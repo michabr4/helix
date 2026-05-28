@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Helix logo variants</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0a0f1a;
+      --card: #111827;
+      --border: #1e293b;
+      --muted: #94a3b8;
+      --text: #e2e8f0;
+      --link: #38bdf8;
+      --nav-hover: rgba(30, 41, 59, 0.55);
+      --nav-active: rgba(59, 130, 246, 0.14);
+      --chip-fg: #93c5fd;
+      --border2: #334155;
+      --surface2: #0f172a;
+    }
+    @media (prefers-color-scheme: light) {
+      :root:not([data-theme]) {
+        color-scheme: light;
+        --bg: #e8eef5;
+        --card: #ffffff;
+        --border: #d8e0ea;
+        --muted: #64748b;
+        --text: #0f172a;
+        --link: #2563eb;
+        --nav-hover: rgba(37, 99, 235, 0.08);
+        --nav-active: rgba(37, 99, 235, 0.12);
+        --chip-fg: #1d4ed8;
+        --border2: #c5d0dd;
+        --surface2: #f8fafc;
+      }
+    }
+    [data-theme="light"] {
+      color-scheme: light;
+      --bg: #e8eef5;
+      --card: #ffffff;
+      --border: #d8e0ea;
+      --muted: #64748b;
+      --text: #0f172a;
+      --link: #2563eb;
+      --nav-hover: rgba(37, 99, 235, 0.08);
+      --nav-active: rgba(37, 99, 235, 0.12);
+      --chip-fg: #1d4ed8;
+      --border2: #c5d0dd;
+      --surface2: #f8fafc;
+    }
+    [data-theme="dark"] { color-scheme: dark; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Inter, system-ui, sans-serif; background: var(--bg); color: var(--text); padding: 24px; line-height: 1.5; }
+    .page-head { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 8px; max-width: 1200px; }
+    .page-head h1 { margin: 0; font-size: 1.25rem; font-weight: 600; }
+    .theme-toggle { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+    .theme-toggle-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+    .theme-segment {
+      display: inline-flex;
+      border-radius: 8px;
+      border: 1px solid var(--border2);
+      overflow: hidden;
+      background: var(--surface2);
+    }
+    .theme-btn {
+      font: inherit;
+      font-size: 11px;
+      font-weight: 500;
+      padding: 6px 10px;
+      margin: 0;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+    }
+    .theme-btn:hover { color: var(--text); background: var(--nav-hover); }
+    .theme-btn[aria-pressed="true"] { background: var(--nav-active); color: var(--chip-fg); font-weight: 600; }
+    h1 { font-size: 1.25rem; font-weight: 600; margin: 0 0 8px; }
+    p { color: var(--muted); font-size: 14px; margin: 0 0 24px; max-width: 720px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+    figure { margin: 0; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
+    figcaption { font-size: 12px; color: var(--muted); margin-top: 10px; line-height: 1.45; }
+    figure img { width: 100%; height: auto; display: block; }
+    a { color: var(--link); }
+    h2.section-title { font-size: 1.05rem; font-weight: 600; margin: 32px 0 8px; color: var(--text); }
+    .agentic-intro { margin-bottom: 20px; max-width: 900px; }
+    .agentic-grid { display: flex; flex-direction: column; gap: 28px; max-width: 1200px; margin-bottom: 12px; }
+    .contrast-pair { border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; background: var(--card); }
+    .contrast-pair h3 { margin: 0 0 6px; font-size: 14px; font-weight: 600; }
+    .pair-desc { font-size: 13px; color: var(--muted); margin: 0 0 14px; max-width: 900px; line-height: 1.45; }
+    .pair-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    @media (max-width: 720px) { .pair-row { grid-template-columns: 1fr; } }
+    .sidebar-sim { border-radius: 10px; padding: 20px 16px; min-height: 188px; display: flex; flex-direction: column; align-items: stretch; justify-content: flex-start; gap: 10px; }
+    .sidebar-sim-dark { background: linear-gradient(180deg, #0f172a 0%, #020617 100%); border: 1px solid rgba(148, 163, 184, 0.18); }
+    .sidebar-sim-light { background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%); border: 1px solid rgba(15, 23, 42, 0.12); }
+    .sim-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; }
+    .sidebar-sim-dark .sim-label { color: #94a3b8; }
+    .sidebar-sim-light .sim-label { color: #64748b; }
+    .sidebar-sim img { width: 100%; height: auto; display: block; }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      clip-path: inset(50%);
+      white-space: nowrap;
+      border: 0;
+    }
+    .skip-link {
+      position: fixed;
+      z-index: 9999;
+      top: 8px;
+      left: 8px;
+      padding: 10px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      background: var(--card);
+      color: var(--text);
+      border: 2px solid var(--border2);
+      border-radius: 8px;
+      text-decoration: none;
+      transform: translateY(-140%);
+      transition: transform 0.12s ease;
+    }
+    .skip-link:focus {
+      outline: none;
+      transform: translateY(0);
+      border-color: var(--link);
+      box-shadow: 0 0 0 3px var(--nav-active);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .skip-link { transition: none; }
+    }
+    a:focus-visible { outline: 3px solid var(--link); outline-offset: 2px; }
+    .theme-btn:focus-visible {
+      outline: 3px solid var(--link);
+      outline-offset: -2px;
+      z-index: 1;
+    }
+    @media (prefers-contrast: more) {
+      figure { border-width: 2px; }
+      .contrast-pair { outline: 1px solid var(--text); }
+    }
+    html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <p id="theme-announce" class="visually-hidden" aria-live="polite" aria-atomic="true"></p>
+  <p class="visually-hidden" id="variants-a11y-desc">Static image gallery. No audio or time-based media. Theme controls affect page colors only.</p>
+  <main id="main-content" tabindex="-1" aria-describedby="variants-a11y-desc">
+  <div class="page-head">
+    <h1>Helix logo — alternate DNA-style marks</h1>
+    <div class="theme-toggle" role="group" aria-label="Color theme">
+      <span class="theme-toggle-label">Theme</span>
+      <div class="theme-segment">
+        <button type="button" class="theme-btn" data-theme-pref="system" aria-pressed="false">Auto</button>
+        <button type="button" class="theme-btn" data-theme-pref="light" aria-pressed="false">Light</button>
+        <button type="button" class="theme-btn" data-theme-pref="dark" aria-pressed="false">Dark</button>
+      </div>
+    </div>
+  </div>
+  <p>Same Cisco blue / magenta palette as the primary <code>helix-logo.svg</code>. Later variants lean into Cisco experience: fabric, routing, observability, campus mesh, cross-plane links, and trust. Open any SVG for the sidebar (<code>src=&quot;assets/…&quot;</code> in <code>index.html</code>). Theme choice is shared with the mockup hub when using the same browser.</p>
+
+  <h2 class="section-title">Agentic AI and interwoven customer experience</h2>
+  <p class="agentic-intro">Each concept has two wordmark treatments: <strong>dark UI</strong> (pale type + deep shadow, for navy sidebars) and <strong>light UI</strong> (deep type + light halo, for pale chrome). Previews sit on simulated sidebar backgrounds so contrast reads even when the page theme stays fixed.</p>
+  <div class="agentic-grid" aria-label="Agentic Helix variants with dark and light sidebar contrast">
+    <article class="contrast-pair">
+      <h3>Agent mesh</h3>
+      <p class="pair-desc">Spoke graph from a central orchestrator: specialist agents aligned to the customer thread, with dual backbones for policy vs creativity.</p>
+      <div class="pair-row">
+        <div class="sidebar-sim sidebar-sim-dark"><span class="sim-label">Dark sidebar</span><img src="assets/helix-logo-variant-agent-mesh.svg" alt="Helix agent mesh, dark UI wordmark" width="260" height="176" /></div>
+        <div class="sidebar-sim sidebar-sim-light"><span class="sim-label">Light sidebar</span><img src="assets/helix-logo-variant-agent-mesh-light.svg" alt="Helix agent mesh, light UI wordmark" width="260" height="176" /></div>
+      </div>
+    </article>
+    <article class="contrast-pair">
+      <h3>Copilot weave</h3>
+      <p class="pair-desc">Guided arc with waypoints: human and copilot turns woven through one journey line&mdash;dialog turns as beads on the same strand.</p>
+      <div class="pair-row">
+        <div class="sidebar-sim sidebar-sim-dark"><span class="sim-label">Dark sidebar</span><img src="assets/helix-logo-variant-copilot-weave.svg" alt="Helix copilot weave, dark UI wordmark" width="260" height="176" /></div>
+        <div class="sidebar-sim sidebar-sim-light"><span class="sim-label">Light sidebar</span><img src="assets/helix-logo-variant-copilot-weave-light.svg" alt="Helix copilot weave, light UI wordmark" width="260" height="176" /></div>
+      </div>
+    </article>
+    <article class="contrast-pair">
+      <h3>Intent braid</h3>
+      <p class="pair-desc">Three correlated intents (resolve, recommend, retain) plaited so no single lane dominates&mdash;CX stays coherent across channels.</p>
+      <div class="pair-row">
+        <div class="sidebar-sim sidebar-sim-dark"><span class="sim-label">Dark sidebar</span><img src="assets/helix-logo-variant-intent-braid.svg" alt="Helix intent braid, dark UI wordmark" width="260" height="176" /></div>
+        <div class="sidebar-sim sidebar-sim-light"><span class="sim-label">Light sidebar</span><img src="assets/helix-logo-variant-intent-braid-light.svg" alt="Helix intent braid, light UI wordmark" width="260" height="176" /></div>
+      </div>
+    </article>
+    <article class="contrast-pair">
+      <h3>Experience fusion</h3>
+      <p class="pair-desc">Service and edge data paths merge at a shared moment of truth&mdash;agentic automation meets the live customer context in one nucleus.</p>
+      <div class="pair-row">
+        <div class="sidebar-sim sidebar-sim-dark"><span class="sim-label">Dark sidebar</span><img src="assets/helix-logo-variant-experience-fusion.svg" alt="Helix experience fusion, dark UI wordmark" width="260" height="176" /></div>
+        <div class="sidebar-sim sidebar-sim-light"><span class="sim-label">Light sidebar</span><img src="assets/helix-logo-variant-experience-fusion-light.svg" alt="Helix experience fusion, light UI wordmark" width="260" height="176" /></div>
+      </div>
+    </article>
+    <article class="contrast-pair">
+      <h3>Agent handoff</h3>
+      <p class="pair-desc">Triage to specialist with explicit seams: arrows show delegation while the hub stays the customer anchor&mdash;no dropped context.</p>
+      <div class="pair-row">
+        <div class="sidebar-sim sidebar-sim-dark"><span class="sim-label">Dark sidebar</span><img src="assets/helix-logo-variant-agent-handoff.svg" alt="Helix agent handoff, dark UI wordmark" width="260" height="176" /></div>
+        <div class="sidebar-sim sidebar-sim-light"><span class="sim-label">Light sidebar</span><img src="assets/helix-logo-variant-agent-handoff-light.svg" alt="Helix agent handoff, light UI wordmark" width="260" height="176" /></div>
+      </div>
+    </article>
+    <article class="contrast-pair">
+      <h3>Symbiosis loop</h3>
+      <p class="pair-desc">Twin loops locked in mutual reinforcement: automation accelerates the human craft layer and vice versa&mdash;continuous, not one-shot AI.</p>
+      <div class="pair-row">
+        <div class="sidebar-sim sidebar-sim-dark"><span class="sim-label">Dark sidebar</span><img src="assets/helix-logo-variant-symbiosis-loop.svg" alt="Helix symbiosis loop, dark UI wordmark" width="260" height="176" /></div>
+        <div class="sidebar-sim sidebar-sim-light"><span class="sim-label">Light sidebar</span><img src="assets/helix-logo-variant-symbiosis-loop-light.svg" alt="Helix symbiosis loop, light UI wordmark" width="260" height="176" /></div>
+      </div>
+    </article>
+    <article class="contrast-pair">
+      <h3>Tight twist (reference pairing)</h3>
+      <p class="pair-desc">Existing crossing-strand mark with the same dark-vs-light wordmark pattern used above; useful baseline when comparing new agentic marks.</p>
+      <div class="pair-row">
+        <div class="sidebar-sim sidebar-sim-dark"><span class="sim-label">Dark sidebar</span><img src="assets/helix-logo-variant-twist.svg" alt="Helix tight twist, dark UI wordmark" width="260" height="176" /></div>
+        <div class="sidebar-sim sidebar-sim-light"><span class="sim-label">Light sidebar</span><img src="assets/helix-logo-variant-twist-light.svg" alt="Helix tight twist, light UI wordmark" width="260" height="176" /></div>
+      </div>
+    </article>
+  </div>
+
+  <h2 class="section-title">Futuristic agentic CX on the Cisco landscape</h2>
+  <p class="agentic-intro">Twenty-four exploratory marks aimed at expanded <strong>agentic AI customer experience</strong>, <strong>CX job architecture</strong>, and cross-portfolio orchestration (security, networking, collaboration, observability). Each ships as paired SVGs: default = dark-sidebar wordmark, <code>-light</code> = light-sidebar wordmark.</p>
+  <div class="agentic-grid" aria-label="Futuristic agentic CX Helix variants">
+    <article class="contrast-pair"><h3>Orchestration fabric</h3><p class="pair-desc">Cross-domain agent mesh on one conductor: many specialists, one customer backbone across the Cisco estate.</p><div class="pair-row"><div class="sidebar-sim sidebar-sim-dark"><span class="sim-label">Dark sidebar</span><img src="assets/helix-logo-variant-orchestration-fabric.svg" alt="" width="260" height="176" /></div><div class="sidebar-sim sidebar-sim-light"><span class="sim-label">Light sidebar</span><img src="assets/helix-logo-variant-orchestration-fabric-light.svg" alt="" width="260" height="176" /></div></div></article>
+    <article class="contrast-pair"><h3>Context thread</h3><p class="pair-desc">Persistent customer context stitched through supervisor, workers, and CX job handoffs.</p><div class="pair-row"><div class="sidebar-sim sidebar-sim-dark"><span class="sim-label">Dark sidebar</span><img src="assets/helix-logo-variant-context-thread.svg" alt="" width="260" height="176" /></div><div class="sidebar-sim sidebar-sim-light"><span class="sim-label">Light sidebar</span><img src="assets/helix-logo-variant-context-thread-light.svg" alt="" width="260" height="176" /></div></div></article>
+    <article class="contrast-pair"><h3>Policy guardrail</h3><p class="pair-desc">Creative autonomy inside explicit guard arcs: safe agent behavior on production journeys.</p><div class="pair-row"><div class="sidebar-sim sidebar-sim-dark"><span class="sim-label">Dark sidebar</span><img src="assets/helix-logo-variant-policy-guardrail.svg" alt="" width="260" height="176" /></div><div class="sidebar-sim sidebar-sim-light"><span class="sim-label">Light sidebar</span><img src="assets/helix-logo-variant-policy-guardrail-light.svg" alt="" width="260" height="176" /></div></div></article>
+    <article class="contrast-pair"><h3>Telemetry aura</h3><p class="pair-desc">Observable agents: health, drift, and outcome rings around the live CX helix.</p><div class="pair-row"><div class="sidebar-sim sidebar-sim-dark"><span class="sim-label">Dark sidebar</span><img src="assets/helix-logo-variant-telemetry-aura.svg" alt="" width="260" height="176" /></div><div class="sidebar-sim sidebar-sim-light"><span class="sim-label">Light sidebar</span><img src="assets/helix-logo-variant-telemetry-aura-light.svg" alt="" width="260" height="176" /></div></div></article>
+    <article class="contrast-pair"><h3>Journey weft</h3><p class="pair-desc">Horizontal journey lanes interlaced with vertical CX job threads.</p><div class="pair-row"><div class="sidebar-sim sidebar-sim-dark"><span class="sim-label">Dark sidebar</span><img src="assets/helix-logo-variant-journey-weft.svg" alt="" width="260" height="176" /></div><div class="sidebar-sim sidebar-sim-light"><span class="sim-label">Light sidebar</span><img src="assets/helix-logo-variant-journey-weft-light.svg" alt="" width="260" height="176" /></div></div></article>
+    <article class="contrast-pair"><h3>Handshake protocol</h3><p class="pair-desc">Explicit human-agent and agent-agent contracts at the midpoint seam.</p><div class="pair-row"><div class="sidebar-sim sidebar-sim-dark"><span class="sim-label">Dark sidebar</span><img src="assets/helix-logo-variant-handshake-protocol.svg" alt="" width="260" height="176" /></div><div class="sidebar-sim sidebar-sim-light"><span class="sim-label">Light sidebar</span><img src="assets/helix-logo-variant-handshake-protocol-light.svg" alt="" width="260" height="176" /></div></div></article>
+    <article class="contrast-pair"><h3>Cognitive mesh</h3><p class="pair-desc">Triangulated reasoning graph for multi-hop resolution across tools and data.</p><div class="pair-row"><div class="sidebar-sim sidebar-sim-dark"><span class="sim-label">Dark sidebar</span><img src="assets/helix-logo-variant-cognitive-mesh.svg" alt="" width="260" height="176" /></div><div class="sidebar-sim sidebar-sim-light"><span class="sim-label">Light sidebar</span><img src="assets/helix-logo-variant-cognitive-mesh-light.svg" alt="" width="260" height="176" /></div></div></article>
+    <article class="contrast-pair"><h3>Intent router</h3><p class="pair-desc">Intent classified once, fanned out to security, networking, collaboration, and service executors.</p><div class="pair-row"><div class="sidebar-sim sidebar-sim-dark"><span class="sim-label">Dark sidebar</span><img src="assets/helix-logo-variant-intent-router.svg" alt="" width="260" height="176" /></div><div class="sidebar-sim sidebar-sim-light"><span class="sim-label">Light sidebar</span><img src="assets/helix-logo-variant-intent-router-light.svg" alt="" width="260" height="176" /></div></div></article>
+    <article class="contrast-pair"><h3>Memory lattice</h3><p class="pair-desc">Durable CX memory across sessions, channels, and roles in the job architecture.</p><div class="pair-row"><div class="sidebar-sim sidebar-sim-dark"><span class="sim-label">Dark sidebar</span><img src="assets/helix-logo-variant-memory-lattice.svg" alt="" width="260" height="176" /></div><div class="sidebar-sim sidebar-sim-light"><span class="sim-label">Light sidebar</span><img src="assets/helix-logo-variant-memory-lattice-light.svg" alt="" width="260" height="176" /></div></div></article>
+    <article class="contrast-pair"><h3>Frontier loop</h3><p class="pair-desc">Continuous improvement: ship agents, observe outcomes, expand scope responsibly.</p><div class="pair-row"><div class="sidebar-sim sidebar-sim-dark"><span class="sim-label">Dark sidebar</span><img src="assets/helix-logo-variant-frontier-loop.svg" alt="" width="260" height="176" /></div><div class="sidebar-sim sidebar-sim-light"><span class="sim-label">Light sidebar</span><img src="assets/helix-logo-variant-frontier-loop-light.svg" alt="" width="260" height="176" /></div></div></article>
+    <article class="contrast-pair"><h3>Bridge plane</h3><p class="pair-desc">East-west automation bridging campus, branch, cloud, and SaaS control imagery.</p><div class="pair-row"><div class="sidebar-sim sidebar-sim-dark"><span class="sim-label">Dark sidebar</span><img src="assets/helix-logo-variant-bridge-plane.svg" alt="" width="260" height="176" /></div><div class="sidebar-sim sidebar-sim-light"><span class="sim-label">Light sidebar</span><img src="assets/helix-logo-variant-bridge-plane-light.svg" alt="" width="260" height="176" /></div></div></article>
+    <article class="contrast-pair"><h3>Sentinel ring</h3><p class="pair-desc">Trust, policy, and Zero Trust posture as a frame around interwoven CX strands.</p><div class="pair-row"><div class="sidebar-sim sidebar-sim-dark"><span class="sim-label">Dark sidebar</span><img src="assets/helix-logo-variant-sentinel-ring.svg" alt="" width="260" height="176" /></div><div class="sidebar-sim sidebar-sim-light"><span class="sim-label">Light sidebar</span><img src="assets/helix-logo-variant-sentinel-ring-light.svg" alt="" width="260" height="176" /></div></div></article>
+    <article class="contrast-pair"><h3>Pulse orchestra</h3><p class="pair-desc">Coordinated agent cadence: many voices, one customer score and rhythm.</p><div class="pair-row"><div class="sidebar-sim sidebar-sim-dark"><span class="sim-label">Dark sidebar</span><img src="assets/helix-logo-variant-pulse-orchestra.svg" alt="" width="260" height="176" /></div><div class="sidebar-sim sidebar-sim-light"><span class="sim-label">Light sidebar</span><img src="assets/helix-logo-variant-pulse-orchestra-light.svg" alt="" width="260" height="176" /></div></div></article>
+    <article class="contrast-pair"><h3>Convergence nexus</h3><p class="pair-desc">Signals, policy, and action converge on a single moment of truth for the customer.</p><div class="pair-row"><div class="sidebar-sim sidebar-sim-dark"><span class="sim-label">Dark sidebar</span><img src="assets/helix-logo-variant-convergence-nexus.svg" alt="" width="260" height="176" /></div><div class="sidebar-sim sidebar-sim-light"><span class="sim-label">Light sidebar</span><img src="assets/helix-logo-variant-convergence-nexus-light.svg" alt="" width="260" height="176" /></div></div></article>
+    <article class="contrast-pair"><h3>Adaptive lane</h3><p class="pair-desc">Journey paths flex as model confidence and risk signals shift across CX jobs.</p><div class="pair-row"><div class="sidebar-sim sidebar-sim-dark"><span class="sim-label">Dark sidebar</span><img src="assets/helix-logo-variant-adaptive-lane.svg" alt="" width="260" height="176" /></div><div class="sidebar-sim sidebar-sim-light"><span class="sim-label">Light sidebar</span><img src="assets/helix-logo-variant-adaptive-lane-light.svg" alt="" width="260" height="176" /></div></div></article>
+    <article class="contrast-pair"><h3>Signal braid</h3><p class="pair-desc">Telemetry, sentiment, and business context plaited into one narrative for agents.</p><div class="pair-row"><div class="sidebar-sim sidebar-sim-dark"><span class="sim-label">Dark sidebar</span><img src="assets/helix-logo-variant-signal-braid.svg" alt="" width="260" height="176" /></div><div class="sidebar-sim sidebar-sim-light"><span class="sim-label">Light sidebar</span><img src="assets/helix-logo-variant-signal-braid-light.svg" alt="" width="260" height="176" /></div></div></article>
+    <article class="contrast-pair"><h3>Horizon arc</h3><p class="pair-desc">Proactive agents scanning beyond the incident: future-state CX on the Cisco landscape.</p><div class="pair-row"><div class="sidebar-sim sidebar-sim-dark"><span class="sim-label">Dark sidebar</span><img src="assets/helix-logo-variant-horizon-arc.svg" alt="" width="260" height="176" /></div><div class="sidebar-sim sidebar-sim-light"><span class="sim-label">Light sidebar</span><img src="assets/helix-logo-variant-horizon-arc-light.svg" alt="" width="260" height="176" /></div></div></article>
+    <article class="contrast-pair"><h3>Lattice handoff</h3><p class="pair-desc">Structured CX job grid with crisp cell boundaries and delegated motion between owners.</p><div class="pair-row"><div class="sidebar-sim sidebar-sim-dark"><span class="sim-label">Dark sidebar</span><img src="assets/helix-logo-variant-lattice-handoff.svg" alt="" width="260" height="176" /></div><div class="sidebar-sim sidebar-sim-light"><span class="sim-label">Light sidebar</span><img src="assets/helix-logo-variant-lattice-handoff-light.svg" alt="" width="260" height="176" /></div></div></article>
+    <article class="contrast-pair"><h3>Empathy weave</h3><p class="pair-desc">Care-forward paths overlaid on automation backbones: human-centered agentic CX.</p><div class="pair-row"><div class="sidebar-sim sidebar-sim-dark"><span class="sim-label">Dark sidebar</span><img src="assets/helix-logo-variant-empathy-weave.svg" alt="" width="260" height="176" /></div><div class="sidebar-sim sidebar-sim-light"><span class="sim-label">Light sidebar</span><img src="assets/helix-logo-variant-empathy-weave-light.svg" alt="" width="260" height="176" /></div></div></article>
+    <article class="contrast-pair"><h3>Catalyst hub</h3><p class="pair-desc">Activation hub spawning parallel missions: onboarding, assurance, and growth agents.</p><div class="pair-row"><div class="sidebar-sim sidebar-sim-dark"><span class="sim-label">Dark sidebar</span><img src="assets/helix-logo-variant-catalyst-hub.svg" alt="" width="260" height="176" /></div><div class="sidebar-sim sidebar-sim-light"><span class="sim-label">Light sidebar</span><img src="assets/helix-logo-variant-catalyst-hub-light.svg" alt="" width="260" height="176" /></div></div></article>
+    <article class="contrast-pair"><h3>Continuum agent</h3><p class="pair-desc">Always-on digital colleague orbiting the relationship, not a one-shot chatbot.</p><div class="pair-row"><div class="sidebar-sim sidebar-sim-dark"><span class="sim-label">Dark sidebar</span><img src="assets/helix-logo-variant-continuum-agent.svg" alt="" width="260" height="176" /></div><div class="sidebar-sim sidebar-sim-light"><span class="sim-label">Light sidebar</span><img src="assets/helix-logo-variant-continuum-agent-light.svg" alt="" width="260" height="176" /></div></div></article>
+    <article class="contrast-pair"><h3>Prism split</h3><p class="pair-desc">One intent refracted across web, app, voice, and operator surfaces.</p><div class="pair-row"><div class="sidebar-sim sidebar-sim-dark"><span class="sim-label">Dark sidebar</span><img src="assets/helix-logo-variant-prism-split.svg" alt="" width="260" height="176" /></div><div class="sidebar-sim sidebar-sim-light"><span class="sim-label">Light sidebar</span><img src="assets/helix-logo-variant-prism-split-light.svg" alt="" width="260" height="176" /></div></div></article>
+    <article class="contrast-pair"><h3>Anchor trust</h3><p class="pair-desc">Ground-truth anchor for regulated actions, provenance, and audit-ready CX automation.</p><div class="pair-row"><div class="sidebar-sim sidebar-sim-dark"><span class="sim-label">Dark sidebar</span><img src="assets/helix-logo-variant-anchor-trust.svg" alt="" width="260" height="176" /></div><div class="sidebar-sim sidebar-sim-light"><span class="sim-label">Light sidebar</span><img src="assets/helix-logo-variant-anchor-trust-light.svg" alt="" width="260" height="176" /></div></div></article>
+    <article class="contrast-pair"><h3>Synapse grid</h3><p class="pair-desc">Fast agent-to-agent synapses on a collaboration lattice spanning teams and tools.</p><div class="pair-row"><div class="sidebar-sim sidebar-sim-dark"><span class="sim-label">Dark sidebar</span><img src="assets/helix-logo-variant-synapse-grid.svg" alt="" width="260" height="176" /></div><div class="sidebar-sim sidebar-sim-light"><span class="sim-label">Light sidebar</span><img src="assets/helix-logo-variant-synapse-grid-light.svg" alt="" width="260" height="176" /></div></div></article>
+  </div>
+
+  <h2 class="section-title">Fifty exploratory marks (batch 3)</h2>
+  <p class="agentic-intro">Procedural geometry: twelve templates rotated with index-based offsets. Light-sidebar twin: same filename plus <code>-light</code> before <code>.svg</code>.</p>
+  <div class="grid" aria-label="Batch 3 Helix logo variants, dark UI wordmarks">
+    <figure>
+      <img src="assets/helix-logo-variant-neural-flow.svg" alt="Helix Neural Flow mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Neural Flow</strong> — batch 3. Light UI: <code>helix-logo-variant-neural-flow-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-quantum-weave.svg" alt="Helix Quantum Weave mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Quantum Weave</strong> — batch 3. Light UI: <code>helix-logo-variant-quantum-weave-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-vector-hub.svg" alt="Helix Vector Hub mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Vector Hub</strong> — batch 3. Light UI: <code>helix-logo-variant-vector-hub-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-delta-stream.svg" alt="Helix Delta Stream mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Delta Stream</strong> — batch 3. Light UI: <code>helix-logo-variant-delta-stream-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-phi-orbit.svg" alt="Helix Phi Orbit mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Phi Orbit</strong> — batch 3. Light UI: <code>helix-logo-variant-phi-orbit-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-sigma-lattice.svg" alt="Helix Sigma Lattice mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Sigma Lattice</strong> — batch 3. Light UI: <code>helix-logo-variant-sigma-lattice-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-lambda-braid.svg" alt="Helix Lambda Braid mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Lambda Braid</strong> — batch 3. Light UI: <code>helix-logo-variant-lambda-braid-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-kappa-mesh.svg" alt="Helix Kappa Mesh mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Kappa Mesh</strong> — batch 3. Light UI: <code>helix-logo-variant-kappa-mesh-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-tau-pulse.svg" alt="Helix Tau Pulse mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Tau Pulse</strong> — batch 3. Light UI: <code>helix-logo-variant-tau-pulse-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-omega-shell.svg" alt="Helix Omega Shell mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Omega Shell</strong> — batch 3. Light UI: <code>helix-logo-variant-omega-shell-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-zenith-arc.svg" alt="Helix Zenith Arc mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Zenith Arc</strong> — batch 3. Light UI: <code>helix-logo-variant-zenith-arc-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-apex-weft.svg" alt="Helix Apex Weft mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Apex Weft</strong> — batch 3. Light UI: <code>helix-logo-variant-apex-weft-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-signal-stack.svg" alt="Helix Signal Stack mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Signal Stack</strong> — batch 3. Light UI: <code>helix-logo-variant-signal-stack-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-echo-braid.svg" alt="Helix Echo Braid mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Echo Braid</strong> — batch 3. Light UI: <code>helix-logo-variant-echo-braid-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-phase-lock.svg" alt="Helix Phase Lock mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Phase Lock</strong> — batch 3. Light UI: <code>helix-logo-variant-phase-lock-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-resonance-net.svg" alt="Helix Resonance Net mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Resonance Net</strong> — batch 3. Light UI: <code>helix-logo-variant-resonance-net-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-harmonic-hub.svg" alt="Helix Harmonic Hub mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Harmonic Hub</strong> — batch 3. Light UI: <code>helix-logo-variant-harmonic-hub-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-cadence-loop.svg" alt="Helix Cadence Loop mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Cadence Loop</strong> — batch 3. Light UI: <code>helix-logo-variant-cadence-loop-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-tempo-spiral.svg" alt="Helix Tempo Spiral mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Tempo Spiral</strong> — batch 3. Light UI: <code>helix-logo-variant-tempo-spiral-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-metric-weave.svg" alt="Helix Metric Weave mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Metric Weave</strong> — batch 3. Light UI: <code>helix-logo-variant-metric-weave-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-radix-fork.svg" alt="Helix Radix Fork mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Radix Fork</strong> — batch 3. Light UI: <code>helix-logo-variant-radix-fork-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-vertex-handoff.svg" alt="Helix Vertex Handoff mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Vertex Handoff</strong> — batch 3. Light UI: <code>helix-logo-variant-vertex-handoff-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-planar-fuse.svg" alt="Helix Planar Fuse mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Planar Fuse</strong> — batch 3. Light UI: <code>helix-logo-variant-planar-fuse-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-tensor-ring.svg" alt="Helix Tensor Ring mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Tensor Ring</strong> — batch 3. Light UI: <code>helix-logo-variant-tensor-ring-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-scalar-field.svg" alt="Helix Scalar Field mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Scalar Field</strong> — batch 3. Light UI: <code>helix-logo-variant-scalar-field-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-matrix-path.svg" alt="Helix Matrix Path mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Matrix Path</strong> — batch 3. Light UI: <code>helix-logo-variant-matrix-path-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-cascade-sync.svg" alt="Helix Cascade Sync mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Cascade Sync</strong> — batch 3. Light UI: <code>helix-logo-variant-cascade-sync-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-ripple-orbit.svg" alt="Helix Ripple Orbit mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Ripple Orbit</strong> — batch 3. Light UI: <code>helix-logo-variant-ripple-orbit-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-tide-braid.svg" alt="Helix Tide Braid mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Tide Braid</strong> — batch 3. Light UI: <code>helix-logo-variant-tide-braid-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-surge-hub.svg" alt="Helix Surge Hub mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Surge Hub</strong> — batch 3. Light UI: <code>helix-logo-variant-surge-hub-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-flux-ring.svg" alt="Helix Flux Ring mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Flux Ring</strong> — batch 3. Light UI: <code>helix-logo-variant-flux-ring-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-spark-mesh.svg" alt="Helix Spark Mesh mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Spark Mesh</strong> — batch 3. Light UI: <code>helix-logo-variant-spark-mesh-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-arc-fusion.svg" alt="Helix Arc Fusion mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Arc Fusion</strong> — batch 3. Light UI: <code>helix-logo-variant-arc-fusion-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-bolt-weave.svg" alt="Helix Bolt Weave mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Bolt Weave</strong> — batch 3. Light UI: <code>helix-logo-variant-bolt-weave-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-ion-trail.svg" alt="Helix Ion Trail mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Ion Trail</strong> — batch 3. Light UI: <code>helix-logo-variant-ion-trail-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-photon-split.svg" alt="Helix Photon Split mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Photon Split</strong> — batch 3. Light UI: <code>helix-logo-variant-photon-split-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-quark-pair.svg" alt="Helix Quark Pair mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Quark Pair</strong> — batch 3. Light UI: <code>helix-logo-variant-quark-pair-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-gluon-web.svg" alt="Helix Gluon Web mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Gluon Web</strong> — batch 3. Light UI: <code>helix-logo-variant-gluon-web-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-hadron-loop.svg" alt="Helix Hadron Loop mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Hadron Loop</strong> — batch 3. Light UI: <code>helix-logo-variant-hadron-loop-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-lepton-path.svg" alt="Helix Lepton Path mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Lepton Path</strong> — batch 3. Light UI: <code>helix-logo-variant-lepton-path-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-boson-ray.svg" alt="Helix Boson Ray mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Boson Ray</strong> — batch 3. Light UI: <code>helix-logo-variant-boson-ray-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-fermion-net.svg" alt="Helix Fermion Net mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Fermion Net</strong> — batch 3. Light UI: <code>helix-logo-variant-fermion-net-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-plasma-weft.svg" alt="Helix Plasma Weft mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Plasma Weft</strong> — batch 3. Light UI: <code>helix-logo-variant-plasma-weft-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-stellar-hub.svg" alt="Helix Stellar Hub mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Stellar Hub</strong> — batch 3. Light UI: <code>helix-logo-variant-stellar-hub-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-comet-tail.svg" alt="Helix Comet Tail mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Comet Tail</strong> — batch 3. Light UI: <code>helix-logo-variant-comet-tail-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-aurora-braid.svg" alt="Helix Aurora Braid mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Aurora Braid</strong> — batch 3. Light UI: <code>helix-logo-variant-aurora-braid-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-nebula-net.svg" alt="Helix Nebula Net mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Nebula Net</strong> — batch 3. Light UI: <code>helix-logo-variant-nebula-net-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-eclipse-ring.svg" alt="Helix Eclipse Ring mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Eclipse Ring</strong> — batch 3. Light UI: <code>helix-logo-variant-eclipse-ring-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-solstice-arc.svg" alt="Helix Solstice Arc mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Solstice Arc</strong> — batch 3. Light UI: <code>helix-logo-variant-solstice-arc-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-equinox-weave.svg" alt="Helix Equinox Weave mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Equinox Weave</strong> — batch 3. Light UI: <code>helix-logo-variant-equinox-weave-light.svg</code>.</figcaption>
+    </figure>
+  </div>
+
+  <h2 class="section-title">One hundred exploratory marks (batch 4)</h2>
+  <p class="pair-desc" style="margin-bottom:16px">Script-generated pairs share batch 3 styling; geometry uses a different template phase. Light wordmarks: <code>-light.svg</code> siblings.</p>
+  <div class="grid" aria-label="Batch 4 Helix logo variants, dark UI wordmarks">
+    <figure>
+      <img src="assets/helix-logo-variant-aether-loop.svg" alt="Helix Aether Loop mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Aether Loop</strong> — batch 4. Light UI: <code>helix-logo-variant-aether-loop-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-beryl-braid.svg" alt="Helix Beryl Braid mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Beryl Braid</strong> — batch 4. Light UI: <code>helix-logo-variant-beryl-braid-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-coral-ring.svg" alt="Helix Coral Ring mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Coral Ring</strong> — batch 4. Light UI: <code>helix-logo-variant-coral-ring-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-drift-mesh.svg" alt="Helix Drift Mesh mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Drift Mesh</strong> — batch 4. Light UI: <code>helix-logo-variant-drift-mesh-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-ember-arc.svg" alt="Helix Ember Arc mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Ember Arc</strong> — batch 4. Light UI: <code>helix-logo-variant-ember-arc-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-frost-hub.svg" alt="Helix Frost Hub mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Frost Hub</strong> — batch 4. Light UI: <code>helix-logo-variant-frost-hub-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-glyph-weave.svg" alt="Helix Glyph Weave mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Glyph Weave</strong> — batch 4. Light UI: <code>helix-logo-variant-glyph-weave-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-haze-orbit.svg" alt="Helix Haze Orbit mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Haze Orbit</strong> — batch 4. Light UI: <code>helix-logo-variant-haze-orbit-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-iris-pulse.svg" alt="Helix Iris Pulse mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Iris Pulse</strong> — batch 4. Light UI: <code>helix-logo-variant-iris-pulse-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-jade-spiral.svg" alt="Helix Jade Spiral mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Jade Spiral</strong> — batch 4. Light UI: <code>helix-logo-variant-jade-spiral-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-kelvin-path.svg" alt="Helix Kelvin Path mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Kelvin Path</strong> — batch 4. Light UI: <code>helix-logo-variant-kelvin-path-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-lotus-fork.svg" alt="Helix Lotus Fork mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Lotus Fork</strong> — batch 4. Light UI: <code>helix-logo-variant-lotus-fork-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-mist-ring.svg" alt="Helix Mist Ring mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Mist Ring</strong> — batch 4. Light UI: <code>helix-logo-variant-mist-ring-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-nimbus-hub.svg" alt="Helix Nimbus Hub mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Nimbus Hub</strong> — batch 4. Light UI: <code>helix-logo-variant-nimbus-hub-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-onyx-braid.svg" alt="Helix Onyx Braid mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Onyx Braid</strong> — batch 4. Light UI: <code>helix-logo-variant-onyx-braid-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-pearl-weft.svg" alt="Helix Pearl Weft mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Pearl Weft</strong> — batch 4. Light UI: <code>helix-logo-variant-pearl-weft-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-quartz-mesh.svg" alt="Helix Quartz Mesh mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Quartz Mesh</strong> — batch 4. Light UI: <code>helix-logo-variant-quartz-mesh-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-reef-arc.svg" alt="Helix Reef Arc mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Reef Arc</strong> — batch 4. Light UI: <code>helix-logo-variant-reef-arc-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-silk-orbit.svg" alt="Helix Silk Orbit mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Silk Orbit</strong> — batch 4. Light UI: <code>helix-logo-variant-silk-orbit-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-terra-loop.svg" alt="Helix Terra Loop mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Terra Loop</strong> — batch 4. Light UI: <code>helix-logo-variant-terra-loop-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-umbra-pulse.svg" alt="Helix Umbra Pulse mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Umbra Pulse</strong> — batch 4. Light UI: <code>helix-logo-variant-umbra-pulse-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-vega-spiral.svg" alt="Helix Vega Spiral mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Vega Spiral</strong> — batch 4. Light UI: <code>helix-logo-variant-vega-spiral-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-wisp-path.svg" alt="Helix Wisp Path mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Wisp Path</strong> — batch 4. Light UI: <code>helix-logo-variant-wisp-path-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-xenon-fork.svg" alt="Helix Xenon Fork mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Xenon Fork</strong> — batch 4. Light UI: <code>helix-logo-variant-xenon-fork-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-yield-ring.svg" alt="Helix Yield Ring mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Yield Ring</strong> — batch 4. Light UI: <code>helix-logo-variant-yield-ring-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-zircon-hub.svg" alt="Helix Zircon Hub mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Zircon Hub</strong> — batch 4. Light UI: <code>helix-logo-variant-zircon-hub-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-alula-mesh.svg" alt="Helix Alula Mesh mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Alula Mesh</strong> — batch 4. Light UI: <code>helix-logo-variant-alula-mesh-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-brine-arc.svg" alt="Helix Brine Arc mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Brine Arc</strong> — batch 4. Light UI: <code>helix-logo-variant-brine-arc-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-cirrus-weave.svg" alt="Helix Cirrus Weave mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Cirrus Weave</strong> — batch 4. Light UI: <code>helix-logo-variant-cirrus-weave-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-dune-orbit.svg" alt="Helix Dune Orbit mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Dune Orbit</strong> — batch 4. Light UI: <code>helix-logo-variant-dune-orbit-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-eider-loop.svg" alt="Helix Eider Loop mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Eider Loop</strong> — batch 4. Light UI: <code>helix-logo-variant-eider-loop-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-flint-pulse.svg" alt="Helix Flint Pulse mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Flint Pulse</strong> — batch 4. Light UI: <code>helix-logo-variant-flint-pulse-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-glen-spiral.svg" alt="Helix Glen Spiral mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Glen Spiral</strong> — batch 4. Light UI: <code>helix-logo-variant-glen-spiral-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-hushed-path.svg" alt="Helix Hushed Path mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Hushed Path</strong> — batch 4. Light UI: <code>helix-logo-variant-hushed-path-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-indigo-fork.svg" alt="Helix Indigo Fork mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Indigo Fork</strong> — batch 4. Light UI: <code>helix-logo-variant-indigo-fork-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-jolt-ring.svg" alt="Helix Jolt Ring mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Jolt Ring</strong> — batch 4. Light UI: <code>helix-logo-variant-jolt-ring-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-kraft-hub.svg" alt="Helix Kraft Hub mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Kraft Hub</strong> — batch 4. Light UI: <code>helix-logo-variant-kraft-hub-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-lumen-mesh.svg" alt="Helix Lumen Mesh mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Lumen Mesh</strong> — batch 4. Light UI: <code>helix-logo-variant-lumen-mesh-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-mica-arc.svg" alt="Helix Mica Arc mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Mica Arc</strong> — batch 4. Light UI: <code>helix-logo-variant-mica-arc-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-nacre-weft.svg" alt="Helix Nacre Weft mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Nacre Weft</strong> — batch 4. Light UI: <code>helix-logo-variant-nacre-weft-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-opal-orbit.svg" alt="Helix Opal Orbit mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Opal Orbit</strong> — batch 4. Light UI: <code>helix-logo-variant-opal-orbit-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-pylon-loop.svg" alt="Helix Pylon Loop mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Pylon Loop</strong> — batch 4. Light UI: <code>helix-logo-variant-pylon-loop-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-quill-pulse.svg" alt="Helix Quill Pulse mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Quill Pulse</strong> — batch 4. Light UI: <code>helix-logo-variant-quill-pulse-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-rune-spiral.svg" alt="Helix Rune Spiral mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Rune Spiral</strong> — batch 4. Light UI: <code>helix-logo-variant-rune-spiral-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-sable-path.svg" alt="Helix Sable Path mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Sable Path</strong> — batch 4. Light UI: <code>helix-logo-variant-sable-path-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-tusk-fork.svg" alt="Helix Tusk Fork mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Tusk Fork</strong> — batch 4. Light UI: <code>helix-logo-variant-tusk-fork-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-vellum-ring.svg" alt="Helix Vellum Ring mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Vellum Ring</strong> — batch 4. Light UI: <code>helix-logo-variant-vellum-ring-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-wharf-hub.svg" alt="Helix Wharf Hub mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Wharf Hub</strong> — batch 4. Light UI: <code>helix-logo-variant-wharf-hub-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-xylem-mesh.svg" alt="Helix Xylem Mesh mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Xylem Mesh</strong> — batch 4. Light UI: <code>helix-logo-variant-xylem-mesh-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-yarrow-arc.svg" alt="Helix Yarrow Arc mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Yarrow Arc</strong> — batch 4. Light UI: <code>helix-logo-variant-yarrow-arc-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-zen-braid.svg" alt="Helix Zen Braid mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Zen Braid</strong> — batch 4. Light UI: <code>helix-logo-variant-zen-braid-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-alloy-weft.svg" alt="Helix Alloy Weft mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Alloy Weft</strong> — batch 4. Light UI: <code>helix-logo-variant-alloy-weft-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-brisk-hub.svg" alt="Helix Brisk Hub mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Brisk Hub</strong> — batch 4. Light UI: <code>helix-logo-variant-brisk-hub-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-chord-mesh.svg" alt="Helix Chord Mesh mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Chord Mesh</strong> — batch 4. Light UI: <code>helix-logo-variant-chord-mesh-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-datum-arc.svg" alt="Helix Datum Arc mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Datum Arc</strong> — batch 4. Light UI: <code>helix-logo-variant-datum-arc-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-edged-orbit.svg" alt="Helix Edged Orbit mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Edged Orbit</strong> — batch 4. Light UI: <code>helix-logo-variant-edged-orbit-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-forge-loop.svg" alt="Helix Forge Loop mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Forge Loop</strong> — batch 4. Light UI: <code>helix-logo-variant-forge-loop-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-helio-pulse.svg" alt="Helix Helio Pulse mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Helio Pulse</strong> — batch 4. Light UI: <code>helix-logo-variant-helio-pulse-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-henge-spiral.svg" alt="Helix Henge Spiral mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Henge Spiral</strong> — batch 4. Light UI: <code>helix-logo-variant-henge-spiral-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-idyll-path.svg" alt="Helix Idyll Path mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Idyll Path</strong> — batch 4. Light UI: <code>helix-logo-variant-idyll-path-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-junto-fork.svg" alt="Helix Junto Fork mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Junto Fork</strong> — batch 4. Light UI: <code>helix-logo-variant-junto-fork-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-krill-ring.svg" alt="Helix Krill Ring mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Krill Ring</strong> — batch 4. Light UI: <code>helix-logo-variant-krill-ring-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-ledger-hub.svg" alt="Helix Ledger Hub mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Ledger Hub</strong> — batch 4. Light UI: <code>helix-logo-variant-ledger-hub-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-motif-mesh.svg" alt="Helix Motif Mesh mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Motif Mesh</strong> — batch 4. Light UI: <code>helix-logo-variant-motif-mesh-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-notch-arc.svg" alt="Helix Notch Arc mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Notch Arc</strong> — batch 4. Light UI: <code>helix-logo-variant-notch-arc-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-overt-orbit.svg" alt="Helix Overt Orbit mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Overt Orbit</strong> — batch 4. Light UI: <code>helix-logo-variant-overt-orbit-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-prism-loop.svg" alt="Helix Prism Loop mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Prism Loop</strong> — batch 4. Light UI: <code>helix-logo-variant-prism-loop-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-qubit-pulse.svg" alt="Helix Qubit Pulse mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Qubit Pulse</strong> — batch 4. Light UI: <code>helix-logo-variant-qubit-pulse-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-radix-spiral.svg" alt="Helix Radix Spiral mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Radix Spiral</strong> — batch 4. Light UI: <code>helix-logo-variant-radix-spiral-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-surge-path.svg" alt="Helix Surge Path mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Surge Path</strong> — batch 4. Light UI: <code>helix-logo-variant-surge-path-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-tact-fork.svg" alt="Helix Tact Fork mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Tact Fork</strong> — batch 4. Light UI: <code>helix-logo-variant-tact-fork-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-unify-ring.svg" alt="Helix Unify Ring mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Unify Ring</strong> — batch 4. Light UI: <code>helix-logo-variant-unify-ring-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-volta-hub.svg" alt="Helix Volta Hub mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Volta Hub</strong> — batch 4. Light UI: <code>helix-logo-variant-volta-hub-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-welt-mesh.svg" alt="Helix Welt Mesh mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Welt Mesh</strong> — batch 4. Light UI: <code>helix-logo-variant-welt-mesh-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-xeno-arc.svg" alt="Helix Xeno Arc mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Xeno Arc</strong> — batch 4. Light UI: <code>helix-logo-variant-xeno-arc-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-yearn-orbit.svg" alt="Helix Yearn Orbit mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Yearn Orbit</strong> — batch 4. Light UI: <code>helix-logo-variant-yearn-orbit-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-zonal-loop.svg" alt="Helix Zonal Loop mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Zonal Loop</strong> — batch 4. Light UI: <code>helix-logo-variant-zonal-loop-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-arbor-mesh.svg" alt="Helix Arbor Mesh mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Arbor Mesh</strong> — batch 4. Light UI: <code>helix-logo-variant-arbor-mesh-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-bloom-weft.svg" alt="Helix Bloom Weft mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Bloom Weft</strong> — batch 4. Light UI: <code>helix-logo-variant-bloom-weft-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-creek-arc.svg" alt="Helix Creek Arc mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Creek Arc</strong> — batch 4. Light UI: <code>helix-logo-variant-creek-arc-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-delta-loop.svg" alt="Helix Delta Loop mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Delta Loop</strong> — batch 4. Light UI: <code>helix-logo-variant-delta-loop-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-ethos-pulse.svg" alt="Helix Ethos Pulse mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Ethos Pulse</strong> — batch 4. Light UI: <code>helix-logo-variant-ethos-pulse-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-fable-spiral.svg" alt="Helix Fable Spiral mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Fable Spiral</strong> — batch 4. Light UI: <code>helix-logo-variant-fable-spiral-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-grove-path.svg" alt="Helix Grove Path mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Grove Path</strong> — batch 4. Light UI: <code>helix-logo-variant-grove-path-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-haven-fork.svg" alt="Helix Haven Fork mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Haven Fork</strong> — batch 4. Light UI: <code>helix-logo-variant-haven-fork-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-inlet-ring.svg" alt="Helix Inlet Ring mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Inlet Ring</strong> — batch 4. Light UI: <code>helix-logo-variant-inlet-ring-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-jasper-hub.svg" alt="Helix Jasper Hub mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Jasper Hub</strong> — batch 4. Light UI: <code>helix-logo-variant-jasper-hub-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-knoll-mesh.svg" alt="Helix Knoll Mesh mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Knoll Mesh</strong> — batch 4. Light UI: <code>helix-logo-variant-knoll-mesh-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-lilac-arc.svg" alt="Helix Lilac Arc mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Lilac Arc</strong> — batch 4. Light UI: <code>helix-logo-variant-lilac-arc-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-moor-orbit.svg" alt="Helix Moor Orbit mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Moor Orbit</strong> — batch 4. Light UI: <code>helix-logo-variant-moor-orbit-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-nova-loop.svg" alt="Helix Nova Loop mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Nova Loop</strong> — batch 4. Light UI: <code>helix-logo-variant-nova-loop-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-oaken-pulse.svg" alt="Helix Oaken Pulse mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Oaken Pulse</strong> — batch 4. Light UI: <code>helix-logo-variant-oaken-pulse-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-pike-spiral.svg" alt="Helix Pike Spiral mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Pike Spiral</strong> — batch 4. Light UI: <code>helix-logo-variant-pike-spiral-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-quern-path.svg" alt="Helix Quern Path mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Quern Path</strong> — batch 4. Light UI: <code>helix-logo-variant-quern-path-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-ridge-fork.svg" alt="Helix Ridge Fork mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Ridge Fork</strong> — batch 4. Light UI: <code>helix-logo-variant-ridge-fork-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-silt-ring.svg" alt="Helix Silt Ring mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Silt Ring</strong> — batch 4. Light UI: <code>helix-logo-variant-silt-ring-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-torus-hub.svg" alt="Helix Torus Hub mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Torus Hub</strong> — batch 4. Light UI: <code>helix-logo-variant-torus-hub-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-upland-mesh.svg" alt="Helix Upland Mesh mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Upland Mesh</strong> — batch 4. Light UI: <code>helix-logo-variant-upland-mesh-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-vapor-arc.svg" alt="Helix Vapor Arc mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Vapor Arc</strong> — batch 4. Light UI: <code>helix-logo-variant-vapor-arc-light.svg</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-wyrd-orbit.svg" alt="Helix Wyrd Orbit mark, dark UI wordmark" width="260" height="176" />
+      <figcaption><strong>Wyrd Orbit</strong> — batch 4. Light UI: <code>helix-logo-variant-wyrd-orbit-light.svg</code>.</figcaption>
+    </figure>
+  </div>
+
+
+  <h2 class="section-title">Full gallery</h2>
+  <p style="margin-top:0">All lockups at a glance (single SVG each; use paired <code>-light</code> siblings in the agentic sections for sidebar contrast).</p>
+  <div class="grid">
+    <figure>
+      <img src="assets/helix-logo.svg" alt="" width="260" height="176" />
+      <figcaption><strong>Current (primary)</strong> — flowing ribbons + elliptical washes.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-ladder.svg" alt="" width="260" height="176" />
+      <figcaption><strong>Ladder</strong> — classic side-view DNA: opposing sine polylines with horizontal base-pair rungs.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-twist.svg" alt="" width="260" height="176" />
+      <figcaption><strong>Tight twist</strong> — crossing backbones with diagonal rungs for “turn” and depth.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-branched.svg" alt="" width="260" height="176" />
+      <figcaption><strong>Branched</strong> — H-shaped connectors + joint dots (forked base-pair read).</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-molecular.svg" alt="" width="260" height="176" />
+      <figcaption><strong>Molecular</strong> — beads on intertwined backbone strokes (node / interaction read).</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-infinity.svg" alt="" width="260" height="176" />
+      <figcaption><strong>Infinity</strong> — dual-loop lock with blue vs magenta strands and central joint.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-ribbon.svg" alt="" width="260" height="176" />
+      <figcaption><strong>Ribbon</strong> — layered wide + thin waves for depth and fusion.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-crystal.svg" alt="" width="260" height="176" />
+      <figcaption><strong>Crystal</strong> — angular zigzag backbones with diamond base-pair motifs.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-fabric.svg" alt="" width="260" height="176" />
+      <figcaption><strong>Fabric</strong> — mesh topology + dual backbones (network fabric read).</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-path.svg" alt="" width="260" height="176" />
+      <figcaption><strong>Path</strong> — site-to-site with preferred arc and resilient underlay (routing / IWAN).</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-pulse.svg" alt="" width="260" height="176" />
+      <figcaption><strong>Pulse</strong> — observability rings + intertwined carriers (telemetry).</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-orbit.svg" alt="" width="260" height="176" />
+      <figcaption><strong>Orbit</strong> — tilted service ellipses around a central helix (platform services).</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-hexmesh.svg" alt="" width="260" height="176" />
+      <figcaption><strong>Hex mesh</strong> — tiled honeycomb with crossing helices (campus / structured cabling energy).</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-crosslink.svg" alt="" width="260" height="176" />
+      <figcaption><strong>Crosslink</strong> — orthogonal planes meeting at a secured hub (east-west / north-south).</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-shield.svg" alt="" width="260" height="176" />
+      <figcaption><strong>Trust arc</strong> — protective enclosure framing intertwined strands (Secure / Zero Trust tone).</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-stream.svg" alt="" width="260" height="176" />
+      <figcaption><strong>Stream</strong> — parallel data-plane lanes with flow ticks (throughput / automation).</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-gateway.svg" alt="" width="260" height="176" />
+      <figcaption><strong>Gateway</strong> — portal arch framing intertwined strands.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-aggregate.svg" alt="" width="260" height="176" />
+      <figcaption><strong>Aggregate</strong> — spoke links into a central hub with dual helices.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-spiral.svg" alt="" width="260" height="176" />
+      <figcaption><strong>Spiral</strong> — interlocking spiral arms with shared core.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-duplex.svg" alt="" width="260" height="176" />
+      <figcaption><strong>Duplex</strong> — mirrored waves suggesting bidirectional flow.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-cluster.svg" alt="" width="260" height="176" />
+      <figcaption><strong>Cluster</strong> — left/right node groups bridged by crossing curves.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-suspension.svg" alt="" width="260" height="176" />
+      <figcaption><strong>Suspension</strong> — cable-stayed curve over a deck line.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-wavelength.svg" alt="" width="260" height="176" />
+      <figcaption><strong>Wavelength</strong> — stacked carrier waves with offset phases.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-lattice.svg" alt="" width="260" height="176" />
+      <figcaption><strong>Lattice</strong> — faint grid under bold crossing helices.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-anchor.svg" alt="" width="260" height="176" />
+      <figcaption><strong>Anchor</strong> — grounded base with strands rising from infrastructure.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-cascade.svg" alt="" width="260" height="176" />
+      <figcaption><strong>Cascade</strong> — stepped horizontal segments with paired flow paths.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-nexus.svg" alt="" width="260" height="176" />
+      <figcaption><strong>Nexus</strong> — concentric rings, radial spokes, and woven strands.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/helix-logo-variant-continuum.svg" alt="" width="260" height="176" />
+      <figcaption><strong>Continuum</strong> — long smooth S-pair encircling the canvas.</figcaption>
+    </figure>
+  </div>
+  <p style="margin-top:28px"><a href="index.html">← Back to mockup hub</a></p>
+  </main>
+  <script>
+    (function () {
+      var THEME_KEY = "helix-mockup-theme";
+      function getPref() {
+        var s = localStorage.getItem(THEME_KEY);
+        if (s === "light" || s === "dark") return s;
+        return "system";
+      }
+      function apply(pref) {
+        var root = document.documentElement;
+        if (pref === "light") {
+          root.setAttribute("data-theme", "light");
+          root.style.colorScheme = "light";
+        } else if (pref === "dark") {
+          root.setAttribute("data-theme", "dark");
+          root.style.colorScheme = "dark";
+        } else {
+          root.removeAttribute("data-theme");
+          root.style.colorScheme = window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+        }
+      }
+      function announceTheme() {
+        var live = document.getElementById("theme-announce");
+        if (!live) return;
+        var pref = getPref();
+        var msg = pref === "system" ? "Theme: using system setting." : (pref === "dark" ? "Theme: dark." : "Theme: light.");
+        live.textContent = "";
+        setTimeout(function () { live.textContent = msg; }, 50);
+      }
+      function sync() {
+        var pref = getPref();
+        apply(pref === "system" ? null : pref);
+        document.querySelectorAll(".theme-btn[data-theme-pref]").forEach(function (btn) {
+          btn.setAttribute("aria-pressed", btn.getAttribute("data-theme-pref") === pref ? "true" : "false");
+        });
+      }
+      document.querySelectorAll(".theme-btn[data-theme-pref]").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var c = btn.getAttribute("data-theme-pref");
+          if (c === "system") localStorage.removeItem(THEME_KEY);
+          else localStorage.setItem(THEME_KEY, c);
+          sync();
+          announceTheme();
+        });
+      });
+      window.matchMedia("(prefers-color-scheme: light)").addEventListener("change", function () {
+        if (!localStorage.getItem(THEME_KEY)) apply(null);
+      });
+      sync();
+    })();
+  </script>
+</body>
+</html>

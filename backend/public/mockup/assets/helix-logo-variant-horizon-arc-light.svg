@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 176" role="img" aria-labelledby="hzal_t">
+  <title id="hzal_t">Helix - horizon arc (light UI)</title>
+  <defs>
+
+    <linearGradient id="hza_bb" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#003949"/><stop offset="50%" stop-color="#049FD9"/><stop offset="100%" stop-color="#7FDBFF"/>
+    </linearGradient>
+    <linearGradient id="hza_bb2" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#9D174D"/><stop offset="50%" stop-color="#FF1B8D"/><stop offset="100%" stop-color="#FDA4D0"/>
+    </linearGradient>
+    <linearGradient id="hza_wm" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0f172a"/><stop offset="38%" stop-color="#0c4a6e"/><stop offset="64%" stop-color="#831843"/><stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    <linearGradient id="hza_sw" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#E6007E" stop-opacity="0.35"/><stop offset="50%" stop-color="#049FD9"/><stop offset="100%" stop-color="#E6007E" stop-opacity="0.35"/>
+    </linearGradient>
+    <radialGradient id="hza_g" cx="130" cy="56" r="74" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#049FD9" stop-opacity="0.18"/><stop offset="100%" stop-color="#020617" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="hza_gl"><feGaussianBlur stdDeviation="0.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <filter id="hza_sh" x="-8%" y="-8%" width="116%" height="120%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="1.2" result="blur"/>
+      <feOffset in="blur" dy="1" result="off"/>
+      <feFlood flood-color="#ffffff" flood-opacity="0.65" result="f"/>
+      <feComposite in="f" in2="off" operator="in" result="sh"/>
+      <feMerge><feMergeNode in="sh"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+
+  </defs>
+  <ellipse cx="130" cy="56" rx="100" ry="52" fill="url(#hza_g)"/>
+  <path fill="none" stroke="#049FD9" stroke-width="2" stroke-linecap="round" opacity="0.4" d="M 72 80 Q 130 52 188 80"/>
+  <path fill="none" stroke="url(#hza_bb2)" stroke-width="5.5" stroke-linecap="round" filter="url(#hza_gl)" d="M 90 50 C 110 38 124 36 134 44 C 148 56 158 70 170 72"/>
+  <path fill="none" stroke="url(#hza_bb)" stroke-width="5.5" stroke-linecap="round" filter="url(#hza_gl)" d="M 170 42 C 150 50 138 52 130 50 C 118 48 102 50 90 58"/>
+  <circle cx="130" cy="46" r="5" fill="#FDA4D0" stroke="#020617" stroke-width="1"/>
+
+  <g filter="url(#hza_sh)">
+    <text x="130" y="156" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="46" font-weight="800" letter-spacing="-0.055em" fill="url(#hza_wm)">Helix</text>
+  </g>
+  <path d="M 48 166 Q 130 182 212 166" fill="none" stroke="url(#hza_sw)" stroke-width="3.5" stroke-linecap="round"/>
+</svg>
+

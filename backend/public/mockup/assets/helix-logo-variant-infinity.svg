@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 176" role="img" aria-labelledby="vinf_title">
+  <title id="vinf_title">Helix — infinity / dual-loop variant</title>
+  <defs>
+    <linearGradient id="vi_bb" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#003949"/><stop offset="55%" stop-color="#049FD9"/><stop offset="100%" stop-color="#7FDBFF"/>
+    </linearGradient>
+    <linearGradient id="vi_bb2" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#9D174D"/><stop offset="45%" stop-color="#FF1B8D"/><stop offset="100%" stop-color="#FDA4D0"/>
+    </linearGradient>
+    <linearGradient id="vi_wm" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ffffff"/><stop offset="40%" stop-color="#e0f4fc"/><stop offset="68%" stop-color="#fda4d0"/><stop offset="100%" stop-color="#ffe4f4"/>
+    </linearGradient>
+    <linearGradient id="vi_sw" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#E6007E" stop-opacity="0.55"/><stop offset="50%" stop-color="#049FD9"/><stop offset="100%" stop-color="#E6007E" stop-opacity="0.55"/>
+    </linearGradient>
+    <radialGradient id="vi_g" cx="130" cy="58" r="74" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#049FD9" stop-opacity="0.2"/><stop offset="60%" stop-color="#E6007E" stop-opacity="0.12"/><stop offset="100%" stop-color="#020617" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="vi_glow" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="0.55" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="vi_sh" x="-8%" y="-8%" width="116%" height="120%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="1.4" result="blur"/>
+      <feOffset in="blur" dy="1.5" result="off"/>
+      <feFlood flood-color="#020617" flood-opacity="0.45" result="f"/>
+      <feComposite in="f" in2="off" operator="in" result="sh"/>
+      <feMerge><feMergeNode in="sh"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <ellipse cx="130" cy="58" rx="100" ry="54" fill="url(#vi_g)"/>
+  <!-- Left loop (blue family) -->
+  <path fill="none" stroke="url(#vi_bb)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" filter="url(#vi_glow)"
+    d="M 130 58 C 130 58 108 20 82 28 C 56 36 52 58 68 76 C 84 94 110 98 122 84 C 130 74 130 58 130 58"/>
+  <!-- Right loop (magenta family) -->
+  <path fill="none" stroke="url(#vi_bb2)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" filter="url(#vi_glow)"
+    d="M 130 58 C 130 58 152 20 178 28 C 204 36 208 58 192 76 C 176 94 150 98 138 84 C 130 74 130 58 130 58"/>
+  <circle cx="130" cy="58" r="5" fill="#ffffff" stroke="#049FD9" stroke-width="1.5"/>
+  <circle cx="82" cy="52" r="3.5" fill="#FF4DB8"/><circle cx="178" cy="52" r="3.5" fill="#049FD9"/>
+  <g filter="url(#vi_sh)">
+    <text x="130" y="156" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="46" font-weight="800" letter-spacing="-0.055em" fill="url(#vi_wm)">Helix</text>
+  </g>
+  <path d="M 48 166 Q 130 182 212 166" fill="none" stroke="url(#vi_sw)" stroke-width="3.5" stroke-linecap="round"/>
+</svg>

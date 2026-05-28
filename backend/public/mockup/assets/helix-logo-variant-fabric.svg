@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 176" role="img" aria-labelledby="vfb_title">
+  <title id="vfb_title">Helix - Cisco fabric (mesh nodes)</title>
+  <defs>
+    <linearGradient id="vfb_bb" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#003949"/><stop offset="48%" stop-color="#049FD9"/><stop offset="100%" stop-color="#5BCFFF"/>
+    </linearGradient>
+    <linearGradient id="vfb_bb2" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#9D174D"/><stop offset="45%" stop-color="#049FD9"/><stop offset="100%" stop-color="#FF1B8D"/>
+    </linearGradient>
+    <linearGradient id="vfb_wm" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ffffff"/><stop offset="42%" stop-color="#e0f4fc"/><stop offset="72%" stop-color="#fda4d0"/><stop offset="100%" stop-color="#ffe4f4"/>
+    </linearGradient>
+    <linearGradient id="vfb_sw" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#FF1B8D" stop-opacity="0.35"/><stop offset="50%" stop-color="#049FD9"/><stop offset="100%" stop-color="#FF1B8D" stop-opacity="0.35"/>
+    </linearGradient>
+    <radialGradient id="vfb_g" cx="130" cy="58" r="78" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#049FD9" stop-opacity="0.18"/><stop offset="100%" stop-color="#003949" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="vfb_glow" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="0.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="vfb_sh" x="-8%" y="-8%" width="116%" height="120%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="1.4" result="blur"/>
+      <feOffset in="blur" dy="1.5" result="off"/>
+      <feFlood flood-color="#020617" flood-opacity="0.45" result="f"/>
+      <feComposite in="f" in2="off" operator="in" result="sh"/>
+      <feMerge><feMergeNode in="sh"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <ellipse cx="130" cy="58" rx="102" ry="56" fill="url(#vfb_g)"/>
+  <!-- Fabric links -->
+  <g fill="none" stroke-linecap="round" opacity="0.55">
+    <path stroke="#049FD9" stroke-width="1.8" d="M 96 38 L 164 38 M 164 38 L 188 62 M 96 38 L 72 62 M 72 62 L 96 88 M 188 62 L 164 88 M 96 88 L 130 108 M 164 88 L 130 108"/>
+  </g>
+  <!-- Dual backbone curves through the mesh -->
+  <path fill="none" stroke="url(#vfb_bb2)" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#vfb_glow)"
+    d="M 86 28 C 96 58 108 72 130 78 C 152 72 176 48 180 28"/>
+  <path fill="none" stroke="url(#vfb_bb)" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#vfb_glow)"
+    d="M 174 100 C 158 72 144 58 130 52 C 116 58 92 82 86 100"/>
+  <!-- Nodes -->
+  <circle cx="96" cy="38" r="5" fill="#003949" stroke="#7FDBFF" stroke-width="1.2"/>
+  <circle cx="164" cy="38" r="5" fill="#9D174D" stroke="#FDA4D0" stroke-width="1.2"/>
+  <circle cx="72" cy="62" r="4.2" fill="#049FD9"/>
+  <circle cx="188" cy="62" r="4.2" fill="#FF1B8D"/>
+  <circle cx="130" cy="78" r="5.5" fill="#ffffff" stroke="#049FD9" stroke-width="1.4"/>
+  <circle cx="96" cy="88" r="3.8" fill="#BE185D"/>
+  <circle cx="164" cy="88" r="3.8" fill="#005C8C"/>
+  <circle cx="130" cy="108" r="3.5" fill="#F472B6"/>
+  <g filter="url(#vfb_sh)">
+    <text x="130" y="156" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="46" font-weight="800" letter-spacing="-0.055em" fill="url(#vfb_wm)">Helix</text>
+  </g>
+  <path d="M 48 166 Q 130 182 212 166" fill="none" stroke="url(#vfb_sw)" stroke-width="3.5" stroke-linecap="round"/>
+</svg>

@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 176" role="img" aria-labelledby="z71_t">
+  <title id="z71_t">Helix - vega spiral (dark UI)</title>
+  <defs>
+
+    <linearGradient id="z71_bb" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#003949"/><stop offset="50%" stop-color="#049FD9"/><stop offset="100%" stop-color="#7FDBFF"/>
+    </linearGradient>
+    <linearGradient id="z71_bb2" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#9D174D"/><stop offset="50%" stop-color="#FF1B8D"/><stop offset="100%" stop-color="#FDA4D0"/>
+    </linearGradient>
+    <linearGradient id="z71_wm" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ffffff"/><stop offset="40%" stop-color="#e0f4fc"/><stop offset="65%" stop-color="#fda4d0"/><stop offset="100%" stop-color="#ffe4f4"/>
+    </linearGradient>
+    <linearGradient id="z71_sw" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#FF1B8D" stop-opacity="0.35"/><stop offset="50%" stop-color="#049FD9"/><stop offset="100%" stop-color="#FF1B8D" stop-opacity="0.35"/>
+    </linearGradient>
+    <radialGradient id="z71_g" cx="130" cy="56" r="74" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#049FD9" stop-opacity="0.18"/><stop offset="100%" stop-color="#020617" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="z71_gl"><feGaussianBlur stdDeviation="0.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <filter id="z71_sh" x="-8%" y="-8%" width="116%" height="120%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="1.4" result="blur"/>
+      <feOffset in="blur" dy="1.5" result="off"/>
+      <feFlood flood-color="#020617" flood-opacity="0.45" result="f"/>
+      <feComposite in="f" in2="off" operator="in" result="sh"/>
+      <feMerge><feMergeNode in="sh"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+
+  </defs>
+  <ellipse cx="130" cy="56" rx="100" ry="52" fill="url(#z71_g)"/>
+  <path fill="none" stroke="url(#z71_bb2)" stroke-width="5" stroke-linecap="round" filter="url(#z71_gl)" d="M 101 70 C 104 44 118 36 130 42 C 142 36 156 44 160 70"/>
+  <path fill="none" stroke="url(#z71_bb)" stroke-width="5" stroke-linecap="round" filter="url(#z71_gl)" d="M 97 52 C 108 62 122 66 130 64 C 138 66 152 62 166 52"/>
+  <path fill="none" stroke="#ffffff" stroke-width="1.5" opacity="0.35" d="M 118 52 Q 130 58 142 52"/>
+
+  <g filter="url(#z71_sh)">
+    <text x="130" y="156" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="46" font-weight="800" letter-spacing="-0.055em" fill="url(#z71_wm)">Helix</text>
+  </g>
+  <path d="M 48 166 Q 130 182 212 166" fill="none" stroke="url(#z71_sw)" stroke-width="3.5" stroke-linecap="round"/>
+</svg>
+

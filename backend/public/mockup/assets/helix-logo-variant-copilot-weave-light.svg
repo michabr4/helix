@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 176" role="img" aria-labelledby="cpwl_t">
+  <title id="cpwl_t">Helix - copilot weave (light UI)</title>
+  <defs>
+    <linearGradient id="cpwl_bb" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#003949"/><stop offset="50%" stop-color="#049FD9"/><stop offset="100%" stop-color="#7FDBFF"/>
+    </linearGradient>
+    <linearGradient id="cpwl_bb2" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#9D174D"/><stop offset="50%" stop-color="#FF1B8D"/><stop offset="100%" stop-color="#FDA4D0"/>
+    </linearGradient>
+    <linearGradient id="cpwl_wm" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0f172a"/><stop offset="38%" stop-color="#0c4a6e"/><stop offset="64%" stop-color="#831843"/><stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    <linearGradient id="cpwl_sw" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#E6007E" stop-opacity="0.35"/><stop offset="50%" stop-color="#049FD9"/><stop offset="100%" stop-color="#E6007E" stop-opacity="0.35"/>
+    </linearGradient>
+    <radialGradient id="cpwl_g" cx="130" cy="56" r="74" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#049FD9" stop-opacity="0.18"/><stop offset="100%" stop-color="#020617" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="cpwl_gl"><feGaussianBlur stdDeviation="0.45" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <filter id="cpwl_sh" x="-8%" y="-8%" width="116%" height="120%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="1.2" result="blur"/>
+      <feOffset in="blur" dy="1" result="off"/>
+      <feFlood flood-color="#ffffff" flood-opacity="0.65" result="f"/>
+      <feComposite in="f" in2="off" operator="in" result="sh"/>
+      <feMerge><feMergeNode in="sh"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <ellipse cx="130" cy="56" rx="100" ry="52" fill="url(#cpwl_g)"/>
+  <path fill="none" stroke="#049FD9" stroke-width="1.2" stroke-dasharray="5 7" opacity="0.45" d="M 64 48 Q 96 28 130 28 T 196 48"/>
+  <path fill="none" stroke="url(#cpwl_bb2)" stroke-width="5.5" stroke-linecap="round" filter="url(#cpwl_gl)" d="M 76 84 C 98 52 118 38 130 36 C 154 44 178 72 188 84"/>
+  <path fill="none" stroke="url(#cpwl_bb)" stroke-width="5.5" stroke-linecap="round" filter="url(#cpwl_gl)" d="M 184 44 C 162 58 140 72 130 80 C 112 70 90 52 72 44"/>
+  <circle cx="104" cy="46" r="4" fill="#020617" stroke="#7FDBFF" stroke-width="1.5"/>
+  <circle cx="130" cy="38" r="4" fill="#020617" stroke="#FDA4D0" stroke-width="1.5"/>
+  <circle cx="156" cy="46" r="4" fill="#020617" stroke="#049FD9" stroke-width="1.5"/>
+  <g filter="url(#cpwl_sh)">
+    <text x="130" y="156" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="46" font-weight="800" letter-spacing="-0.055em" fill="url(#cpwl_wm)">Helix</text>
+  </g>
+  <path d="M 48 166 Q 130 182 212 166" fill="none" stroke="url(#cpwl_sw)" stroke-width="3.5" stroke-linecap="round"/>
+</svg>

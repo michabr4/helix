@@ -1,0 +1,39 @@
+# Publishes backend/public/mockup as the site root on GitHub Pages.
+#
+# Setup (once): Repo → Settings → Pages → Build and deployment → Source: GitHub Actions
+# If the workflow is "Waiting" the first time: Settings → Environments → github-pages → remove protection or approve the run.
+#
+# Site URL: https://<user>.github.io/<repo>/  (example: https://michabr4.github.io/helix/)
+# Listed in Actions as: "Deploy UI mockup to GitHub Pages"
+name: Deploy UI mockup to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: backend/public/mockup
+      - id: deployment
+        uses: actions/deploy-pages@v4

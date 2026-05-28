@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 176" role="img" aria-labelledby="antl_t">
+  <title id="antl_t">Helix - anchor trust (light UI)</title>
+  <defs>
+
+    <linearGradient id="ant_bb" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#003949"/><stop offset="50%" stop-color="#049FD9"/><stop offset="100%" stop-color="#7FDBFF"/>
+    </linearGradient>
+    <linearGradient id="ant_bb2" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#9D174D"/><stop offset="50%" stop-color="#FF1B8D"/><stop offset="100%" stop-color="#FDA4D0"/>
+    </linearGradient>
+    <linearGradient id="ant_wm" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0f172a"/><stop offset="38%" stop-color="#0c4a6e"/><stop offset="64%" stop-color="#831843"/><stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    <linearGradient id="ant_sw" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#E6007E" stop-opacity="0.35"/><stop offset="50%" stop-color="#049FD9"/><stop offset="100%" stop-color="#E6007E" stop-opacity="0.35"/>
+    </linearGradient>
+    <radialGradient id="ant_g" cx="130" cy="56" r="74" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#049FD9" stop-opacity="0.18"/><stop offset="100%" stop-color="#020617" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="ant_gl"><feGaussianBlur stdDeviation="0.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <filter id="ant_sh" x="-8%" y="-8%" width="116%" height="120%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="1.2" result="blur"/>
+      <feOffset in="blur" dy="1" result="off"/>
+      <feFlood flood-color="#ffffff" flood-opacity="0.65" result="f"/>
+      <feComposite in="f" in2="off" operator="in" result="sh"/>
+      <feMerge><feMergeNode in="sh"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+
+  </defs>
+  <ellipse cx="130" cy="56" rx="100" ry="52" fill="url(#ant_g)"/>
+  <path fill="none" stroke="#049FD9" stroke-width="2" stroke-linecap="round" opacity="0.45" d="M 98 48 H 162 V 64 H 150 V 78 H 110 V 64 H 98 Z"/>
+  <path fill="none" stroke="url(#ant_bb2)" stroke-width="5.5" stroke-linecap="round" filter="url(#ant_gl)" d="M 114 34 C 126 46 132 54 132 60"/>
+  <path fill="none" stroke="url(#ant_bb)" stroke-width="5.5" stroke-linecap="round" filter="url(#ant_gl)" d="M 146 34 C 134 46 128 54 128 60"/>
+  <circle cx="130" cy="40" r="4" fill="#020617" stroke="#7FDBFF" stroke-width="1.3"/>
+
+  <g filter="url(#ant_sh)">
+    <text x="130" y="156" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="46" font-weight="800" letter-spacing="-0.055em" fill="url(#ant_wm)">Helix</text>
+  </g>
+  <path d="M 48 166 Q 130 182 212 166" fill="none" stroke="url(#ant_sw)" stroke-width="3.5" stroke-linecap="round"/>
+</svg>
+

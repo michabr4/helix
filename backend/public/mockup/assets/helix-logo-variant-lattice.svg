@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 176" role="img" aria-labelledby="vlt_title">
+  <title id="vlt_title">Helix - Lattice grid</title>
+  <defs>
+    <linearGradient id="vlt_bb" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#003949"/><stop offset="50%" stop-color="#049FD9"/><stop offset="100%" stop-color="#5BCFFF"/>
+    </linearGradient>
+    <linearGradient id="vlt_bb2" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#9D174D"/><stop offset="50%" stop-color="#FF1B8D"/><stop offset="100%" stop-color="#FDA4D0"/>
+    </linearGradient>
+    <linearGradient id="vlt_wm" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ffffff"/><stop offset="40%" stop-color="#e0f4fc"/><stop offset="70%" stop-color="#fda4d0"/><stop offset="100%" stop-color="#ffe4f4"/>
+    </linearGradient>
+    <linearGradient id="vlt_sw" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#E6007E" stop-opacity="0.45"/><stop offset="50%" stop-color="#049FD9"/><stop offset="100%" stop-color="#E6007E" stop-opacity="0.45"/>
+    </linearGradient>
+    <radialGradient id="vlt_g" cx="130" cy="56" r="74" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#005C8C" stop-opacity="0.12"/><stop offset="100%" stop-color="#020617" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="vlt_glow" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="0.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="vlt_sh" x="-8%" y="-8%" width="116%" height="120%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="1.4" result="blur"/>
+      <feOffset in="blur" dy="1.5" result="off"/>
+      <feFlood flood-color="#020617" flood-opacity="0.45" result="f"/>
+      <feComposite in="f" in2="off" operator="in" result="sh"/>
+      <feMerge><feMergeNode in="sh"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <ellipse cx="130" cy="56" rx="100" ry="54" fill="url(#vlt_g)"/>
+  <g stroke="#049FD9" stroke-width="1" opacity="0.28" stroke-linecap="round">
+    <path d="M 88 36 L 172 36 M 88 52 L 172 52 M 88 68 L 172 68 M 88 84 L 172 84 M 88 100 L 172 100"/>
+    <path d="M 92 32 L 108 108 M 118 32 L 134 108 M 144 32 L 160 108"/>
+  </g>
+  <path fill="none" stroke="url(#vlt_bb2)" stroke-width="6" stroke-linecap="round" filter="url(#vlt_glow)"
+    d="M 86 28 C 104 52 112 72 130 92 C 148 72 162 48 174 28"/>
+  <path fill="none" stroke="url(#vlt_bb)" stroke-width="6" stroke-linecap="round" filter="url(#vlt_glow)"
+    d="M 174 96 C 156 72 142 52 130 36 C 118 52 100 76 86 96"/>
+  <circle cx="130" cy="64" r="4.5" fill="#ffffff" stroke="#E6007E" stroke-width="1.2"/>
+  <g filter="url(#vlt_sh)">
+    <text x="130" y="156" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="46" font-weight="800" letter-spacing="-0.055em" fill="url(#vlt_wm)">Helix</text>
+  </g>
+  <path d="M 48 166 Q 130 182 212 166" fill="none" stroke="url(#vlt_sw)" stroke-width="3.5" stroke-linecap="round"/>
+</svg>

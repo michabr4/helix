@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 176" role="img" aria-labelledby="gaml_t">
+  <title id="gaml_t">Helix - agent mesh (light UI)</title>
+  <defs>
+    <linearGradient id="gaml_bb" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#003949"/><stop offset="50%" stop-color="#049FD9"/><stop offset="100%" stop-color="#7FDBFF"/>
+    </linearGradient>
+    <linearGradient id="gaml_bb2" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#9D174D"/><stop offset="50%" stop-color="#FF1B8D"/><stop offset="100%" stop-color="#FDA4D0"/>
+    </linearGradient>
+    <linearGradient id="gaml_wm" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0f172a"/><stop offset="38%" stop-color="#0c4a6e"/><stop offset="64%" stop-color="#831843"/><stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    <linearGradient id="gaml_sw" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#E6007E" stop-opacity="0.35"/><stop offset="50%" stop-color="#049FD9"/><stop offset="100%" stop-color="#E6007E" stop-opacity="0.35"/>
+    </linearGradient>
+    <radialGradient id="gaml_g" cx="130" cy="54" r="76" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#049FD9" stop-opacity="0.2"/><stop offset="100%" stop-color="#020617" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="gaml_gl"><feGaussianBlur stdDeviation="0.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <filter id="gaml_sh" x="-8%" y="-8%" width="116%" height="120%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="1.2" result="blur"/>
+      <feOffset in="blur" dy="1" result="off"/>
+      <feFlood flood-color="#ffffff" flood-opacity="0.65" result="f"/>
+      <feComposite in="f" in2="off" operator="in" result="sh"/>
+      <feMerge><feMergeNode in="sh"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <ellipse cx="130" cy="58" rx="102" ry="56" fill="url(#gaml_g)"/>
+  <g fill="none" stroke-linecap="round" opacity="0.5">
+    <path stroke="#049FD9" stroke-width="1.4" d="M 130 56 L 94 34 M 130 56 L 166 34 M 130 56 L 88 72 M 130 56 L 172 72 M 130 56 L 108 94 M 130 56 L 152 94"/>
+  </g>
+  <circle cx="94" cy="34" r="3.5" fill="#005C8C"/><circle cx="166" cy="34" r="3.5" fill="#FF1B8D"/>
+  <circle cx="88" cy="72" r="3" fill="#049FD9"/><circle cx="172" cy="72" r="3" fill="#F472B6"/>
+  <circle cx="108" cy="94" r="2.8" fill="#7FDBFF"/><circle cx="152" cy="94" r="2.8" fill="#BE185D"/>
+  <path fill="none" stroke="url(#gaml_bb2)" stroke-width="6" stroke-linecap="round" filter="url(#gaml_gl)" d="M 86 28 C 108 48 118 58 130 62 C 146 54 168 32 178 26"/>
+  <path fill="none" stroke="url(#gaml_bb)" stroke-width="6" stroke-linecap="round" filter="url(#gaml_gl)" d="M 174 100 C 152 78 138 62 130 54 C 118 70 98 88 86 100"/>
+  <circle cx="130" cy="58" r="7" fill="#020617" stroke="url(#gaml_bb)" stroke-width="2"/><circle cx="130" cy="58" r="3.5" fill="#ffffff"/>
+  <g filter="url(#gaml_sh)">
+    <text x="130" y="156" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="46" font-weight="800" letter-spacing="-0.055em" fill="url(#gaml_wm)">Helix</text>
+  </g>
+  <path d="M 48 166 Q 130 182 212 166" fill="none" stroke="url(#gaml_sw)" stroke-width="3.5" stroke-linecap="round"/>
+</svg>

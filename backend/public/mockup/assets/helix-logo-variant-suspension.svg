@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 176" role="img" aria-labelledby="vsu_title">
+  <title id="vsu_title">Helix - Suspension bridge</title>
+  <defs>
+    <linearGradient id="vsu_bb" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#003949"/><stop offset="50%" stop-color="#049FD9"/><stop offset="100%" stop-color="#5BCFFF"/>
+    </linearGradient>
+    <linearGradient id="vsu_bb2" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#9D174D"/><stop offset="50%" stop-color="#FF1B8D"/><stop offset="100%" stop-color="#FDA4D0"/>
+    </linearGradient>
+    <linearGradient id="vsu_wm" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ffffff"/><stop offset="40%" stop-color="#e0f4fc"/><stop offset="70%" stop-color="#fda4d0"/><stop offset="100%" stop-color="#ffe4f4"/>
+    </linearGradient>
+    <linearGradient id="vsu_sw" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#E6007E" stop-opacity="0.45"/><stop offset="50%" stop-color="#049FD9"/><stop offset="100%" stop-color="#E6007E" stop-opacity="0.45"/>
+    </linearGradient>
+    <radialGradient id="vsu_g" cx="130" cy="56" r="76" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#049FD9" stop-opacity="0.12"/><stop offset="100%" stop-color="#020617" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="vsu_glow" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="0.45" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="vsu_sh" x="-8%" y="-8%" width="116%" height="120%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="1.4" result="blur"/>
+      <feOffset in="blur" dy="1.5" result="off"/>
+      <feFlood flood-color="#020617" flood-opacity="0.45" result="f"/>
+      <feComposite in="f" in2="off" operator="in" result="sh"/>
+      <feMerge><feMergeNode in="sh"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <ellipse cx="130" cy="56" rx="100" ry="54" fill="url(#vsu_g)"/>
+  <path fill="none" stroke="url(#vsu_bb)" stroke-width="3" stroke-linecap="round" opacity="0.9" filter="url(#vsu_glow)"
+    d="M 78 26 Q 130 44 182 26"/>
+  <g stroke-linecap="round" opacity="0.4">
+    <path stroke="#7FDBFF" stroke-width="1.2" d="M 94 30 L 94 74 M 118 36 L 112 80 M 142 36 L 148 80 M 166 30 L 166 74"/>
+  </g>
+  <path fill="none" stroke="#049FD9" stroke-width="4" stroke-linecap="round" d="M 80 78 L 180 78"/>
+  <path fill="none" stroke="url(#vsu_bb2)" stroke-width="5.5" stroke-linecap="round" filter="url(#vsu_glow)"
+    d="M 82 78 C 104 56 118 48 130 44 C 142 48 160 62 178 78"/>
+  <path fill="none" stroke="url(#vsu_bb)" stroke-width="5.5" stroke-linecap="round" filter="url(#vsu_glow)" opacity="0.9"
+    d="M 178 78 C 156 88 138 92 130 90 C 122 92 100 86 82 78"/>
+  <circle cx="78" cy="26" r="3" fill="#FF1B8D"/><circle cx="182" cy="26" r="3" fill="#049FD9"/>
+  <g filter="url(#vsu_sh)">
+    <text x="130" y="156" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="46" font-weight="800" letter-spacing="-0.055em" fill="url(#vsu_wm)">Helix</text>
+  </g>
+  <path d="M 48 166 Q 130 182 212 166" fill="none" stroke="url(#vsu_sw)" stroke-width="3.5" stroke-linecap="round"/>
+</svg>
