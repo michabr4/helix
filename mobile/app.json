@@ -1,0 +1,34 @@
+{
+  "expo": {
+    "name": "Helix",
+    "slug": "helix-sdm",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "scheme": "helix-sdm",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0a0f1a"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.cisco.serviceflow.sdm",
+      "infoPlist": {
+        "NSFaceIDUsageDescription": "Authenticate with biometrics to access Helix."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#0a0f1a"
+      },
+      "package": "com.cisco.serviceflow.sdm"
+    },
+    "plugins": [
+      "expo-secure-store"
+    ]
+  }
+}

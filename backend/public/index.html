@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Operations — Service Delivery Manager</title>
+    <link rel="stylesheet" href="/assets/sdc-ui.css" />
+  </head>
+  <body>
+    <div class="sdc-app">
+      <aside class="sdc-sidebar" aria-label="Main navigation">
+        <div class="sdc-brand">
+          <div class="sdc-brand-name">Service Delivery Manager</div>
+          <div class="sdc-brand-tag">Service delivery operations</div>
+        </div>
+        <div class="sdc-nav-label">Views</div>
+        <nav class="sdc-nav">
+          <a class="active" href="/" aria-current="page">
+            <svg class="sdc-nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 19V5M8 19V9M12 19v-6M16 19v-3M20 19V11" />
+            </svg>
+            Operations
+          </a>
+          <a href="/admin/sources.html">
+            <svg class="sdc-nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3" /><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+            </svg>
+            Source admin
+          </a>
+          <a href="/mockup/index.html">
+            <svg class="sdc-nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="18" height="18" rx="2" /><path d="M3 9h18M9 21V9" />
+            </svg>
+            UI mockup hub
+          </a>
+          <a href="/powerbi-pm.html">
+            <svg class="sdc-nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="16" rx="2" /><path d="M7 8h10M7 12h6M7 16h8" />
+            </svg>
+            Power BI · Global PM
+          </a>
+        </nav>
+        <div class="sdc-sidebar-foot">
+          API <code>/api/v1/*</code><br />
+          HTML + fetch · JWT in localStorage
+        </div>
+      </aside>
+
+      <div class="sdc-main">
+        <header class="sdc-topbar">
+          <div>
+            <h1>Operations</h1>
+            <p>Incidents, inventory, TAC linkage, and integration sync — wired to the live backend.</p>
+          </div>
+          <div class="sdc-pills">
+            <span class="sdc-pill">MGM · GES-West</span>
+            <span class="sdc-pill sdc-pill--live" id="connPill">Connected</span>
+          </div>
+        </header>
+
+        <main class="sdc-content">
+          <div class="sdc-kpis" id="kpiStrip" aria-live="polite">
+            <div class="sdc-kpi"><div class="sdc-kpi-label">Properties</div><div class="sdc-kpi-value" id="kpiProps">—</div><div class="sdc-kpi-sub">Sites</div></div>
+            <div class="sdc-kpi"><div class="sdc-kpi-label">Devices</div><div class="sdc-kpi-value" id="kpiDevices">—</div><div class="sdc-kpi-sub">Inventory</div></div>
+            <div class="sdc-kpi"><div class="sdc-kpi-label">Incidents</div><div class="sdc-kpi-value" id="kpiIncidents">—</div><div class="sdc-kpi-sub">All statuses</div></div>
+            <div class="sdc-kpi"><div class="sdc-kpi-label">TAC cases</div><div class="sdc-kpi-value" id="kpiTac">—</div><div class="sdc-kpi-sub">Linked SRs</div></div>
+          </div>
+
+          <section class="sdc-panel">
+            <h2>Authentication</h2>
+            <p class="sdc-panel-desc">
+              Local login or
+              <a class="sdc-link" href="/api/v1/auth/sso/login">Sign in with SSO</a>
+              (OIDC · set <span class="sdc-code">SSO_ENABLED=true</span>).
+            </p>
+            <div class="sdc-grid sdc-grid--2">
+              <div>
+                <div class="sdc-field">
+                  <label class="sdc-label" for="email">Email</label>
+                  <input class="sdc-input" id="email" type="email" autocomplete="username" value="admin@serviceflow.local" />
+                </div>
+                <div class="sdc-field">
+                  <label class="sdc-label" for="password">Password</label>
+                  <input class="sdc-input" id="password" type="password" autocomplete="current-password" value="ChangeMe123!" />
+                </div>
+                <div class="sdc-actions">
+                  <button type="button" class="sdc-btn sdc-btn--primary" onclick="login()">Sign in</button>
+                  <button type="button" class="sdc-btn sdc-btn--ghost" onclick="logout()">Sign out</button>
+                </div>
+              </div>
+              <div>
+                <span class="sdc-label">Session</span>
+                <div id="authStatus" class="sdc-alert sdc-alert--err" style="margin-top:0">Not signed in</div>
+                <p class="sdc-panel-desc" style="margin:8px 0 0;font-size:12px">
+                  Sign in on this host (<strong>port 3000</strong>) for API + mockup live mode. The Vite React app on
+                  <strong>port 3001</strong> uses separate storage — signing in there does not sign you in here.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <section class="sdc-panel">
+            <h2>Create incident</h2>
+            <p class="sdc-panel-desc">Opens a service incident against the first property (demo default).</p>
+            <div class="sdc-field">
+              <label class="sdc-label" for="incidentTitle">Title</label>
+              <input class="sdc-input" id="incidentTitle" value="WAN jitter spike" />
+            </div>
+            <div class="sdc-field">
+              <label class="sdc-label" for="incidentDesc">Description</label>
+              <textarea class="sdc-textarea" id="incidentDesc">Packet loss and latency observed.</textarea>
+            </div>
+            <div class="sdc-field">
+              <label class="sdc-label" for="incidentPriority">Priority</label>
+              <select class="sdc-select" id="incidentPriority" style="max-width:200px">
+                <option>P1</option>
+                <option selected>P2</option>
+                <option>P3</option>
+                <option>P4</option>
+              </select>
+            </div>
+            <div class="sdc-actions">
+              <button type="button" class="sdc-btn sdc-btn--primary" onclick="createIncident()">Create incident</button>
+            </div>
+            <div id="createIncidentResult"></div>
+          </section>
+
+          <section class="sdc-panel">
+            <h2>Data views</h2>
+            <p class="sdc-panel-desc">Properties, devices, incidents, and TAC — requires sign-in.</p>
+            <div class="sdc-actions">
+              <button type="button" class="sdc-btn sdc-btn--ghost" onclick="loadAll()">Refresh all</button>
+            </div>
+            <div class="sdc-grid sdc-grid--2" style="margin-top:1rem">
+              <div>
+                <span class="sdc-label">Properties</span>
+                <div class="sdc-table-wrap"><table class="sdc-table" id="tblProperties"><thead><tr><th>Name</th><th>Type</th><th>ID</th></tr></thead><tbody></tbody></table></div>
+              </div>
+              <div>
+                <span class="sdc-label">Devices</span>
+                <div class="sdc-table-wrap"><table class="sdc-table" id="tblDevices"><thead><tr><th>Hostname</th><th>Status</th><th>ID</th></tr></thead><tbody></tbody></table></div>
+              </div>
+              <div>
+                <span class="sdc-label">Incidents</span>
+                <div class="sdc-table-wrap"><table class="sdc-table" id="tbl_incidents"><thead><tr><th>Number</th><th>Title</th><th>Priority</th><th>Status</th></tr></thead><tbody></tbody></table></div>
+              </div>
+              <div>
+                <span class="sdc-label">TAC cases</span>
+                <div class="sdc-table-wrap"><table class="sdc-table" id="tblTac"><thead><tr><th>Case</th><th>Severity</th><th>Status</th></tr></thead><tbody></tbody></table></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="sdc-panel">
+            <h2>Integration sync</h2>
+            <p class="sdc-panel-desc">Trigger ingestion jobs (DNA Center, TAC, Smart Licensing).</p>
+            <div class="sdc-actions">
+              <button type="button" class="sdc-btn sdc-btn--sync" onclick="sync('dna-center')">Catalyst Center</button>
+              <button type="button" class="sdc-btn sdc-btn--sync" onclick="sync('tac')">TAC</button>
+              <button type="button" class="sdc-btn sdc-btn--sync" onclick="sync('smart-licensing')">Smart Licensing</button>
+            </div>
+            <div id="syncStatus"></div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        var h = location.hash;
+        if (h && h.indexOf("accessToken") !== -1) {
+          var p = new URLSearchParams(h.slice(1));
+          var at = p.get("accessToken");
+          var rt = p.get("refreshToken");
+          if (at) localStorage.setItem("accessToken", at);
+          if (rt) localStorage.setItem("refreshToken", rt);
+          history.replaceState(null, "", location.pathname + location.search);
+        }
+      })();
+
+      function esc(s) {
+        if (s == null) return "";
+        return String(s)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#39;");
+      }
+
+      function toast(msg, isErr) {
+        var el = document.createElement("div");
+        el.className = "sdc-toast" + (isErr ? " sdc-toast--err" : "");
+        el.textContent = msg;
+        document.body.appendChild(el);
+        setTimeout(function () {
+          el.remove();
+        }, 4200);
+      }
+
+      const state = { token: localStorage.getItem("accessToken") || "" };
+
+      function syncTokenFromStorage() {
+        const t = localStorage.getItem("accessToken") || "";
+        if (t === state.token) return;
+        state.token = t;
+        renderAuth();
+        if (state.token) loadAll();
+      }
+
+      function renderAuth() {
+        const el = document.getElementById("authStatus");
+        const pill = document.getElementById("connPill");
+        if (state.token) {
+          el.className = "sdc-alert sdc-alert--ok";
+          el.textContent = "Signed in · JWT active";
+          pill.textContent = "Live session";
+          pill.className = "sdc-pill sdc-pill--live";
+        } else {
+          el.className = "sdc-alert sdc-alert--err";
+          el.textContent = "Not signed in — use Sign in or SSO";
+          pill.textContent = "Offline";
+          pill.className = "sdc-pill";
+        }
+      }
+
+      async function request(path, options) {
+        options = options || {};
+        const headers = Object.assign({ "Content-Type": "application/json" }, options.headers || {});
+        if (state.token) headers.Authorization = "Bearer " + state.token;
+        const res = await fetch(path, Object.assign({}, options, { headers }));
+        if (!res.ok) {
+          const text = await res.text();
+          throw new Error(res.status + " " + text);
+        }
+        if (res.status === 204) return null;
+        return res.json();
+      }
+
+      async function login() {
+        try {
+          const email = document.getElementById("email").value;
+          const password = document.getElementById("password").value;
+          const data = await request("/api/v1/auth/login", {
+            method: "POST",
+            body: JSON.stringify({ email, password })
+          });
+          if (!data || !data.accessToken) {
+            throw new Error("Login response missing accessToken — check API logs");
+          }
+          state.token = data.accessToken;
+          localStorage.setItem("accessToken", state.token);
+          renderAuth();
+          await loadAll();
+          toast("Signed in successfully");
+        } catch (e) {
+          toast("Sign-in failed: " + e.message, true);
+        }
+      }
+
+      function logout() {
+        state.token = "";
+        localStorage.removeItem("accessToken");
+        renderAuth();
+        clearTables();
+        setKpis(null, null, null, null);
+        toast("Signed out");
+      }
+
+      function setKpis(props, devs, incs, tac) {
+        function v(n) {
+          return n == null ? "—" : String(n);
+        }
+        document.getElementById("kpiProps").textContent = v(props);
+        document.getElementById("kpiDevices").textContent = v(devs);
+        document.getElementById("kpiIncidents").textContent = v(incs);
+        document.getElementById("kpiTac").textContent = v(tac);
+      }
+
+      function clearTables() {
+        ["tblProperties", "tblDevices", "tbl_incidents", "tblTac"].forEach(function (id) {
+          var tb = document.querySelector("#" + id + " tbody");
+          if (tb) tb.innerHTML = "";
+        });
+      }
+
+      function badgePriority(p) {
+        var c = "sdc-badge sdc-badge--p3";
+        if (p === "P1") c = "sdc-badge sdc-badge--p1";
+        else if (p === "P2") c = "sdc-badge sdc-badge--p2";
+        else if (p === "P4") c = "sdc-badge sdc-badge--p4";
+        return '<span class="' + c + '">' + esc(p) + "</span>";
+      }
+
+      async function loadAll() {
+        try {
+          const rows = await Promise.all([
+            request("/api/v1/properties"),
+            request("/api/v1/devices"),
+            request("/api/v1/incidents"),
+            request("/api/v1/tac-cases")
+          ]);
+          const properties = rows[0];
+          const devices = rows[1];
+          const incidents = rows[2];
+          const tacCases = rows[3];
+
+          setKpis(properties.length, devices.length, incidents.length, tacCases.length);
+
+          document.querySelector("#tblProperties tbody").innerHTML =
+            (properties.length
+              ? properties
+              : [{ _empty: true }]).map(function (it) {
+              if (it._empty)
+                return '<tr><td colspan="3" style="color:var(--sdc-muted)">No records</td></tr>';
+              return (
+                "<tr><td>" +
+                esc(it.name) +
+                '</td><td><span class="sdc-badge sdc-badge--ok">' +
+                esc(it.property_type) +
+                "</span></td><td class=\"sdc-code\">" +
+                esc(it.property_id) +
+                "</td></tr>"
+              );
+            }).join("");
+
+          document.querySelector("#tblDevices tbody").innerHTML =
+            (devices.length ? devices : [{ _empty: true }]).map(function (it) {
+              if (it._empty)
+                return '<tr><td colspan="3" style="color:var(--sdc-muted)">No records</td></tr>';
+              return (
+                "<tr><td>" +
+                esc(it.hostname) +
+                "</td><td>" +
+                esc(it.status) +
+                '</td><td class="sdc-code">' +
+                esc(it.device_id) +
+                "</td></tr>"
+              );
+            }).join("");
+
+          document.querySelector("#tbl_incidents tbody").innerHTML =
+            (incidents.length ? incidents : [{ _empty: true }]).map(function (it) {
+              if (it._empty)
+                return '<tr><td colspan="4" style="color:var(--sdc-muted)">No records</td></tr>';
+              return (
+                "<tr><td class=\"sdc-code\">" +
+                esc(it.incident_number) +
+                "</td><td>" +
+                esc(it.title) +
+                "</td><td>" +
+                badgePriority(it.priority) +
+                "</td><td>" +
+                esc(it.status) +
+                "</td></tr>"
+              );
+            }).join("");
+
+          document.querySelector("#tblTac tbody").innerHTML =
+            (tacCases.length ? tacCases : [{ _empty: true }]).map(function (it) {
+              if (it._empty)
+                return '<tr><td colspan="3" style="color:var(--sdc-muted)">No records</td></tr>';
+              return (
+                "<tr><td class=\"sdc-code\">" +
+                esc(it.case_number) +
+                "</td><td>" +
+                esc(it.severity) +
+                "</td><td>" +
+                esc(it.status) +
+                "</td></tr>"
+              );
+            }).join("");
+        } catch (e) {
+          console.error(e);
+          toast("Refresh failed (sign in?): " + e.message, true);
+        }
+      }
+
+      async function createIncident() {
+        const out = document.getElementById("createIncidentResult");
+        out.innerHTML = "";
+        try {
+          const properties = await request("/api/v1/properties");
+          const devices = await request("/api/v1/devices");
+          if (!properties.length) throw new Error("No properties found");
+
+          const body = {
+            propertyId: properties[0].property_id,
+            deviceId: devices[0] && devices[0].device_id,
+            title: document.getElementById("incidentTitle").value,
+            description: document.getElementById("incidentDesc").value,
+            priority: document.getElementById("incidentPriority").value
+          };
+          const created = await request("/api/v1/incidents", { method: "POST", body: JSON.stringify(body) });
+          out.innerHTML =
+            '<div class="sdc-alert sdc-alert--ok">Created <strong>' + esc(created.incident_number) + "</strong></div>";
+          await loadAll();
+          toast("Incident created");
+        } catch (e) {
+          out.innerHTML = '<div class="sdc-alert sdc-alert--err">' + esc(e.message) + "</div>";
+        }
+      }
+
+      async function sync(source) {
+        const el = document.getElementById("syncStatus");
+        try {
+          const data = await request("/api/v1/integrations/sync/" + source, { method: "POST" });
+          el.innerHTML =
+            '<div class="sdc-alert sdc-alert--ok">' +
+            esc(source) +
+            " · processed <strong>" +
+            esc(String(data.processed)) +
+            "</strong></div>";
+          await loadAll();
+          toast("Sync complete · " + source);
+        } catch (e) {
+          el.innerHTML = '<div class="sdc-alert sdc-alert--err">' + esc(e.message) + "</div>";
+          toast("Sync failed", true);
+        }
+      }
+
+      window.addEventListener("storage", function (e) {
+        if (e.key === "accessToken") syncTokenFromStorage();
+      });
+      window.addEventListener("focus", syncTokenFromStorage);
+      window.addEventListener("pageshow", syncTokenFromStorage);
+
+      renderAuth();
+      if (state.token) loadAll();
+    </script>
+  </body>
+</html>

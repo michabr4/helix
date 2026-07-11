@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Source administration — Service Delivery Manager</title>
+    <link rel="stylesheet" href="/assets/sdc-ui.css" />
+  </head>
+  <body>
+    <div class="sdc-app">
+      <aside class="sdc-sidebar">
+        <div class="sdc-brand">
+          <div class="sdc-brand-name">Service Delivery Manager</div>
+          <div class="sdc-brand-tag">Integration control</div>
+        </div>
+        <div class="sdc-nav-label">Views</div>
+        <nav class="sdc-nav">
+          <a href="/">
+            <svg class="sdc-nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 19V5M8 19V9M12 19v-6M16 19v-3M20 19V11" />
+            </svg>
+            Operations
+          </a>
+          <a class="active" href="/admin/sources.html" aria-current="page">
+            <svg class="sdc-nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3" /><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2" />
+            </svg>
+            Source admin
+          </a>
+          <a href="/mockup/index.html">
+            <svg class="sdc-nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="18" height="18" rx="2" /><path d="M3 9h18" />
+            </svg>
+            UI mockup hub
+          </a>
+        </nav>
+        <div class="sdc-sidebar-foot">
+          <code>integration_source_configs</code><br />
+          Roles: admin, sdm, manager
+        </div>
+      </aside>
+
+      <div class="sdc-main">
+        <header class="sdc-topbar">
+          <div>
+            <h1>Source administration</h1>
+            <p>Enable waves, set schedules, and test connectivity to Cisco and partner APIs.</p>
+          </div>
+          <div class="sdc-pills">
+            <span class="sdc-pill">Waves 1–15</span>
+            <span class="sdc-pill sdc-pill--live" id="sessionPill">Session</span>
+          </div>
+        </header>
+
+        <main class="sdc-content">
+          <section class="sdc-panel">
+            <h2>Authentication</h2>
+            <p class="sdc-panel-desc">
+              <a class="sdc-link" href="/api/v1/auth/sso/login">Sign in with SSO</a>
+              · back to <a class="sdc-link" href="/">Operations</a>
+            </p>
+            <div class="sdc-grid sdc-grid--2">
+              <div>
+                <div class="sdc-field">
+                  <label class="sdc-label" for="email">Email</label>
+                  <input class="sdc-input" id="email" type="email" value="admin@serviceflow.local" />
+                </div>
+                <div class="sdc-field">
+                  <label class="sdc-label" for="password">Password</label>
+                  <input class="sdc-input" id="password" type="password" value="ChangeMe123!" />
+                </div>
+                <div class="sdc-actions">
+                  <button type="button" class="sdc-btn sdc-btn--primary" onclick="login()">Sign in</button>
+                  <button type="button" class="sdc-btn sdc-btn--ghost" onclick="logout()">Sign out</button>
+                </div>
+              </div>
+              <div>
+                <span class="sdc-label">Status</span>
+                <div id="authState" class="sdc-alert sdc-alert--err" style="margin-top:0">Not signed in</div>
+              </div>
+            </div>
+          </section>
+
+          <section class="sdc-panel">
+            <h2>Integration sources</h2>
+            <p class="sdc-panel-desc">Load configuration from the API, edit fields, save or run a test sync.</p>
+            <div class="sdc-actions">
+              <button type="button" class="sdc-btn sdc-btn--primary" onclick="loadSources()">Reload sources</button>
+            </div>
+            <div id="status" class="sdc-panel-desc" style="margin-top:0.75rem"></div>
+            <div id="sources" class="sdc-source-grid"></div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        var h = location.hash;
+        if (h && h.indexOf("accessToken") !== -1) {
+          var p = new URLSearchParams(h.slice(1));
+          var at = p.get("accessToken");
+          var rt = p.get("refreshToken");
+          if (at) localStorage.setItem("accessToken", at);
+          if (rt) localStorage.setItem("refreshToken", rt);
+          history.replaceState(null, "", location.pathname + location.search);
+        }
+      })();
+
+      function esc(s) {
+        if (s == null) return "";
+        return String(s)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/"/g, "&quot;");
+      }
+
+      function toast(msg, err) {
+        var el = document.createElement("div");
+        el.className = "sdc-toast" + (err ? " sdc-toast--err" : "");
+        el.textContent = msg;
+        document.body.appendChild(el);
+        setTimeout(function () {
+          el.remove();
+        }, 4000);
+      }
+
+      function waveFromNotes(notes) {
+        var m = (notes || "").match(/Wave\s*(\d+)/i);
+        return m ? "W" + m[1] : "—";
+      }
+
+      const state = { token: localStorage.getItem("accessToken") || "" };
+      const authState = document.getElementById("authState");
+      const statusEl = document.getElementById("status");
+      const sourcesEl = document.getElementById("sources");
+      const sessionPill = document.getElementById("sessionPill");
+
+      function renderAuthState() {
+        if (state.token) {
+          authState.className = "sdc-alert sdc-alert--ok";
+          authState.textContent = "Signed in";
+          sessionPill.textContent = "Authenticated";
+          sessionPill.className = "sdc-pill sdc-pill--live";
+        } else {
+          authState.className = "sdc-alert sdc-alert--err";
+          authState.textContent = "Not signed in";
+          sessionPill.textContent = "Guest";
+          sessionPill.className = "sdc-pill";
+        }
+      }
+
+      async function request(url, options) {
+        options = options || {};
+        const headers = Object.assign({ "Content-Type": "application/json" }, options.headers || {});
+        if (state.token) headers.Authorization = "Bearer " + state.token;
+        const response = await fetch(url, Object.assign({}, options, { headers }));
+        if (!response.ok) throw new Error(response.status + " " + (await response.text()));
+        return response.status === 204 ? null : response.json();
+      }
+
+      async function login() {
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        try {
+          const data = await request("/api/v1/auth/login", {
+            method: "POST",
+            body: JSON.stringify({ email, password })
+          });
+          state.token = data.accessToken;
+          localStorage.setItem("accessToken", data.accessToken);
+          renderAuthState();
+          await loadSources();
+          toast("Signed in");
+        } catch (err) {
+          statusEl.textContent = "Login failed: " + err.message;
+          statusEl.style.color = "var(--sdc-err)";
+          toast(err.message, true);
+        }
+      }
+
+      function logout() {
+        state.token = "";
+        localStorage.removeItem("accessToken");
+        renderAuthState();
+        sourcesEl.innerHTML = "";
+        statusEl.textContent = "";
+        toast("Signed out");
+      }
+
+      function sourceCard(source) {
+        const id = source.sourceName;
+        const w = waveFromNotes(source.notes);
+        const safeId = id.replace(/[^a-zA-Z0-9_-]/g, "_");
+        return (
+          '<div class="sdc-source-card" data-source="' +
+          esc(id) +
+          '">' +
+          '<div class="sdc-source-head">' +
+          "<div>" +
+          '<h3 class="sdc-source-title"><span class="sdc-code">' +
+          esc(id) +
+          '</span> <span class="sdc-badge sdc-badge--wave">' +
+          esc(w) +
+          "</span></h3>" +
+          '<p class="sdc-panel-desc" style="margin:0.35rem 0 0;font-size:0.8rem">' +
+          esc(source.notes || "Configure endpoint and credentials.") +
+          "</p>" +
+          "</div>" +
+          '<div class="' +
+          (source.enabled ? "sdc-toggle on" : "sdc-toggle") +
+          '" data-source-toggle="' +
+          esc(id) +
+          '" aria-hidden="true"></div>' +
+          "</div>" +
+          '<div class="sdc-row"><span class="sdc-label">Enabled</span><select class="sdc-select" style="max-width:100%" id="' +
+          safeId +
+          '-enabled"><option value="true">Yes</option><option value="false">No</option></select></div>' +
+          '<div class="sdc-row"><span class="sdc-label">Base URL</span><input class="sdc-input" style="max-width:100%" id="' +
+          safeId +
+          '-baseUrl" value="' +
+          esc(source.baseUrl || "") +
+          '" /></div>' +
+          '<div class="sdc-row"><span class="sdc-label">Auth type</span><input class="sdc-input" style="max-width:100%" id="' +
+          safeId +
+          '-authType" value="' +
+          esc(source.authType || "") +
+          '" /></div>' +
+          '<div class="sdc-row"><span class="sdc-label">Schedule</span><input class="sdc-input" style="max-width:100%" id="' +
+          safeId +
+          '-schedule" value="' +
+          esc(source.schedule || "") +
+          '" /></div>' +
+          '<div class="sdc-row"><span class="sdc-label">Credentials ref</span><input class="sdc-input" style="max-width:100%" id="' +
+          safeId +
+          '-credentialsRef" value="' +
+          esc(source.credentialsRef || "") +
+          '" /></div>' +
+          '<div class="sdc-field"><label class="sdc-label">Notes</label><textarea class="sdc-textarea" style="max-width:100%" id="' +
+          safeId +
+          '-notes">' +
+          esc(source.notes || "") +
+          "</textarea></div>" +
+          '<p class="sdc-panel-desc" style="margin:0 0 0.5rem">Updated: ' +
+          esc(source.updatedAt || "—") +
+          "</p>" +
+          '<div class="sdc-actions">' +
+          '<button type="button" class="sdc-btn sdc-btn--primary" onclick="saveSource(\'' +
+          id.replace(/'/g, "\\'") +
+          '\')">Save</button>' +
+          '<button type="button" class="sdc-btn sdc-btn--ghost" onclick="testSource(\'' +
+          id.replace(/'/g, "\\'") +
+          '\')">Test</button>' +
+          "</div>" +
+          '<div id="' +
+          safeId +
+          '-result" class="sdc-panel-desc"></div>' +
+          "</div>"
+        );
+      }
+
+      function domIdForSource(sourceName) {
+        return sourceName.replace(/[^a-zA-Z0-9_-]/g, "_");
+      }
+
+      async function loadSources() {
+        try {
+          const data = await request("/api/v1/admin/sources");
+          sourcesEl.innerHTML = data.map(sourceCard).join("");
+          data.forEach(function (s) {
+            var sid = domIdForSource(s.sourceName);
+            document.getElementById(sid + "-enabled").value = String(s.enabled);
+          });
+          statusEl.textContent = "Loaded " + data.length + " sources";
+          statusEl.style.color = "var(--sdc-ok)";
+        } catch (err) {
+          statusEl.textContent = "Failed: " + err.message;
+          statusEl.style.color = "var(--sdc-err)";
+        }
+      }
+
+      async function saveSource(sourceName) {
+        var sid = domIdForSource(sourceName);
+        var payload = {
+          enabled: document.getElementById(sid + "-enabled").value === "true",
+          baseUrl: document.getElementById(sid + "-baseUrl").value || undefined,
+          authType: document.getElementById(sid + "-authType").value || undefined,
+          schedule: document.getElementById(sid + "-schedule").value || undefined,
+          credentialsRef: document.getElementById(sid + "-credentialsRef").value || undefined,
+          notes: document.getElementById(sid + "-notes").value || undefined
+        };
+        var resultEl = document.getElementById(sid + "-result");
+        try {
+          await request("/api/v1/admin/sources/" + encodeURIComponent(sourceName), {
+            method: "PUT",
+            body: JSON.stringify(payload)
+          });
+          resultEl.textContent = "Saved";
+          resultEl.style.color = "var(--sdc-ok)";
+          var card = document.querySelector('.sdc-source-card[data-source="' + sourceName + '"]');
+          var tg = card && card.querySelector("[data-source-toggle]");
+          if (tg) tg.className = payload.enabled ? "sdc-toggle on" : "sdc-toggle";
+          toast("Saved · " + sourceName);
+        } catch (err) {
+          resultEl.textContent = err.message;
+          resultEl.style.color = "var(--sdc-err)";
+        }
+      }
+
+      async function testSource(sourceName) {
+        var sid = domIdForSource(sourceName);
+        var resultEl = document.getElementById(sid + "-result");
+        try {
+          const data = await request("/api/v1/admin/sources/" + encodeURIComponent(sourceName) + "/test", {
+            method: "POST"
+          });
+          resultEl.textContent = "status=" + data.status + ", processed=" + data.processed;
+          resultEl.style.color = "var(--sdc-ok)";
+        } catch (err) {
+          resultEl.textContent = err.message;
+          resultEl.style.color = "var(--sdc-err)";
+        }
+      }
+
+      renderAuthState();
+      if (state.token) loadSources();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Helix UI Mockup Hub — Reference &amp; Playbook</title>
+  <style>
+    :root {
+      --text: #0f172a;
+      --muted: #475569;
+      --border: #cbd5e1;
+      --bg: #fff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      font-size: 11pt;
+      line-height: 1.45;
+      color: var(--text);
+      background: var(--bg);
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 24px 20px 48px;
+    }
+    h1 { font-size: 1.75rem; margin: 0 0 0.5rem; line-height: 1.2; }
+    h2 { font-size: 1.25rem; margin: 1.75rem 0 0.75rem; page-break-after: avoid; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+    h3 { font-size: 1.05rem; margin: 1.25rem 0 0.5rem; page-break-after: avoid; }
+    p { margin: 0.5rem 0; }
+    ul, ol { margin: 0.5rem 0; padding-left: 1.35rem; }
+    li { margin: 0.25rem 0; }
+    strong { font-weight: 600; }
+    code {
+      font-family: ui-monospace, "Cascadia Code", monospace;
+      font-size: 0.88em;
+      background: #f1f5f9;
+      padding: 1px 5px;
+      border-radius: 4px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 10pt;
+      margin: 0.75rem 0 1rem;
+      page-break-inside: auto;
+    }
+    tr { page-break-inside: avoid; page-break-after: auto; }
+    th, td {
+      border: 1px solid var(--border);
+      padding: 6px 8px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th { background: #f8fafc; font-weight: 600; }
+    hr { border: 0; border-top: 1px solid var(--border); margin: 1.5rem 0; }
+    blockquote {
+      margin: 0.75rem 0;
+      padding: 0.5rem 1rem;
+      border-left: 4px solid #94a3b8;
+      background: #f8fafc;
+      color: var(--muted);
+    }
+    .print-hint {
+      background: #eff6ff;
+      border: 1px solid #93c5fd;
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin-bottom: 28px;
+      font-size: 10.5pt;
+    }
+    @media print {
+      body { padding: 0; max-width: none; font-size: 10pt; }
+      .print-hint { border: 1px dashed #64748b; background: #fff; }
+      a[href^="http"]::after { content: " (" attr(href) ")"; font-size: 8pt; color: #64748b; }
+    }
+  </style>
+</head>
+<body>
+  <div class="print-hint" role="note">
+    <strong>Export to PDF:</strong> Use <kbd>Cmd/Ctrl + P</kbd> → Destination <strong>Save as PDF</strong> → enable <strong>Background graphics</strong> if you want shaded table headers.
+  </div>
+  <main><h1>Helix UI Mockup Hub — Reference &amp; Playbook</h1>
+<p><strong>Document purpose:</strong> Describe each hub <strong>page</strong> (view), its <strong>intended audience</strong>, <strong>widgets and modules</strong>, <strong>data integrations and API connectors</strong>, and a <strong>how-to</strong> oriented to <strong>customer experience and delivery roles</strong>.  </p>
+<p><strong>Scope:</strong> Static mockup at <code>backend/public/mockup/</code> (<code>index.html</code> + <code>mockup-hub.js</code>). Metrics, tables, and most actions are <strong>illustrative</strong> unless <strong>Live data</strong> is enabled with a valid JWT from Operations on the same host.  </p>
+<p><strong>Deep links:</strong> <code>http(s)://&lt;host&gt;/mockup/#&lt;view-id&gt;</code> — see §2 for view IDs.  </p>
+<p><strong>Trademark note:</strong> Cisco, Microsoft, Webex, Splunk, and other names identify third-party products and may be trademarks of their owners. This document describes an internal demonstration narrative only.</p>
+<hr>
+<h2>1. Global shell (all pages)</h2>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Left navigation</strong></td>
+<td>Tab list for all views; order can be customized via drag-and-drop (persisted in browser <code>localStorage</code>).</td>
+</tr>
+<tr>
+<td><strong>Top bar</strong></td>
+<td>Page title, subtitle, <strong>Appearance</strong> (light / dark / system / daylight-at-location), <strong>Contrast</strong> (standard / soft / high), column balance controls.</td>
+</tr>
+<tr>
+<td><strong>Live data strip</strong></td>
+<td>Toggle <strong>Live data</strong>, refresh, JWT hint; <strong>MVP scope</strong> pill; <strong>integration advisor</strong> strip (contextual next steps).</td>
+</tr>
+<tr>
+<td><strong>Main content</strong></td>
+<td>One visible <strong>view</strong> (<code>section.view</code>) at a time.</td>
+</tr>
+<tr>
+<td><strong>Right rail — Deep insights</strong></td>
+<td>Mock Microsoft 365 Copilot–style narrative that changes per tab; for demo copy only.</td>
+</tr>
+<tr>
+<td><strong>Sidebar footer</strong></td>
+<td>Local time widget (geolocation + reverse geocode when permitted), nav spacing control, Operations / token hints.</td>
+</tr>
+</tbody></table>
+<p><strong>Intended audience (shell):</strong> anyone running a <strong>demo</strong>, <strong>training</strong>, or <strong>architecture</strong> session on the Helix/MGM GES-West narrative.</p>
+<hr>
+<h2>2. Page index</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>View ID (hash)</th>
+<th>Page title</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td><code>overview</code></td>
+<td>Overview</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>sentiment</code></td>
+<td>Sentiment &amp; VoC</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>journeys</code></td>
+<td>Journey signals</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>cx-command</code></td>
+<td>Experience command</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>cx-role-actions</code></td>
+<td>CX role actions</td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>powerbi-pm</code></td>
+<td>Power BI · Global PM</td>
+</tr>
+<tr>
+<td>7</td>
+<td><code>incidents</code></td>
+<td>Incidents</td>
+</tr>
+<tr>
+<td>8</td>
+<td><code>devices</code></td>
+<td>Devices</td>
+</tr>
+<tr>
+<td>9</td>
+<td><code>properties</code></td>
+<td>Properties</td>
+</tr>
+<tr>
+<td>10</td>
+<td><code>integrations</code></td>
+<td>Waves &amp; integrations</td>
+</tr>
+<tr>
+<td>11</td>
+<td><code>mvp-journey</code></td>
+<td>MVP journey &amp; adoption</td>
+</tr>
+<tr>
+<td>12</td>
+<td><code>sources</code></td>
+<td>Source administration</td>
+</tr>
+<tr>
+<td>13</td>
+<td><code>consoles</code></td>
+<td>Console ↔ wave map</td>
+</tr>
+<tr>
+<td>14</td>
+<td><code>sdcroles</code></td>
+<td>SDC personas &amp; consoles</td>
+</tr>
+<tr>
+<td>15</td>
+<td><code>security</code></td>
+<td>Security (PSIRT)</td>
+</tr>
+<tr>
+<td>16</td>
+<td><code>fieldnotes</code></td>
+<td>Field notices</td>
+</tr>
+</tbody></table>
+<p><strong>Related surfaces (outside hub shell):</strong> Live source admin <code>/admin/sources.html</code>; Power BI embed <code>/powerbi-pm.html</code>; logo variants <code>/mockup/helix-logo-variants.html</code>.</p>
+<hr>
+<h2>3. Integration &amp; wave registry (summary)</h2>
+<p>MVP narrative assumes <strong>Waves 1–16</strong> aligned to Cisco API integrations. Registry entries in the mock mirror backend <code>VALID_SOURCES</code> / <code>integration_source_configs</code> concepts.</p>
+<table>
+<thead>
+<tr>
+<th>Wave</th>
+<th>Source key</th>
+<th>Product / domain</th>
+<th>Typical auth pattern (mock)</th>
+<th>Cadence (illustrative)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>W1</td>
+<td><code>dna-center</code></td>
+<td>Catalyst Center — inventory, assurance, sites</td>
+<td>Basic / token</td>
+<td><code>*/30 * * * *</code></td>
+</tr>
+<tr>
+<td>W2</td>
+<td><code>tac</code></td>
+<td>TAC Service Request API</td>
+<td>API key + secret</td>
+<td><code>*/15 * * * *</code></td>
+</tr>
+<tr>
+<td>W3</td>
+<td><code>smart-licensing</code></td>
+<td>Smart Licensing / SWAPI</td>
+<td>OAuth2 client credentials</td>
+<td>hourly</td>
+</tr>
+<tr>
+<td>W4</td>
+<td><code>webex</code>, <code>support-api</code></td>
+<td>Control Hub; Support APIs (EoX, bugs, contract)</td>
+<td>Bot OAuth; API key</td>
+<td>manual / nightly</td>
+</tr>
+<tr>
+<td>W5</td>
+<td><code>thousandeyes</code></td>
+<td>ThousandEyes synthetics &amp; paths</td>
+<td>API token</td>
+<td><code>*/15 * * * *</code></td>
+</tr>
+<tr>
+<td>W6</td>
+<td><code>umbrella</code></td>
+<td>Umbrella reporting / Investigate</td>
+<td>API key / OAuth</td>
+<td>hourly</td>
+</tr>
+<tr>
+<td>W7</td>
+<td><code>stealthwatch</code></td>
+<td>Secure Network Analytics</td>
+<td>Basic or token</td>
+<td><code>*/30 * * * *</code></td>
+</tr>
+<tr>
+<td>W8</td>
+<td><code>dwdm</code></td>
+<td>Optical / transport EMS</td>
+<td>Collector / EMS</td>
+<td>hourly</td>
+</tr>
+<tr>
+<td>W9</td>
+<td><code>cisco-iq</code></td>
+<td>Cisco IQ insights</td>
+<td>OAuth / API key</td>
+<td>nightly</td>
+</tr>
+<tr>
+<td>W10</td>
+<td><code>cspc</code></td>
+<td>CSPC collector / Smart Account upload</td>
+<td>Collector registration</td>
+<td>nightly</td>
+</tr>
+<tr>
+<td>W11</td>
+<td><code>ise</code></td>
+<td>ISE — ERS, OpenAPI, pxGrid</td>
+<td>ERS / pxGrid</td>
+<td><code>*/30 * * * *</code></td>
+</tr>
+<tr>
+<td>W12</td>
+<td><code>cisco-spaces</code></td>
+<td>Cisco Spaces / location</td>
+<td>OAuth / API key</td>
+<td>hourly</td>
+</tr>
+<tr>
+<td>W13</td>
+<td><code>secure-access</code></td>
+<td>Secure Access (SSE / ZTNA)</td>
+<td>OAuth2 client credentials</td>
+<td><code>*/15 * * * *</code></td>
+</tr>
+<tr>
+<td>W14</td>
+<td><code>psirt-openvuln</code></td>
+<td>PSIRT / OpenVuln (advisories, CVE ↔ inventory)</td>
+<td>OAuth2 <code>id.cisco.com</code></td>
+<td>nightly</td>
+</tr>
+<tr>
+<td>W15</td>
+<td><code>field-notices</code></td>
+<td>Field Notice API / feed</td>
+<td>API key / OAuth</td>
+<td>nightly</td>
+</tr>
+<tr>
+<td>W16</td>
+<td><code>fmc</code></td>
+<td>Firepower Management Center (FTD inventory, policies)</td>
+<td>Token / basic</td>
+<td><code>*/30 * * * *</code></td>
+</tr>
+</tbody></table>
+<p><strong>Mock “enabled” defaults (KPI strip on Sources):</strong> commonly <strong>four</strong> sources shown as on — <strong><code>dna-center</code></strong>, <strong><code>tac</code></strong>, <strong><code>smart-licensing</code></strong>, <strong><code>fmc</code></strong> — with others off until configured.</p>
+<p><strong>Non-Cisco bridges (mock registry):</strong> e.g. <strong>Microsoft Teams</strong> (<code>teams</code> — Graph / Bot), called out where PM/collaboration handoff is part of the story.</p>
+<hr>
+<h2>4. Voice-of-customer &amp; analytics connectors (conceptual)</h2>
+<p>These appear in <strong>Sentiment &amp; VoC</strong> and <strong>Journey signals</strong> as <strong>integration catalog</strong> tables (mock auth and scheduling text). Production would normalize into a single VoC/event model.</p>
+<table>
+<thead>
+<tr>
+<th>System</th>
+<th>Role in narrative</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Qualtrics, Medallia, Dynamics Customer Voice</strong></td>
+<td>Survey CSAT/NPS ingestion</td>
+</tr>
+<tr>
+<td><strong>Zendesk, Salesforce Service Cloud</strong></td>
+<td>Case and thread sentiment</td>
+</tr>
+<tr>
+<td><strong>Webex Contact Center</strong></td>
+<td>Transcript and queue analytics</td>
+</tr>
+<tr>
+<td><strong>Adobe Experience Platform / event bus</strong></td>
+<td>Journey-step telemetry</td>
+</tr>
+<tr>
+<td><strong>ThousandEyes, DNA intent</strong></td>
+<td>Infra friction correlated to journey health</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>5. Page-by-page reference</h2>
+<h3>5.1 Overview — <code>#overview</code></h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Purpose</strong></td>
+<td>Command surface for portfolio health and integration sync posture.</td>
+</tr>
+<tr>
+<td><strong>Primary audience</strong></td>
+<td>SDM, Engineer (read), PM (read), CXM (read).</td>
+</tr>
+</tbody></table>
+<p><strong>Widgets / modules</strong></p>
+<table>
+<thead>
+<tr>
+<th>Widget</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>KPI grid</strong></td>
+<td>Open incidents, P1/P2, devices monitored, TAC linkage, license compliance, advisory exposure, field notices, blended guest sentiment. Live hooks update select KPIs when Live data is on.</td>
+</tr>
+<tr>
+<td><strong>Quick actions</strong></td>
+<td>Clusters: Respond &amp; escalate; Inventory &amp; policy (DNA, FMC, ISE); Observability (ThousandEyes, Umbrella, SNA, DWDM); Risk &amp; VoC hooks (licensing, OpenVuln, FN, IQ, CSPC). Buttons are mock (<code>alert</code>).</td>
+</tr>
+<tr>
+<td><strong>Activity timeline</strong></td>
+<td>Recent events (TAC link, FN match, wave validation).</td>
+</tr>
+<tr>
+<td><strong>Integration sync status</strong></td>
+<td>Cards driven from mock registry + <code>OVERVIEW_SYNC_LINES</code> for enabled sources.</td>
+</tr>
+</tbody></table>
+<p><strong>Integrations most referenced:</strong> W1 DNA, W2 TAC, W3 Licensing, W16 FMC, plus W5–W8 observability, W14–W15 risk feeds, W9–W10 insight collectors.</p>
+<hr>
+<h3>5.2 Sentiment &amp; VoC — <code>#sentiment</code></h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Purpose</strong></td>
+<td>Blended customer sentiment, escalation threads, VoC integration catalog.</td>
+</tr>
+<tr>
+<td><strong>Primary audience</strong></td>
+<td>CXM, SDM, PM (read).</td>
+</tr>
+</tbody></table>
+<p><strong>Widgets:</strong> CSAT / NPS / at-risk journeys / VoC ingest lag KPIs; <strong>signal blend</strong> bar; <strong>escalation queue</strong> timeline; <strong>Voice-of-customer API integrations</strong> table (systems in §4).</p>
+<p><strong>Integrations:</strong> VoC platforms (survey + case + CC); operationally ties to <strong>Incidents</strong>, <strong>Journey signals</strong>, <strong>Experience command</strong>.</p>
+<hr>
+<h3>5.3 Journey signals — <code>#journeys</code></h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Purpose</strong></td>
+<td>Journey health vs infrastructure friction; analytics API map.</td>
+</tr>
+<tr>
+<td><strong>Primary audience</strong></td>
+<td>CXM, CDA, SDM.</td>
+</tr>
+</tbody></table>
+<p><strong>Widgets:</strong> KPI strip; <strong>journey health grid</strong> (phase, sentiment, driver, linked incidents); <strong>Journey &amp; product analytics APIs</strong> table (Adobe AEP-style, DNA, internal bus).</p>
+<p><strong>Integrations:</strong> DNA assurance/intent, event platforms, TE paths; mock joins to incidents.</p>
+<hr>
+<h3>5.4 Experience command — <code>#cx-command</code></h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Purpose</strong></td>
+<td>Cross-program <strong>unified queue</strong>: financial KPIs, ranked <strong>next steps</strong> (PM / Delivery / CX / Renewals / Architect), customer financial table, trend charts, <strong>AI analysis</strong> recommendations.</td>
+</tr>
+<tr>
+<td><strong>Primary audience</strong></td>
+<td>CXM, Renewals, PM, SDM, CDA — <strong>executive</strong> and <strong>QBR</strong> prep.</td>
+</tr>
+</tbody></table>
+<p><strong>Widgets:</strong> Outcome KPIs; <strong>Recommended next steps</strong> (Visibility vs Action cards with mock jumps); <strong>Customer financial detail</strong>; sparkline/trend panels; <strong>AI analysis</strong> list with confidence; export/RAID mock buttons.</p>
+<p><strong>Integrations:</strong> CPQ/ERP (narrative), Smart Licensing, VoC, incidents/devices — production cites source-backed metrics.</p>
+<hr>
+<h3>5.5 CX role actions — <code>#cx-role-actions</code></h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Purpose</strong></td>
+<td>Single page for <strong>adoption</strong>, <strong>cost</strong>, <strong>speed</strong>, and <strong>CSAT</strong> priorities <strong>by role</strong> (PM, SDM, CXM, Delivery Architect, Engineer).</td>
+</tr>
+<tr>
+<td><strong>Primary audience</strong></td>
+<td>Customer experience and delivery roles (workshop / QBR).</td>
+</tr>
+</tbody></table>
+<p><strong>Widgets:</strong> Four-outcome KPIs; <strong>Recommended actions by role</strong> grid (<code>#cx-role-actions-mount</code>) — content refreshes when the tab is opened (mock <code>APP_DATA_SNAPSHOT</code> narrative).</p>
+<p><strong>Integrations:</strong> Cross-cuts waves, sources, incidents, sentiment — use as <strong>orchestration</strong> narrative, not a single connector.</p>
+<hr>
+<h3>5.6 Power BI · Global PM — <code>#powerbi-pm</code></h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Purpose</strong></td>
+<td>Describe <strong>Microsoft Power BI</strong> embed for program management; link to live embed page.</td>
+</tr>
+<tr>
+<td><strong>Primary audience</strong></td>
+<td>PM, SDM, CXM (read), executive sponsors.</td>
+</tr>
+</tbody></table>
+<p><strong>Widgets:</strong> Embed readiness KPIs; <strong>PM dashboard surfaces</strong> table (executive summary, RAID, milestones, financials, capacity, regional drill, VoC, integration health); <strong>Embed flow</strong> checklist; mock tile strip for static demo.</p>
+<p><strong>Integrations:</strong> Power BI REST <code>GenerateToken</code> via backend <code>GET /api/v1/analytics/powerbi/embed</code> (see <code>docs/POWERBI_GLOBAL_PM.md</code>); Azure AD service principal.</p>
+<hr>
+<h3>5.7 Incidents — <code>#incidents</code></h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Purpose</strong></td>
+<td>Incident operations — queue, filters, table, detail preview, TAC correlation.</td>
+</tr>
+<tr>
+<td><strong>Primary audience</strong></td>
+<td>SDM, Engineer.</td>
+</tr>
+</tbody></table>
+<p><strong>Widgets:</strong> Queue KPIs (open, P1/P2, TAC, API total — wired partially to live API); toolbar; filter chips; <strong>mock table</strong>; detail preview (<strong>INC-20244</strong> sketch); TAC correlation table.</p>
+<p><strong>Integrations:</strong> <strong><code>/api/v1/incidents</code></strong>; W2 TAC API (narrative).</p>
+<hr>
+<h3>5.8 Devices — <code>#devices</code></h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Purpose</strong></td>
+<td>Inventory sample — Catalyst Center + FMC (W16) flavor: hostnames, roles, health, CVEs, sites, assurance.</td>
+</tr>
+<tr>
+<td><strong>Primary audience</strong></td>
+<td>Engineer, SDM, CDA.</td>
+</tr>
+</tbody></table>
+<p><strong>Widgets:</strong> Filter chips; inventory table; <strong>Sync now</strong> (mock); <strong>assurance issues</strong> panel.</p>
+<p><strong>Integrations:</strong> W1 DNA, W11 ISE context, W16 FMC, W14 advisory join (narrative).</p>
+<hr>
+<h3>5.9 Properties — <code>#properties</code></h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Purpose</strong></td>
+<td>Portfolio cards — Las Vegas vs <strong>remote</strong>; adoption; incidents; wave tags; site mapping panels.</td>
+</tr>
+<tr>
+<td><strong>Primary audience</strong></td>
+<td>PM, CXM, CDA, SDM.</td>
+</tr>
+</tbody></table>
+<p><strong>Widgets:</strong> Region chips; property cards; <strong>Property ↔ site mapping</strong>; <strong>Technology at property</strong> from mock registry.</p>
+<p><strong>Integrations:</strong> DNA sites, wave coverage tags; links to Devices/Incidents in production.</p>
+<hr>
+<h3>5.10 Waves &amp; integrations — <code>#integrations</code></h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Purpose</strong></td>
+<td>MVP <strong>wave</strong> cards, KPIs, <strong>API connection builds</strong> matrix.</td>
+</tr>
+<tr>
+<td><strong>Primary audience</strong></td>
+<td>CDA, SDM, PM.</td>
+</tr>
+</tbody></table>
+<p><strong>Widgets:</strong> Summary KPIs; <strong>wave grid</strong> (<code>MVP_SCOPE_FREEZE</code> narrative); sortable/filterable <strong>API builds</strong> table from <code>INTEGRATION_SOURCES</code>.</p>
+<p><strong>Integrations:</strong> Full W1–W16 catalog (§3).</p>
+<hr>
+<h3>5.11 MVP journey &amp; adoption — <code>#mvp-journey</code></h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Purpose</strong></td>
+<td><strong>Six-phase Cisco customer journey</strong> map with each MVP wave positioned; deep <strong>CSPC</strong> and <strong>Cisco IQ</strong> panels.</td>
+</tr>
+<tr>
+<td><strong>Primary audience</strong></td>
+<td>PM, SDM, CDA, CXM (adoption storytelling).</td>
+</tr>
+</tbody></table>
+<p><strong>Widgets:</strong> Journey legend; per-wave rails with maturity % (mock); <strong>CSPC</strong> KPI list; <strong>Cisco IQ</strong> KPI list; live note when <code>/api/v1/admin/sources</code> is merged.</p>
+<p><strong>Integrations:</strong> W10 CSPC, W9 Cisco IQ, plus wave placement for all W1–W16.</p>
+<hr>
+<h3>5.12 Source administration — <code>#sources</code></h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Purpose</strong></td>
+<td>Operator view parallel to <strong><code>/admin/sources.html</code></strong>: cards, filters, audit log, environment checklist.</td>
+</tr>
+<tr>
+<td><strong>Primary audience</strong></td>
+<td>SDM, platform admin.</td>
+</tr>
+</tbody></table>
+<p><strong>Widgets:</strong> Enabled/total KPIs; toolbar; per-source <strong>cards</strong> (<code>source-mock-cards</code>); change log; <strong>environment checklist</strong> (<code>OPENVULN_*</code>, <code>FIELD_NOTICE_*</code>, <code>FMC_*</code>, ISE).</p>
+<p><strong>Integrations:</strong> All registry keys; Live data merges real registry rows for authorized tokens.</p>
+<hr>
+<h3>5.13 Console ↔ wave map — <code>#consoles</code></h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Purpose</strong></td>
+<td>Map <strong>vendor consoles / surfaces</strong> to MVP waves; <strong>out of MVP</strong> callouts (e.g. Meraki, AppDynamics).</td>
+</tr>
+<tr>
+<td><strong>Primary audience</strong></td>
+<td>CDA, PM.</td>
+</tr>
+</tbody></table>
+<p><strong>Widgets:</strong> Filterable table (<code>CONSOLE_MAP_ROWS</code> + narrative); parity rule: <strong>API-first</strong>, no scraping.</p>
+<p><strong>Integrations:</strong> DevNet API Console; product UIs listed as contextual only.</p>
+<hr>
+<h3>5.14 SDC personas &amp; consoles — <code>#sdcroles</code></h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Purpose</strong></td>
+<td><strong>Persona workspaces</strong> (PM, SDM, CXM, CDA, Engineer, HTOM); <strong>live recommended next steps</strong>; program console cards; renewal pipeline; RACI.</td>
+</tr>
+<tr>
+<td><strong>Primary audience</strong></td>
+<td><strong>All</strong> SDC personas — onboarding and governance.</td>
+</tr>
+</tbody></table>
+<p><strong>Widgets:</strong> Persona sections with jump links; <strong>recommended next steps</strong> panel; renewal table; console matrix; doc pointers.</p>
+<p><strong>Integrations:</strong> Summarizes cross-surface use of Helix vs native consoles (DNA, FMC, etc.).</p>
+<hr>
+<h3>5.15 Security (PSIRT) — <code>#security</code></h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Purpose</strong></td>
+<td>OpenVuln-themed <strong>advisory</strong> grid, exposure, remediation queue, OAuth health (masked).</td>
+</tr>
+<tr>
+<td><strong>Primary audience</strong></td>
+<td>SecOps, NetEng, SDM, Engineer.</td>
+</tr>
+</tbody></table>
+<p><strong>Widgets:</strong> KPIs; advisory table; remediation queue; token panel mock.</p>
+<p><strong>Integrations:</strong> W14 OpenVuln (<code>id.cisco.com</code> OAuth); inventory join from DNA serials (narrative).</p>
+<hr>
+<h3>5.16 Field notices — <code>#fieldnotes</code></h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Purpose</strong></td>
+<td>Field-notice KPIs; FN table (ID, severity, PID scope, property matches); bulk <strong>mock</strong> actions.</td>
+</tr>
+<tr>
+<td><strong>Primary audience</strong></td>
+<td>SDM, NetEng, PM.</td>
+</tr>
+</tbody></table>
+<p><strong>Widgets:</strong> KPI strip; FN table; export / incident / email owner buttons (mock).</p>
+<p><strong>Integrations:</strong> W15 Field Notice API/feed + inventory correlation.</p>
+<hr>
+<h2>6. How-to by customer experience &amp; delivery role</h2>
+<p>Use this as a <strong>facilitator script</strong>. Deep links use <code>#&lt;view-id&gt;</code>.</p>
+<h3>6.1 Customer Experience Manager (CXM)</h3>
+<ol>
+<li><strong>Start at</strong> <code>#cx-command</code> — read unified financial + sentiment + next steps; note mock jumps to VoC and journeys.  </li>
+<li><strong>Open</strong> <code>#sentiment</code> — review CSAT/NPS and escalation threads; cite VoC integration table in external workshops.  </li>
+<li><strong>Open</strong> <code>#journeys</code> — tie journey strain to infra incidents for storytelling.  </li>
+<li><strong>Use</strong> <code>#cx-role-actions</code> — filter mentally to CXM row cards for QBR “what to do this week.”  </li>
+<li><strong>Optional:</strong> <code>#properties</code> for venue-level adoption; <code>#sdcroles</code> for broader SDC alignment.</li>
+</ol>
+<h3>6.2 Customer Delivery Architect (CDA)</h3>
+<ol>
+<li><strong>Start at</strong> <code>#integrations</code> — wave grid + API builds matrix for gate order.  </li>
+<li><strong>Open</strong> <code>#consoles</code> — prove console-to-wave mapping and API-only parity.  </li>
+<li><strong>Open</strong> <code>#mvp-journey</code> — journey phase placement per wave; CSPC/IQ deep panels for trust narratives.  </li>
+<li><strong>Open</strong> <code>#sources</code> — credential posture and schedules (with platform admin).  </li>
+<li><strong>Drill</strong> <code>#devices</code> / <code>#security</code> when discussing assurance and exposure.</li>
+</ol>
+<h3>6.3 Project / Program Manager (PM)</h3>
+<ol>
+<li><strong>Start at</strong> <code>#overview</code> — KPIs + quick actions + sync strip for executive stand-ups.  </li>
+<li><strong>Open</strong> <code>#powerbi-pm</code> — RAID/milestone/financial surfaces; open live embed when configured.  </li>
+<li><strong>Open</strong> <code>#cx-command</code> — ranked next steps and financial table for steering committees.  </li>
+<li><strong>Open</strong> <code>#properties</code> — regional readiness and wave tags.  </li>
+<li><strong>Use</strong> <code>#fieldnotes</code> / <code>#security</code> for CAB and change-freeze arguments.</li>
+</ol>
+<h3>6.4 Service Delivery Manager (SDM)</h3>
+<ol>
+<li><strong>Live at</strong> <code>#incidents</code> and <code>#overview</code> — queue depth, P1/P2, TAC linkage.  </li>
+<li><strong>Run</strong> <code>#sources</code> — enablement, health, checklist vs <code>.env</code>.  </li>
+<li><strong>Cross-check</strong> <code>#integrations</code> advisor strip + <code>#sources</code> for yellow waves.  </li>
+<li><strong>Escalate CX</strong> via <code>#sentiment</code> and <code>#cx-command</code> when VoC and operations diverge.  </li>
+<li><strong>Field / hardware</strong> loops: <code>#fieldnotes</code>, <code>#devices</code>, <code>#security</code>.</li>
+</ol>
+<h3>6.5 Engineer / NetEng</h3>
+<ol>
+<li><strong>Primary:</strong> <code>#incidents</code>, <code>#devices</code>, <code>#security</code>, <code>#fieldnotes</code>.  </li>
+<li>Use <strong>DNA / FMC / ISE</strong> mock actions from <code>#overview</code> quick clusters as runbook placeholders.  </li>
+<li><strong>TAC correlation</strong> on Incidents view for bridge discipline.</li>
+</ol>
+<h3>6.6 Renewals / Customer Success (Renewals)</h3>
+<ol>
+<li><strong>Anchor</strong> <code>#cx-command</code> — ACV/renewal risk mock KPIs and “export renewals brief” (mock).  </li>
+<li><strong>Support</strong> with <code>#properties</code> and <code>#sentiment</code> for venue-level story.  </li>
+<li><strong>Power BI</strong> <code>#powerbi-pm</code> when financial slide deck is embedded.</li>
+</ol>
+<h3>6.7 High Touch Operations Manager (HTOM)</h3>
+<ol>
+<li><strong>Single pane:</strong> <code>#cx-command</code> + <code>#overview</code> for integration trust and exec escalation.  </li>
+<li><strong>Persona view</strong> <code>#sdcroles</code> — HTOM card in recommended next steps when Live/mock snapshot includes operations load.  </li>
+<li><strong>Prove observability:</strong> <code>#integrations</code> W5–W7 + Sources schedules.</li>
+</ol>
+<hr>
+<h2>7. Exporting this document to PDF</h2>
+<p><strong>Recommended — print-ready HTML (no Puppeteer):</strong></p>
+<pre><code class="language-bash">cd helix-sdm
+npm install   # once, if node_modules is missing
+npm run docs:helix-mockup-reference-html
+</code></pre>
+<p>Open <code>docs/HELIX_MOCKUP_REFERENCE_PRINT.html</code> in Chrome / Edge / Safari, then <strong>Print → Save as PDF</strong> (optional: enable <strong>Background graphics</strong>).</p>
+<p><strong>Alternative — md-to-pdf (Chromium via Puppeteer):</strong></p>
+<pre><code class="language-bash">npm run docs:helix-mockup-reference-pdf
+</code></pre>
+<p>Writes <code>docs/HELIX_MOCKUP_REFERENCE.pdf</code> next to this repo when the toolchain can download Chromium.</p>
+<p><strong>Other:</strong> Pandoc, or any Markdown preview’s <strong>Print → Save as PDF</strong>.</p>
+<hr>
+<h2>8. Revision history</h2>
+<table>
+<thead>
+<tr>
+<th>Version</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0.7</td>
+<td>Initial combined reference: all 16 views, registry summary, role playbook, export instructions.</td>
+</tr>
+</tbody></table>
+<hr>
+<p><em>End of document.</em></p>
+</main>
+</body>
+</html>

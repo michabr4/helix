@@ -1,15 +1,26 @@
 {
-  "name": "helix",
-  "version": "1.0.0",
-  "type": "module",
+  "name": "helix-sdm",
+  "private": true,
+  "description": "Root workspace script for documentation artifacts",
   "scripts": {
-    "test": "vitest run",
-    "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "docs:mockup-pdf": "mkdir -p docs && md-to-pdf README.md --document-title \"Helix — Mockup hub guide\" --pdf-options '{\"format\":\"Letter\",\"printBackground\":true,\"margin\":{\"top\":\"18mm\",\"bottom\":\"18mm\",\"left\":\"16mm\",\"right\":\"16mm\"}}' && mv -f README.pdf docs/MOCKUP_HUB_USER_GUIDE.pdf",
+    "docs:helix-mockup-reference-pdf": "mkdir -p docs && md-to-pdf docs/HELIX_MOCKUP_REFERENCE.md --document-title \"Helix UI Mockup Hub — Reference & Playbook\" --pdf-options '{\"format\":\"Letter\",\"printBackground\":true,\"margin\":{\"top\":\"16mm\",\"bottom\":\"16mm\",\"left\":\"14mm\",\"right\":\"14mm\"}}'",
+    "docs:helix-mockup-reference-html": "node scripts/build-helix-reference-print-html.mjs",
+    "package:mockup": "node scripts/package-mockup-standalone.mjs",
+    "lint:mockup": "htmlhint backend/public/mockup/index.html && stylelint backend/public/mockup/index.html && eslint -c backend/public/mockup/eslint.config.mjs backend/public/mockup/mockup-hub.js backend/public/mockup/theme-init.js"
   },
   "devDependencies": {
-    "@vitest/coverage-v8": "^2.0.0",
-    "jsdom": "^25.0.0",
-    "vitest": "^2.0.0"
+    "eslint": "^9.39.4",
+    "globals": "^15.15.0",
+    "htmlhint": "^1.9.2",
+    "marked": "^12.0.0",
+    "md-to-pdf": "^5.2.5",
+    "postcss-html": "^1.8.1",
+    "stylelint": "^16.26.1"
+  },
+  "dependencies": {
+    "helix-sdm-mobile": "file:mobile",
+    "service-delivery-manager-backend": "file:backend",
+    "service-delivery-manager-frontend": "file:frontend"
   }
 }

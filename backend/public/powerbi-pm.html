@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Power BI — Global PM Dashboard · Service Delivery Manager</title>
+    <link rel="stylesheet" href="/assets/sdc-ui.css" />
+    <style>
+      .pbi-wrap {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        background: var(--sdc-bg, #0f1419);
+        color: var(--sdc-text, #e6edf3);
+      }
+      .pbi-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 12px;
+        padding: 14px 20px;
+        border-bottom: 1px solid var(--sdc-border, #30363d);
+        background: var(--sdc-surface, #161b22);
+      }
+      .pbi-top h1 {
+        margin: 0;
+        font-size: 1.15rem;
+        font-weight: 600;
+      }
+      .pbi-top .pbi-meta {
+        font-size: 0.85rem;
+        color: var(--sdc-muted, #8b949e);
+        max-width: 520px;
+      }
+      .pbi-actions a {
+        color: var(--sdc-accent, #58a6ff);
+        margin-left: 12px;
+      }
+      #pbiStatus {
+        margin: 0 20px;
+        padding: 10px 14px;
+        font-size: 0.9rem;
+        border-radius: 6px;
+      }
+      #pbiStatus.info {
+        background: rgba(56, 139, 253, 0.12);
+        border: 1px solid rgba(56, 139, 253, 0.35);
+      }
+      #pbiStatus.err {
+        background: rgba(248, 81, 73, 0.12);
+        border: 1px solid rgba(248, 81, 73, 0.45);
+        color: #ff7b72;
+      }
+      #pbiStatus.ok {
+        background: rgba(46, 160, 67, 0.12);
+        border: 1px solid rgba(46, 160, 67, 0.35);
+        color: #3fb950;
+      }
+      #embedContainer {
+        flex: 1;
+        min-height: 640px;
+        margin: 0 16px 16px;
+        background: #1a1a1a;
+        border: 1px solid var(--sdc-border, #30363d);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="pbi-wrap">
+      <header class="pbi-top">
+        <div>
+          <h1>Power BI — Global PM Dashboard</h1>
+          <p class="pbi-meta">
+            Embedded report using Microsoft powerbi-client and a server-issued embed token (service principal). Sign in on
+            <a href="/">Operations</a> first.
+          </p>
+        </div>
+        <div class="pbi-actions">
+          <a href="/">← Operations</a>
+          <a href="/mockup/index.html#powerbi-pm">Mockup · capability map</a>
+        </div>
+      </header>
+      <p id="pbiStatus" class="info" role="status">Loading embed context…</p>
+      <div id="embedContainer" aria-label="Power BI report embed region"></div>
+    </div>
+    <script src="https://unpkg.com/powerbi-client@2.23.1/dist/powerbi.min.js"></script>
+    <script src="/assets/powerbi-pm.js"></script>
+  </body>
+</html>

@@ -3,87 +3,40 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <script>
-    /* Theme + contrast before first paint (contrast stacks with light/dark tokens). */
-    (function () {
-      try {
-        var k = "helix-mockup-theme";
-        var s = localStorage.getItem(k);
-        if (s === "light" || s === "dark") {
-          document.documentElement.setAttribute("data-theme", s);
-          document.documentElement.style.colorScheme = s;
-        } else if (s === "daylight") {
-          try {
-            var snap = JSON.parse(localStorage.getItem("helix-mockup-daylight-snapshot"));
-            var today = new Date().toISOString().slice(0, 10);
-            var dh =
-              snap && snap.day === today && (snap.theme === "light" || snap.theme === "dark")
-                ? snap.theme
-                : new Date().getHours() >= 7 && new Date().getHours() < 19
-                  ? "light"
-                  : "dark";
-            document.documentElement.setAttribute("data-theme", dh);
-            document.documentElement.style.colorScheme = dh;
-          } catch (err2) {
-            document.documentElement.setAttribute("data-theme", "dark");
-            document.documentElement.style.colorScheme = "dark";
-          }
-        }
-        var c = localStorage.getItem("helix-mockup-contrast");
-        if (c === "soft" || c === "high") document.documentElement.setAttribute("data-contrast", c);
-      } catch (err) {}
-    })();
-    /* UA widgets + readability: align with system when theme not forced (pairs with prefers-color-scheme tokens). */
-    (function () {
-      try {
-        var k = "helix-mockup-theme";
-        var s = localStorage.getItem(k);
-        if (s !== "light" && s !== "dark" && s !== "daylight") {
-          document.documentElement.style.colorScheme = window.matchMedia("(prefers-color-scheme: dark)").matches
-            ? "dark"
-            : "light";
-        }
-      } catch (e) {}
-    })();
-    /* Saved pane widths (3-column desktop layout) — applied before paint. */
-    (function () {
-      try {
-        var sw = localStorage.getItem("helix-mockup-sidebar-w");
-        var aw = localStorage.getItem("helix-mockup-ai-pane-w");
-        if (sw && /^\d+$/.test(sw)) document.documentElement.style.setProperty("--sidebar-w", sw + "px");
-        if (aw && /^\d+$/.test(aw)) document.documentElement.style.setProperty("--ai-pane-w", aw + "px");
-      } catch (e) {}
-    })();
-    /* Left nav section spacing scale (labels, gaps, tab padding) — all views. */
-    (function () {
-      try {
-        var s = localStorage.getItem("helix-mockup-nav-break-scale");
-        if (!s || !/^[\d.]+$/.test(s)) return;
-        var v = parseFloat(s, 10);
-        if (v >= 0.6 && v <= 1.7) document.documentElement.style.setProperty("--nav-break-scale", String(v));
-      } catch (e) {}
-    })();
-    /* Readability: text scale + optional reduce motion (WCAG 2.1 — reflow / motion). */
-    (function () {
-      try {
-        var ts = localStorage.getItem("helix-mockup-text-scale");
-        if (ts === "0.9" || ts === "1" || ts === "1.15" || ts === "1.3") {
-          document.documentElement.style.setProperty("--text-scale", ts);
-        }
-        var rm = localStorage.getItem("helix-mockup-reduced-motion");
-        if (rm === "1") document.documentElement.setAttribute("data-a11y-reduced-motion", "1");
-        var bl = localStorage.getItem("helix-mockup-bluelight");
-        if (bl === "low" || bl === "medium" || bl === "high") document.documentElement.setAttribute("data-bluelight", bl);
-      } catch (e) {}
-    })();
-  </script>
+  <!--
+    GitHub Pages serves this directory with no custom HTTP headers, so the CSP/Referrer-Policy
+    that the real backend applies via Helmet (backend/src/middleware/helmetByPath.ts, mockupHelmet)
+    never reaches this static deploy. Mirror the same policy here via meta tags so the public
+    GitHub Pages copy isn't shipped with zero hardening. Note: frame-ancestors and X-Frame-Options
+    cannot be set via <meta> (only via HTTP header) — clickjacking protection for this deploy target
+    would require moving hosting to a platform that supports a headers config (e.g. Netlify _headers,
+    Cloudflare Pages _headers), which is a hosting decision, not a document-level fix.
+  -->
+  <meta
+    http-equiv="Content-Security-Policy"
+    content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: blob: https:; connect-src 'self' https: wss:; media-src 'self' https: blob:; worker-src 'self' blob:; object-src 'none'; base-uri 'none'; form-action 'none'"
+  />
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
+  <script src="theme-init.js"></script>
   <title>Helix — UI Mockup Hub</title>
   <link rel="icon" href="assets/helix-mark.svg" type="image/svg+xml" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
+    /* Inter, self-hosted (was fonts.googleapis.com) — one variable-weight file covers 400–700,
+       same as how Google Fonts itself was serving the wght@400;500;600;700 request. Latin subset
+       only (matches this app's English-only UI text); regenerate from Google Fonts CSS2 API if
+       Cyrillic/Greek/Vietnamese text is ever added. */
+    @font-face {
+      font-family: "Inter";
+      font-style: normal;
+      font-weight: 100 900;
+      font-display: swap;
+      src: url("assets/fonts/inter-latin-var.woff2") format("woff2");
+    }
     :root {
       color-scheme: dark;
+      /* Partner brand identity colors — fixed across light/dark/contrast themes, unlike the tokens below */
+      --brand-salesforce: #00a1e0;
+      --brand-salesforce-rgb: 0, 161, 224;
       /* Palette: Cisco enterprise blue/cyan accents + Splunk-style deep neutrals & green success; reduced pure black for eye comfort */
       --bg: #0c1018;
       --surface: #141c2b;
@@ -98,6 +51,13 @@
       --warn: #e8c36a;
       --err: #f09090;
       --purple: #b89ef5;
+      /* Categorical accent stripe palette — same 5 hues reused across persona-live-card,
+         pbi-mock-tile, and console-card accents; kept flat (not per-theme) to match current look. */
+      --accent-green: #34d399;
+      --accent-violet: #a78bfa;
+      --accent-amber: #fbbf24;
+      --accent-blue: #38bdf8;
+      --accent-rose: #fb7185;
       --sidebar-w: 272px;
       --ai-pane-w: 332px;
       --pane-gutter-track: 6px;
@@ -125,7 +85,7 @@
       --table-hover-bg: rgba(255, 255, 255, 0.035);
       --ai-grad-end: #0a101a;
       --ai-header-bg: rgba(16, 24, 38, 0.94);
-      /* Ask Copilot panel — Splunk magenta wash (CX / #ff2d8b family) */
+      /* Ask AI panel — Splunk magenta wash (CX / #ff2d8b family) */
       --ai-copilot-bg: linear-gradient(
         160deg,
         rgba(255, 45, 139, 0.38) 0%,
@@ -1742,9 +1702,9 @@
     .roi-total .roi-total-value { font-size: 1.925rem; font-weight: 700; color: var(--ok); font-variant-numeric: tabular-nums; }
 
     /* Salesforce CRM panels */
-    .sf-panel { position: relative; background: linear-gradient(135deg, rgba(0,161,224,0.03), transparent 60%); }
+    .sf-panel { position: relative; background: linear-gradient(135deg, rgba(var(--brand-salesforce-rgb), 0.03), transparent 60%); }
     .sf-panel h2 { display: flex; align-items: center; gap: 8px; }
-    .sf-panel h2::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #00a1e0; flex-shrink: 0; }
+    .sf-panel h2::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--brand-salesforce); flex-shrink: 0; }
 
     .nav-break-row {
       display: flex;
@@ -2389,11 +2349,11 @@
       padding: 16px 18px 18px;
       border-top: 3px solid var(--accent);
     }
-    .persona-live-card:nth-child(2) { border-top-color: #34d399; }
-    .persona-live-card:nth-child(3) { border-top-color: #a78bfa; }
-    .persona-live-card:nth-child(4) { border-top-color: #fbbf24; }
-    .persona-live-card:nth-child(5) { border-top-color: #38bdf8; }
-    .persona-live-card:nth-child(6) { border-top-color: #fb7185; }
+    .persona-live-card:nth-child(2) { border-top-color: var(--accent-green); }
+    .persona-live-card:nth-child(3) { border-top-color: var(--accent-violet); }
+    .persona-live-card:nth-child(4) { border-top-color: var(--accent-amber); }
+    .persona-live-card:nth-child(5) { border-top-color: var(--accent-blue); }
+    .persona-live-card:nth-child(6) { border-top-color: var(--accent-rose); }
     .persona-live-role {
       font-size: 12px;
       font-weight: 700;
@@ -2560,10 +2520,10 @@
       gap: 4px;
       border-top: 3px solid var(--accent);
     }
-    .pbi-mock-tile.pbi-mt-b { border-top-color: #fbbf24; }
-    .pbi-mock-tile.pbi-mt-c { border-top-color: #a78bfa; }
-    .pbi-mock-tile.pbi-mt-d { border-top-color: #34d399; }
-    .pbi-mock-tile.pbi-mt-e { border-top-color: #38bdf8; }
+    .pbi-mock-tile.pbi-mt-b { border-top-color: var(--accent-amber); }
+    .pbi-mock-tile.pbi-mt-c { border-top-color: var(--accent-violet); }
+    .pbi-mock-tile.pbi-mt-d { border-top-color: var(--accent-green); }
+    .pbi-mock-tile.pbi-mt-e { border-top-color: var(--accent-blue); }
     .pbi-mock-tile span {
       font-size: 12px;
       font-weight: 700;
@@ -2601,7 +2561,7 @@
     }
     a.mock-jump:hover { background: var(--mock-jump-hover-bg); text-decoration: none; }
 
-    /* Right AI insights + Microsoft 365 Copilot assistant pane (mock) */
+    /* Right AI insights pane (mock) — generated from the current view's own data */
     .ai-pane {
       display: flex;
       flex-direction: column;
@@ -3012,7 +2972,7 @@
   <div class="skip-links">
     <a class="skip-link" href="#main-content">Skip to main content</a>
     <a class="skip-link" href="#main-nav">Skip to navigation</a>
-    <a class="skip-link" href="#ai-pane-region">Skip to Microsoft 365 Copilot and AI insights panel</a>
+    <a class="skip-link" href="#ai-pane-region">Skip to AI insights panel</a>
   </div>
   <p id="app-status-message" role="status" aria-live="polite" aria-atomic="true"></p>
 
@@ -3038,28 +2998,28 @@
           role="tablist"
           aria-label="Mockup view tabs. Reorder by dragging or with Alt plus Up or Down Arrow while a tab is focused."
         >
-        <div class="nav-item active" data-view="overview" role="tab" aria-selected="true" tabindex="0"><span class="nav-ico" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span> Overview</div>
-        <div class="nav-item" data-view="journeys" role="tab" aria-selected="false" tabindex="-1"><span class="nav-ico" aria-hidden="true" title="ThousandEyes — digital experience &amp; journey paths"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="12" r="2.2"/><circle cx="12" cy="7" r="2.2"/><circle cx="19" cy="12" r="2.2"/><path d="M7 10.5 9.5 8.5M14.5 8.5 17 10.5"/></svg></span> Journey signals</div>
-        <div class="nav-item" data-view="powerbi-pm" role="tab" aria-selected="false" tabindex="-1"><span class="nav-ico" aria-hidden="true" title="Splunk — observability &amp; analytics (Cisco)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 18V11M12 18V6M18 18v-7"/><path d="M3 20h18"/></svg></span> Power BI · Global PM</div>
-        <div class="nav-item" data-view="sentiment" role="tab" aria-selected="false" tabindex="-1"><span class="nav-ico" aria-hidden="true" title="Webex CX — collaboration &amp; customer signals"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 14c1.8-4.2 4.3-6 9-6s7.2 1.8 9 6M3 10c1.8-3.3 4.3-5 9-5s7.2 1.7 9 5"/></svg></span> Sentiment &amp; VoC</div>
-        <div class="nav-item" data-view="cx-role-actions" role="tab" aria-selected="false" tabindex="-1"><span class="nav-ico" aria-hidden="true" title="RACI &amp; cross-functional delivery roles"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="2"/><path d="M8 21v-3a4 4 0 018 0v3"/><circle cx="5" cy="14" r="1.8"/><circle cx="19" cy="14" r="1.8"/><path d="M7 13.5l4-6M17 13.5l-4-6"/></svg></span> CX role actions</div>
-        <div class="nav-item" data-view="cx-command" role="tab" aria-selected="false" tabindex="-1"><span class="nav-ico" aria-hidden="true" title="Customer experience command"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="11" rx="2"/><path d="M8 21h8"/><path d="M9 9h6M9 12h4"/></svg></span> Experience command</div>
-        <div class="nav-item" data-view="incidents" role="tab" aria-selected="false" tabindex="-1"><span class="nav-ico" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 16H3L12 3z"/><path d="M12 10v4M12 17.5v.01"/></svg></span> Incidents</div>
-        <div class="nav-item" data-view="devices" role="tab" aria-selected="false" tabindex="-1"><span class="nav-ico" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="5" rx="1"/><rect x="4" y="11" width="16" height="5" rx="1"/><path d="M7 6.5h.01M7 13.5h.01M17 6v2M17 13v2"/></svg></span> Devices</div>
-        <div class="nav-item" data-view="properties" role="tab" aria-selected="false" tabindex="-1"><span class="nav-ico" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V10l7-5 7 5v11"/><path d="M9 21v-5h6v5"/><path d="M11 13h2"/></svg></span> Properties</div>
-        <div class="nav-item" data-view="integrations" role="tab" aria-selected="false" tabindex="-1"><span class="nav-ico" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="12" r="3"/><circle cx="18" cy="12" r="3"/><path d="M9 12h6"/><path d="M6 9V7a2 2 0 012-2h8a2 2 0 012 2v2M6 15v2a2 2 0 002 2h8a2 2 0 002-2v-2"/></svg></span> Waves &amp; integrations</div>
-        <div class="nav-item" data-view="mvp-journey" role="tab" aria-selected="false" tabindex="-1"><span class="nav-ico" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18h5v-6H4zM11 18h5V8h-5zM18 18h2V4h-2z"/></svg></span> MVP journey &amp; adoption</div>
-        <div class="nav-item" data-view="sources" role="tab" aria-selected="false" tabindex="-1"><span class="nav-ico" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.66 3.58 3 8 3s8-1.34 8-3V5"/><path d="M4 11v6c0 1.66 3.58 3 8 3s8-1.34 8-3v-6"/></svg></span> Source administration</div>
-        <div class="nav-item" data-view="consoles" role="tab" aria-selected="false" tabindex="-1"><span class="nav-ico" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="7.5" height="13" rx="1"/><rect x="13.5" y="4" width="7.5" height="13" rx="1"/><path d="M10 18.5h4"/></svg></span> Console ↔ wave map</div>
-        <div class="nav-item" data-view="sdcroles" role="tab" aria-selected="false" tabindex="-1"><span class="nav-ico" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="8" r="3"/><path d="M3 21v-2a4 4 0 014-4"/><rect x="13" y="6" width="8" height="10" rx="1"/><path d="M15 10h4M15 14h3"/></svg></span> SDC personas &amp; consoles</div>
-        <div class="nav-item" data-view="security" role="tab" aria-selected="false" tabindex="-1"><span class="nav-ico" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4v6c0 5-3.5 9-8 11-4.5-2-8-6-8-11V7l8-4z"/></svg></span> Security (PSIRT)</div>
-        <div class="nav-item" data-view="fieldnotes" role="tab" aria-selected="false" tabindex="-1"><span class="nav-ico" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4h8a2 2 0 012 2v14a2 2 0 01-2 2H8a2 2 0 01-2-2V6a2 2 0 012-2z"/><path d="M9 4V3a1 1 0 011-1h4a1 1 0 011 1v1"/><path d="M9 10h6M9 14h6M9 18h4"/></svg></span> Field notices</div>
+        <div class="nav-item active" data-view="overview" id="tab-overview" aria-controls="view-overview" role="tab" aria-selected="true" tabindex="0"><span class="nav-ico" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span> Overview</div>
+        <div class="nav-item" data-view="journeys" id="tab-journeys" aria-controls="view-journeys" role="tab" aria-selected="false" tabindex="-1"><span class="nav-ico" aria-hidden="true" title="ThousandEyes — digital experience &amp; journey paths"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="12" r="2.2"/><circle cx="12" cy="7" r="2.2"/><circle cx="19" cy="12" r="2.2"/><path d="M7 10.5 9.5 8.5M14.5 8.5 17 10.5"/></svg></span> Journey signals</div>
+        <div class="nav-item" data-view="powerbi-pm" id="tab-powerbi-pm" aria-controls="view-powerbi-pm" role="tab" aria-selected="false" tabindex="-1"><span class="nav-ico" aria-hidden="true" title="Splunk — observability &amp; analytics (Cisco)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 18V11M12 18V6M18 18v-7"/><path d="M3 20h18"/></svg></span> Power BI · Global PM</div>
+        <div class="nav-item" data-view="sentiment" id="tab-sentiment" aria-controls="view-sentiment" role="tab" aria-selected="false" tabindex="-1"><span class="nav-ico" aria-hidden="true" title="Webex CX — collaboration &amp; customer signals"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 14c1.8-4.2 4.3-6 9-6s7.2 1.8 9 6M3 10c1.8-3.3 4.3-5 9-5s7.2 1.7 9 5"/></svg></span> Sentiment &amp; VoC</div>
+        <div class="nav-item" data-view="cx-role-actions" id="tab-cx-role-actions" aria-controls="view-cx-role-actions" role="tab" aria-selected="false" tabindex="-1"><span class="nav-ico" aria-hidden="true" title="RACI &amp; cross-functional delivery roles"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="2"/><path d="M8 21v-3a4 4 0 018 0v3"/><circle cx="5" cy="14" r="1.8"/><circle cx="19" cy="14" r="1.8"/><path d="M7 13.5l4-6M17 13.5l-4-6"/></svg></span> CX role actions</div>
+        <div class="nav-item" data-view="cx-command" id="tab-cx-command" aria-controls="view-cx-command" role="tab" aria-selected="false" tabindex="-1"><span class="nav-ico" aria-hidden="true" title="Customer experience command"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="11" rx="2"/><path d="M8 21h8"/><path d="M9 9h6M9 12h4"/></svg></span> Experience command</div>
+        <div class="nav-item" data-view="incidents" id="tab-incidents" aria-controls="view-incidents" role="tab" aria-selected="false" tabindex="-1"><span class="nav-ico" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 16H3L12 3z"/><path d="M12 10v4M12 17.5v.01"/></svg></span> Incidents</div>
+        <div class="nav-item" data-view="devices" id="tab-devices" aria-controls="view-devices" role="tab" aria-selected="false" tabindex="-1"><span class="nav-ico" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="5" rx="1"/><rect x="4" y="11" width="16" height="5" rx="1"/><path d="M7 6.5h.01M7 13.5h.01M17 6v2M17 13v2"/></svg></span> Devices</div>
+        <div class="nav-item" data-view="properties" id="tab-properties" aria-controls="view-properties" role="tab" aria-selected="false" tabindex="-1"><span class="nav-ico" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V10l7-5 7 5v11"/><path d="M9 21v-5h6v5"/><path d="M11 13h2"/></svg></span> Properties</div>
+        <div class="nav-item" data-view="integrations" id="tab-integrations" aria-controls="view-integrations" role="tab" aria-selected="false" tabindex="-1"><span class="nav-ico" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="12" r="3"/><circle cx="18" cy="12" r="3"/><path d="M9 12h6"/><path d="M6 9V7a2 2 0 012-2h8a2 2 0 012 2v2M6 15v2a2 2 0 002 2h8a2 2 0 002-2v-2"/></svg></span> Waves &amp; integrations</div>
+        <div class="nav-item" data-view="mvp-journey" id="tab-mvp-journey" aria-controls="view-mvp-journey" role="tab" aria-selected="false" tabindex="-1"><span class="nav-ico" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18h5v-6H4zM11 18h5V8h-5zM18 18h2V4h-2z"/></svg></span> MVP journey &amp; adoption</div>
+        <div class="nav-item" data-view="sources" id="tab-sources" aria-controls="view-sources" role="tab" aria-selected="false" tabindex="-1"><span class="nav-ico" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.66 3.58 3 8 3s8-1.34 8-3V5"/><path d="M4 11v6c0 1.66 3.58 3 8 3s8-1.34 8-3v-6"/></svg></span> Source administration</div>
+        <div class="nav-item" data-view="consoles" id="tab-consoles" aria-controls="view-consoles" role="tab" aria-selected="false" tabindex="-1"><span class="nav-ico" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="7.5" height="13" rx="1"/><rect x="13.5" y="4" width="7.5" height="13" rx="1"/><path d="M10 18.5h4"/></svg></span> Console ↔ wave map</div>
+        <div class="nav-item" data-view="sdcroles" id="tab-sdcroles" aria-controls="view-sdcroles" role="tab" aria-selected="false" tabindex="-1"><span class="nav-ico" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="8" r="3"/><path d="M3 21v-2a4 4 0 014-4"/><rect x="13" y="6" width="8" height="10" rx="1"/><path d="M15 10h4M15 14h3"/></svg></span> SDC personas &amp; consoles</div>
+        <div class="nav-item" data-view="security" id="tab-security" aria-controls="view-security" role="tab" aria-selected="false" tabindex="-1"><span class="nav-ico" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4v6c0 5-3.5 9-8 11-4.5-2-8-6-8-11V7l8-4z"/></svg></span> Security (PSIRT)</div>
+        <div class="nav-item" data-view="fieldnotes" id="tab-fieldnotes" aria-controls="view-fieldnotes" role="tab" aria-selected="false" tabindex="-1"><span class="nav-ico" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4h8a2 2 0 012 2v14a2 2 0 01-2 2H8a2 2 0 01-2-2V6a2 2 0 012-2z"/><path d="M9 4V3a1 1 0 011-1h4a1 1 0 011 1v1"/><path d="M9 10h6M9 14h6M9 18h4"/></svg></span> Field notices</div>
         </div>
         <div class="nav-label digitized">Digitized Delivery</div>
         <div class="nav-sortable nav-sortable-dd" role="tablist" aria-label="Digitized Delivery view tabs.">
-        <div class="nav-item" data-view="network-as-code" role="tab" aria-selected="false" tabindex="-1"><span class="nav-ico" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17l6-6 4 4 6-6"/><circle cx="18" cy="7" r="2"/><path d="M2 20h20"/></svg></span> Network as Code</div>
-        <div class="nav-item" data-view="services-as-code" role="tab" aria-selected="false" tabindex="-1"><span class="nav-ico" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M16 18l6-6-6-6"/><path d="M8 6l-6 6 6 6"/><path d="M10 21l4-18"/></svg></span> Services as Code</div>
-        <div class="nav-item" data-view="digital-document-solutions" role="tab" aria-selected="false" tabindex="-1"><span class="nav-ico" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h4"/></svg></span> Digital Document Solutions</div>
+        <div class="nav-item" data-view="network-as-code" id="tab-network-as-code" aria-controls="view-network-as-code" role="tab" aria-selected="false" tabindex="-1"><span class="nav-ico" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17l6-6 4 4 6-6"/><circle cx="18" cy="7" r="2"/><path d="M2 20h20"/></svg></span> Network as Code</div>
+        <div class="nav-item" data-view="services-as-code" id="tab-services-as-code" aria-controls="view-services-as-code" role="tab" aria-selected="false" tabindex="-1"><span class="nav-ico" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M16 18l6-6-6-6"/><path d="M8 6l-6 6 6 6"/><path d="M10 21l4-18"/></svg></span> Services as Code</div>
+        <div class="nav-item" data-view="digital-document-solutions" id="tab-digital-document-solutions" aria-controls="view-digital-document-solutions" role="tab" aria-selected="false" tabindex="-1"><span class="nav-ico" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h4"/></svg></span> Digital Document Solutions</div>
         </div>
       </nav>
       <div class="sidebar-foot">
@@ -3286,7 +3246,7 @@
       <div class="content">
         <div class="content-inner">
         <!-- Overview -->
-        <section class="view active" id="view-overview">
+        <section class="view active" id="view-overview" role="tabpanel" aria-labelledby="tab-overview" tabindex="0">
           <div class="kpi-grid">
             <div class="kpi"><div class="lbl">Open incidents</div><div class="val" id="mockup-live-kpi-overview-incidents">14</div><div class="delta" id="mockup-live-kpi-overview-incidents-sub">−3 vs 7d</div></div>
             <div class="kpi"><div class="lbl">P1 / P2</div><div class="val" id="mockup-live-kpi-overview-p12">2</div><div class="delta" id="mockup-live-kpi-overview-p12-sub" style="color:var(--warn)">Action required</div></div>
@@ -3306,8 +3266,8 @@
                   <h3 class="qa-cluster-title">Respond &amp; escalate</h3>
                   <p class="qa-cluster-hint">New work, TAC alignment, and human–agent handoff.</p>
                   <div class="qa-cluster-actions">
-                    <button class="btn" type="button" onclick="alert('Mock: create incident wizard')">New incident</button>
-                    <button class="btn btn-ghost" type="button" onclick="alert('Mock: TAC sync')">Sync TAC</button>
+                    <button class="btn" type="button" data-action="alert" data-alert-text="Mock: create incident wizard">New incident</button>
+                    <button class="btn btn-ghost" type="button" data-action="alert" data-alert-text="Mock: TAC sync">Sync TAC</button>
                     <button class="btn btn-ghost" type="button" id="overview-open-war-room">Open war room</button>
                   </div>
                 </div>
@@ -3315,30 +3275,30 @@
                   <h3 class="qa-cluster-title">Inventory &amp; policy truth</h3>
                   <p class="qa-cluster-hint">Catalyst Center, FMC, and ISE snapshots for estate confidence.</p>
                   <div class="qa-cluster-actions">
-                    <button class="btn" type="button" onclick="alert('Mock: DNA Center sync')">Sync Catalyst Center</button>
-                    <button class="btn btn-ghost" type="button" onclick="alert('Mock: FMC device &amp; policy sync (Wave 16)')">Sync FMC</button>
-                    <button class="btn btn-ghost" type="button" onclick="alert('Mock: ISE as Code snapshot (Wave 11)')">ISE as Code snapshot</button>
+                    <button class="btn" type="button" data-action="alert" data-alert-text="Mock: DNA Center sync">Sync Catalyst Center</button>
+                    <button class="btn btn-ghost" type="button" data-action="alert" data-alert-text="Mock: FMC device &amp; policy sync (Wave 16)">Sync FMC</button>
+                    <button class="btn btn-ghost" type="button" data-action="alert" data-alert-text="Mock: ISE as Code snapshot (Wave 11)">ISE as Code snapshot</button>
                   </div>
                 </div>
                 <div class="qa-cluster">
                   <h3 class="qa-cluster-title">Observability &amp; edge</h3>
                   <p class="qa-cluster-hint">Path, DNS, and flow context — fewer blind spots during incidents.</p>
                   <div class="qa-cluster-actions">
-                    <button class="btn" type="button" onclick="alert('Mock: ThousandEyes tests &amp; alerts (Wave 5)')">Sync ThousandEyes</button>
-                    <button class="btn btn-ghost" type="button" onclick="alert('Mock: Umbrella reporting (Wave 6)')">Sync Umbrella</button>
-                    <button class="btn btn-ghost" type="button" onclick="alert('Mock: Stealthwatch / SNA flow context (Wave 7)')">Sync SNA</button>
-                    <button class="btn btn-ghost" type="button" onclick="alert('Mock: DWDM / optical EMS (Wave 8)')">Sync DWDM</button>
+                    <button class="btn" type="button" data-action="alert" data-alert-text="Mock: ThousandEyes tests &amp; alerts (Wave 5)">Sync ThousandEyes</button>
+                    <button class="btn btn-ghost" type="button" data-action="alert" data-alert-text="Mock: Umbrella reporting (Wave 6)">Sync Umbrella</button>
+                    <button class="btn btn-ghost" type="button" data-action="alert" data-alert-text="Mock: Stealthwatch / SNA flow context (Wave 7)">Sync SNA</button>
+                    <button class="btn btn-ghost" type="button" data-action="alert" data-alert-text="Mock: DWDM / optical EMS (Wave 8)">Sync DWDM</button>
                   </div>
                 </div>
                 <div class="qa-cluster">
                   <h3 class="qa-cluster-title">Risk, entitlements &amp; VoC hooks</h3>
                   <p class="qa-cluster-hint">Licensing, advisories, field notices, and insight collectors.</p>
                   <div class="qa-cluster-actions">
-                    <button class="btn" type="button" onclick="alert('Mock: Smart Licensing sync')">Sync licensing</button>
-                    <button class="btn btn-ghost" type="button" onclick="alert('Mock: OpenVuln advisory pull (Wave 14)')">Sync OpenVuln</button>
-                    <button class="btn btn-ghost" type="button" onclick="alert('Mock: Field notice feed (Wave 15)')">Sync field notices</button>
-                    <button class="btn btn-ghost" type="button" onclick="alert('Mock: Cisco IQ insights (Wave 9)')">Sync Cisco IQ</button>
-                    <button class="btn btn-ghost" type="button" onclick="alert('Mock: CSPC collector alignment (Wave 10)')">Sync CSPC</button>
+                    <button class="btn" type="button" data-action="alert" data-alert-text="Mock: Smart Licensing sync">Sync licensing</button>
+                    <button class="btn btn-ghost" type="button" data-action="alert" data-alert-text="Mock: OpenVuln advisory pull (Wave 14)">Sync OpenVuln</button>
+                    <button class="btn btn-ghost" type="button" data-action="alert" data-alert-text="Mock: Field notice feed (Wave 15)">Sync field notices</button>
+                    <button class="btn btn-ghost" type="button" data-action="alert" data-alert-text="Mock: Cisco IQ insights (Wave 9)">Sync Cisco IQ</button>
+                    <button class="btn btn-ghost" type="button" data-action="alert" data-alert-text="Mock: CSPC collector alignment (Wave 10)">Sync CSPC</button>
                   </div>
                 </div>
               </div>
@@ -3369,32 +3329,32 @@
               <div><div class="dd-metric">6</div><div class="dd-sub">AppDynamics-monitored apps</div></div>
             </div>
             <div class="btn-row" style="margin-top:12px">
-              <button class="btn" type="button" onclick="showView('network-as-code')">NaC ROI →</button>
-              <button class="btn btn-ghost" type="button" onclick="showView('services-as-code')">SaC ROI →</button>
-              <button class="btn btn-ghost" type="button" onclick="showView('integrations')">DD waves →</button>
+              <button class="btn" type="button" data-action="show-view" data-view-target="network-as-code">NaC ROI →</button>
+              <button class="btn btn-ghost" type="button" data-action="show-view" data-view-target="services-as-code">SaC ROI →</button>
+              <button class="btn btn-ghost" type="button" data-action="show-view" data-view-target="integrations">DD waves →</button>
             </div>
           </div>
 
           <!-- Salesforce CRM — overview pulse -->
-          <div class="panel sf-panel" style="border-left:3px solid #00a1e0">
-            <h2 style="color:#00a1e0;font-size:1.125rem;margin:0 0 10px">Salesforce CRM — portfolio pulse</h2>
+          <div class="panel sf-panel" style="border-left:3px solid var(--brand-salesforce)">
+            <h2 style="color:var(--brand-salesforce);font-size:1.125rem;margin:0 0 10px">Salesforce CRM — portfolio pulse</h2>
             <p class="hint">Live account, case, and pipeline data from Salesforce powering all SDC program consoles.</p>
             <div style="display:flex;gap:24px;flex-wrap:wrap;margin-top:10px">
-              <div><div class="dd-metric" style="color:#00a1e0">24</div><div class="dd-sub">Active accounts</div></div>
-              <div><div class="dd-metric" style="color:#00a1e0">18</div><div class="dd-sub">Open cases</div></div>
-              <div><div class="dd-metric" style="color:#00a1e0">$4.2M</div><div class="dd-sub">Pipeline value</div></div>
-              <div><div class="dd-metric" style="color:#00a1e0">7</div><div class="dd-sub">Entitlements expiring 90d</div></div>
-              <div><div class="dd-metric" style="color:#00a1e0">42</div><div class="dd-sub">Open tasks</div></div>
+              <div><div class="dd-metric" style="color:var(--brand-salesforce)">24</div><div class="dd-sub">Active accounts</div></div>
+              <div><div class="dd-metric" style="color:var(--brand-salesforce)">18</div><div class="dd-sub">Open cases</div></div>
+              <div><div class="dd-metric" style="color:var(--brand-salesforce)">$4.2M</div><div class="dd-sub">Pipeline value</div></div>
+              <div><div class="dd-metric" style="color:var(--brand-salesforce)">7</div><div class="dd-sub">Entitlements expiring 90d</div></div>
+              <div><div class="dd-metric" style="color:var(--brand-salesforce)">42</div><div class="dd-sub">Open tasks</div></div>
             </div>
             <div class="btn-row" style="margin-top:12px">
-              <button class="btn" type="button" onclick="showView('sdcroles')" style="background:#00a1e0;border-color:#00a1e0">SDC consoles →</button>
-              <button class="btn btn-ghost" type="button" onclick="showView('consoles')">Console ↔ wave map →</button>
+              <button class="btn" type="button" data-action="show-view" data-view-target="sdcroles" style="background:var(--brand-salesforce);border-color:var(--brand-salesforce)">SDC consoles →</button>
+              <button class="btn btn-ghost" type="button" data-action="show-view" data-view-target="consoles">Console ↔ wave map →</button>
             </div>
           </div>
         </section>
 
         <!-- Sentiment & VoC -->
-        <section class="view" id="view-sentiment">
+        <section class="view" id="view-sentiment" role="tabpanel" aria-labelledby="tab-sentiment" tabindex="0">
           <div class="kpi-grid">
             <div class="kpi"><div class="lbl">Blended CSAT (30d)</div><div class="val">4.2</div><div class="delta">Target 4.0</div></div>
             <div class="kpi"><div class="lbl">NPS trend</div><div class="val">+18</div><div class="delta" style="color:var(--ok)">+6 vs prior month</div></div>
@@ -3444,7 +3404,7 @@
         </section>
 
         <!-- Journey signals -->
-        <section class="view" id="view-journeys">
+        <section class="view" id="view-journeys" role="tabpanel" aria-labelledby="tab-journeys" tabindex="0">
           <div class="kpi-grid">
             <div class="kpi"><div class="lbl">Active journeys</div><div class="val">24</div><div class="delta">Defined in VoC hub</div></div>
             <div class="kpi"><div class="lbl">Avg friction index</div><div class="val">0.31</div><div class="delta" style="color:var(--warn)">Watch &gt; 0.35</div></div>
@@ -3484,7 +3444,7 @@
         </section>
 
         <!-- Experience command — cross-console CX hub -->
-        <section class="view" id="view-cx-command">
+        <section class="view" id="view-cx-command" role="tabpanel" aria-labelledby="tab-cx-command" tabindex="0">
           <div class="kpi-grid">
             <div class="kpi"><div class="lbl">Portfolio ACV (TCV · mock)</div><div class="val cx-fin-highlight">$48.2M</div><div class="delta">Multi-year · hospitality IT</div></div>
             <div class="kpi"><div class="lbl">Renewal risk (12 mo)</div><div class="val cx-fin-highlight">$3.1M</div><div class="delta" style="color:var(--warn)">2 accounts · score &gt; 6</div></div>
@@ -3683,26 +3643,26 @@
               </li>
             </ul>
             <div class="btn-row" style="margin-top:8px">
-              <button class="btn btn-ghost" type="button" onclick="alert('Mock: push recommendations to PM console as RAID items')">Push to PM RAID</button>
-              <button class="btn btn-ghost" type="button" onclick="alert('Mock: export PDF for renewals')">Export renewals brief</button>
+              <button class="btn btn-ghost" type="button" data-action="alert" data-alert-text="Mock: push recommendations to PM console as RAID items">Push to PM RAID</button>
+              <button class="btn btn-ghost" type="button" data-action="alert" data-alert-text="Mock: export PDF for renewals">Export renewals brief</button>
             </div>
           </div>
 
           <!-- Salesforce CRM — command center feed -->
-          <div class="panel sf-panel" style="border-left:3px solid #00a1e0;margin-top:16px">
-            <h2 style="color:#00a1e0;font-size:1.125rem;margin:0 0 8px">Salesforce — executive CRM pulse</h2>
+          <div class="panel sf-panel" style="border-left:3px solid var(--brand-salesforce);margin-top:16px">
+            <h2 style="color:var(--brand-salesforce);font-size:1.125rem;margin:0 0 8px">Salesforce — executive CRM pulse</h2>
             <p class="hint">Executive-level Salesforce aggregation for Experience Command: strategic pipeline health, renewal risk, and cross-console case velocity.</p>
             <div style="display:flex;gap:24px;flex-wrap:wrap;margin-top:10px">
-              <div><div class="dd-metric" style="color:#00a1e0">$4.2M</div><div class="dd-sub">Strategic pipeline</div></div>
-              <div><div class="dd-metric" style="color:#00a1e0">68%</div><div class="dd-sub">Weighted close probability</div></div>
-              <div><div class="dd-metric" style="color:#00a1e0">2</div><div class="dd-sub">At-risk renewals (90d)</div></div>
-              <div><div class="dd-metric" style="color:#00a1e0">96%</div><div class="dd-sub">Case SLA compliance</div></div>
+              <div><div class="dd-metric" style="color:var(--brand-salesforce)">$4.2M</div><div class="dd-sub">Strategic pipeline</div></div>
+              <div><div class="dd-metric" style="color:var(--brand-salesforce)">68%</div><div class="dd-sub">Weighted close probability</div></div>
+              <div><div class="dd-metric" style="color:var(--brand-salesforce)">2</div><div class="dd-sub">At-risk renewals (90d)</div></div>
+              <div><div class="dd-metric" style="color:var(--brand-salesforce)">96%</div><div class="dd-sub">Case SLA compliance</div></div>
             </div>
           </div>
         </section>
 
         <!-- CX role actions — adoption, cost, speed, CSAT -->
-        <section class="view" id="view-cx-role-actions">
+        <section class="view" id="view-cx-role-actions" role="tabpanel" aria-labelledby="tab-cx-role-actions" tabindex="0">
           <div class="kpi-grid">
             <div class="kpi"><div class="lbl">Wave coverage (props)</div><div class="val">94%</div><div class="delta" style="color:var(--ok)">+2 pts vs Q3</div></div>
             <div class="kpi"><div class="lbl">Support $ / device / mo</div><div class="val">$9.40</div><div class="delta" style="color:var(--ok)">−4% QoQ target</div></div>
@@ -3745,7 +3705,7 @@
         </section>
 
         <!-- Power BI Global PM Dashboard capability -->
-        <section class="view" id="view-powerbi-pm">
+        <section class="view" id="view-powerbi-pm" role="tabpanel" aria-labelledby="tab-powerbi-pm" tabindex="0">
           <div class="kpi-grid">
             <div class="kpi"><div class="lbl">Embed status</div><div class="val">Ready</div><div class="delta">JWT + SP token</div></div>
             <div class="kpi"><div class="lbl">Report pages</div><div class="val">12</div><div class="delta">Mock · portfolio slice</div></div>
@@ -3761,7 +3721,7 @@
             </p>
             <div class="btn-row" style="margin-top:12px">
               <a class="btn" href="../powerbi-pm.html">Open live embed page</a>
-              <button class="btn btn-ghost" type="button" onclick="alert('Mock: open workspace in Power BI Service')">Open workspace (mock)</button>
+              <button class="btn btn-ghost" type="button" data-action="alert" data-alert-text="Mock: open workspace in Power BI Service">Open workspace (mock)</button>
             </div>
           </div>
           <div class="two-col">
@@ -3811,8 +3771,8 @@
           </div>
 
           <!-- Salesforce CRM — role-specific SF data -->
-          <div class="panel sf-panel" style="border-left:3px solid #00a1e0;margin-top:16px">
-            <h2 style="color:#00a1e0;font-size:1.125rem;margin:0 0 8px">Salesforce — CX role data feeds</h2>
+          <div class="panel sf-panel" style="border-left:3px solid var(--brand-salesforce);margin-top:16px">
+            <h2 style="color:var(--brand-salesforce);font-size:1.125rem;margin:0 0 8px">Salesforce — CX role data feeds</h2>
             <p class="hint">Each SDC program console pulls different Salesforce objects. This matrix shows which SF data powers which role.</p>
             <div class="table-wrap">
               <table>
@@ -3831,7 +3791,7 @@
         </section>
 
         <!-- Incidents -->
-        <section class="view" id="view-incidents">
+        <section class="view" id="view-incidents" role="tabpanel" aria-labelledby="tab-incidents" tabindex="0">
           <div class="kpi-grid">
             <div class="kpi"><div class="lbl">Open</div><div class="val" id="mockup-live-kpi-inc-open">14</div><div class="delta" id="mockup-live-kpi-inc-open-sub">Queue depth</div></div>
             <div class="kpi"><div class="lbl">P1 / P2</div><div class="val" id="mockup-live-kpi-inc-p12">2</div><div class="delta" id="mockup-live-kpi-inc-p12-sub" style="color:var(--warn)">SLA clock</div></div>
@@ -3906,8 +3866,8 @@
           </div>
 
           <!-- Salesforce CRM — incident correlation -->
-          <div class="panel sf-panel" style="border-left:3px solid #00a1e0;margin-top:16px">
-            <h2 style="color:#00a1e0;font-size:1.125rem;margin:0 0 8px">Salesforce — case correlation</h2>
+          <div class="panel sf-panel" style="border-left:3px solid var(--brand-salesforce);margin-top:16px">
+            <h2 style="color:var(--brand-salesforce);font-size:1.125rem;margin:0 0 8px">Salesforce — case correlation</h2>
             <p class="hint">SDM incidents with matching Salesforce cases. Service Delivery Console auto-links when TAC SR or SF case number is attached.</p>
             <div class="table-wrap">
               <table>
@@ -3923,7 +3883,7 @@
         </section>
 
         <!-- Devices -->
-        <section class="view" id="view-devices">
+        <section class="view" id="view-devices" role="tabpanel" aria-labelledby="tab-devices" tabindex="0">
           <div class="kpi-grid">
             <div class="kpi"><div class="lbl">Total devices</div><div class="val" id="mockup-live-kpi-dev-total">1,284</div><div class="delta" id="mockup-live-kpi-dev-total-sub">DNA managed</div></div>
             <div class="kpi"><div class="lbl">Active</div><div class="val" id="mockup-live-kpi-dev-active">—</div><div class="delta" id="mockup-live-kpi-dev-active-sub">Live API</div></div>
@@ -4017,8 +3977,8 @@
           </div>
 
           <!-- Salesforce CRM — asset / contract mapping -->
-          <div class="panel sf-panel" style="border-left:3px solid #00a1e0;margin-top:16px">
-            <h2 style="color:#00a1e0;font-size:1.125rem;margin:0 0 8px">Salesforce — device entitlement coverage</h2>
+          <div class="panel sf-panel" style="border-left:3px solid var(--brand-salesforce);margin-top:16px">
+            <h2 style="color:var(--brand-salesforce);font-size:1.125rem;margin:0 0 8px">Salesforce — device entitlement coverage</h2>
             <p class="hint">Salesforce Entitlements and Service Contracts mapped against the device inventory for the Success and Renewals consoles.</p>
             <div class="table-wrap">
               <table>
@@ -4034,7 +3994,7 @@
         </section>
 
         <!-- Properties -->
-        <section class="view" id="view-properties">
+        <section class="view" id="view-properties" role="tabpanel" aria-labelledby="tab-properties" tabindex="0">
           <div class="panel">
             <h2>Properties</h2>
             <p class="hint">Full MGM portfolio — <strong>Las Vegas</strong> resort destinations and <strong>remote</strong> regional / corporate sites (mock inventory). <strong>Magenta outline</strong> highlights the current sites with the highest mock network-exposure index (devices, open incidents, rollout gaps) — prioritize remediation there first.</p>
@@ -4090,8 +4050,8 @@
           </div>
 
           <!-- Salesforce CRM — property account health -->
-          <div class="panel sf-panel" style="border-left:3px solid #00a1e0;margin-top:16px">
-            <h2 style="color:#00a1e0;font-size:1.125rem;margin:0 0 8px">Salesforce — property ↔ account health</h2>
+          <div class="panel sf-panel" style="border-left:3px solid var(--brand-salesforce);margin-top:16px">
+            <h2 style="color:var(--brand-salesforce);font-size:1.125rem;margin:0 0 8px">Salesforce — property ↔ account health</h2>
             <p class="hint">Each property maps to a Salesforce Account. The PM and Success consoles use this data to drive customer health scores and renewal readiness.</p>
             <div class="table-wrap">
               <table>
@@ -4108,7 +4068,7 @@
         </section>
 
         <!-- Integrations / waves -->
-        <section class="view" id="view-integrations">
+        <section class="view" id="view-integrations" role="tabpanel" aria-labelledby="tab-integrations" tabindex="0">
           <div class="kpi-grid">
             <div class="kpi"><div class="lbl">Sources enabled</div><div class="val">4</div><div class="delta">of 18 configured</div></div>
             <div class="kpi"><div class="lbl">Waves in scope</div><div class="val">16</div><div class="delta">MVP freeze</div></div>
@@ -4175,7 +4135,7 @@
                   <tr><td>DD-L</td><td>AppDynamics</td><td>Controller REST</td><td><span class="badge b-p3">N/A</span></td><td><span class="badge b-p3">N/A</span></td><td><span class="badge b-warn">Planned</span></td><td><span class="badge b-ok">Active</span></td></tr>
                   <tr><td>DD-M</td><td>Digital Document Solutions</td><td>Doc Gen REST</td><td><span class="badge b-p3">N/A</span></td><td><span class="badge b-p3">N/A</span></td><td><span class="badge b-warn">Planned</span></td><td><span class="badge b-warn">Planned</span></td></tr>
                   <tr><td>DD-N</td><td>NaC Toolchain</td><td>CLI + REST (nac-api)</td><td><span class="badge b-ok">Yes</span></td><td><span class="badge b-p3">N/A</span></td><td><span class="badge b-p3">No</span></td><td><span class="badge b-ok">Active</span></td></tr>
-                  <tr style="background:rgba(0,161,224,0.04)"><td>W-17</td><td><strong>Salesforce CRM</strong></td><td>REST v59.0 / SOQL</td><td><span class="badge b-p3">N/A</span></td><td><span class="badge b-p3">N/A</span></td><td><span class="badge b-ok">Yes</span></td><td><span class="badge b-ok">Active</span></td></tr>
+                  <tr style="background:rgba(var(--brand-salesforce-rgb), 0.04)"><td>W-17</td><td><strong>Salesforce CRM</strong></td><td>REST v59.0 / SOQL</td><td><span class="badge b-p3">N/A</span></td><td><span class="badge b-p3">N/A</span></td><td><span class="badge b-ok">Yes</span></td><td><span class="badge b-ok">Active</span></td></tr>
                 </tbody>
               </table>
             </div>
@@ -4183,7 +4143,7 @@
         </section>
 
         <!-- MVP products × Cisco customer journey + CSPC / Cisco IQ -->
-        <section class="view" id="view-mvp-journey">
+        <section class="view" id="view-mvp-journey" role="tabpanel" aria-labelledby="tab-mvp-journey" tabindex="0">
           <div class="kpi-grid">
             <div class="kpi"><div class="lbl">MVP products in view</div><div class="val">16</div><div class="delta">W1–W16 frozen scope</div></div>
             <div class="kpi"><div class="lbl">In Implement or beyond</div><div class="val">11</div><div class="delta">Mock portfolio curve</div></div>
@@ -4268,8 +4228,8 @@
           </div>
 
           <!-- Salesforce CRM — journey pipeline alignment -->
-          <div class="panel sf-panel" style="border-left:3px solid #00a1e0;margin-top:16px">
-            <h2 style="color:#00a1e0;font-size:1.125rem;margin:0 0 8px">Salesforce — journey ↔ pipeline alignment</h2>
+          <div class="panel sf-panel" style="border-left:3px solid var(--brand-salesforce);margin-top:16px">
+            <h2 style="color:var(--brand-salesforce);font-size:1.125rem;margin:0 0 8px">Salesforce — journey ↔ pipeline alignment</h2>
             <p class="hint">Salesforce Opportunities mapped to journey phases. PM Console uses this to track commercial velocity alongside technical adoption.</p>
             <div class="table-wrap">
               <table>
@@ -4286,7 +4246,7 @@
         </section>
 
         <!-- Sources admin -->
-        <section class="view" id="view-sources">
+        <section class="view" id="view-sources" role="tabpanel" aria-labelledby="tab-sources" tabindex="0">
           <div class="kpi-grid">
             <div class="kpi"><div class="lbl">Enabled</div><div class="val">4</div><div class="delta">dna, tac, licensing, fmc</div></div>
             <div class="kpi"><div class="lbl">Credentials ref</div><div class="val">Vault</div><div class="delta">mock · no secrets shown</div></div>
@@ -4351,20 +4311,20 @@
           </div>
 
           <!-- Salesforce CRM — source health -->
-          <div class="panel sf-panel" style="border-left:3px solid #00a1e0;margin-top:16px">
-            <h2 style="color:#00a1e0;font-size:1.125rem;margin:0 0 8px">Salesforce — Wave 17 source detail</h2>
+          <div class="panel sf-panel" style="border-left:3px solid var(--brand-salesforce);margin-top:16px">
+            <h2 style="color:var(--brand-salesforce);font-size:1.125rem;margin:0 0 8px">Salesforce — Wave 17 source detail</h2>
             <p class="hint">Salesforce Connected App (OAuth 2.0 password flow). Enable via <code>SALESFORCE_ENABLED=true</code> in <code>.env</code>. Token TTL ~110 min with auto-refresh. Test via <code>/api/v1/admin/sources/salesforce/test</code>.</p>
             <div style="display:flex;gap:24px;flex-wrap:wrap;margin-top:10px">
-              <div><div class="dd-metric" style="color:#00a1e0">REST v59.0</div><div class="dd-sub">API version</div></div>
-              <div><div class="dd-metric" style="color:#00a1e0">9</div><div class="dd-sub">SF objects exposed</div></div>
-              <div><div class="dd-metric" style="color:#00a1e0">*/15</div><div class="dd-sub">Sync schedule (cron)</div></div>
-              <div><div class="dd-metric" style="color:#00a1e0">6</div><div class="dd-sub">SDC consoles fed</div></div>
+              <div><div class="dd-metric" style="color:var(--brand-salesforce)">REST v59.0</div><div class="dd-sub">API version</div></div>
+              <div><div class="dd-metric" style="color:var(--brand-salesforce)">9</div><div class="dd-sub">SF objects exposed</div></div>
+              <div><div class="dd-metric" style="color:var(--brand-salesforce)">*/15</div><div class="dd-sub">Sync schedule (cron)</div></div>
+              <div><div class="dd-metric" style="color:var(--brand-salesforce)">6</div><div class="dd-sub">SDC consoles fed</div></div>
             </div>
           </div>
         </section>
 
         <!-- Console map -->
-        <section class="view" id="view-consoles">
+        <section class="view" id="view-consoles" role="tabpanel" aria-labelledby="tab-consoles" tabindex="0">
           <div class="panel">
             <h2>SDC console ↔ MVP wave</h2>
             <p class="hint">From <strong>CISCO_DATA_SOURCES.md</strong> — capability parity via published APIs only (no UI scraping).</p>
@@ -4412,19 +4372,19 @@
           </div>
 
           <!-- Salesforce CRM — console CRM mapping -->
-          <div class="panel sf-panel" style="border-left:3px solid #00a1e0;margin-top:16px">
-            <h2 style="color:#00a1e0;font-size:1.125rem;margin:0 0 8px">Salesforce — CRM layer for all consoles</h2>
+          <div class="panel sf-panel" style="border-left:3px solid var(--brand-salesforce);margin-top:16px">
+            <h2 style="color:var(--brand-salesforce);font-size:1.125rem;margin:0 0 8px">Salesforce — CRM layer for all consoles</h2>
             <p class="hint">Wave 17 (Salesforce CRM) provides the customer relationship layer that spans all SDC program consoles and the vendor console map.</p>
             <div style="display:flex;gap:24px;flex-wrap:wrap;margin-top:10px">
-              <div><div class="dd-metric" style="color:#00a1e0">6</div><div class="dd-sub">SDC consoles fed</div></div>
-              <div><div class="dd-metric" style="color:#00a1e0">9</div><div class="dd-sub">SF objects</div></div>
-              <div><div class="dd-metric" style="color:#00a1e0">12</div><div class="dd-sub">API endpoints</div></div>
+              <div><div class="dd-metric" style="color:var(--brand-salesforce)">6</div><div class="dd-sub">SDC consoles fed</div></div>
+              <div><div class="dd-metric" style="color:var(--brand-salesforce)">9</div><div class="dd-sub">SF objects</div></div>
+              <div><div class="dd-metric" style="color:var(--brand-salesforce)">12</div><div class="dd-sub">API endpoints</div></div>
             </div>
           </div>
         </section>
 
         <!-- SDC personas & program consoles -->
-        <section class="view" id="view-sdcroles">
+        <section class="view" id="view-sdcroles" role="tabpanel" aria-labelledby="tab-sdcroles" tabindex="0">
           <div class="kpi-grid">
             <div class="kpi"><div class="lbl">Personas in hub</div><div class="val">6</div><div class="delta">PM · SDM · CXM · CDA · ENG · HTOM</div></div>
             <div class="kpi"><div class="lbl">Program consoles</div><div class="val">6</div><div class="delta">PM · Delivery · High touch · Success · Renewals · Architect</div></div>
@@ -4524,7 +4484,7 @@
                   <a href="#" class="mock-jump" data-mock-view="integrations">Integrations</a>
                 </div>
               </div>
-              <div class="console-card" style="border-top-color:#fb7185">
+              <div class="console-card" style="border-top-color:var(--accent-rose)">
                 <h3>High Touch Operations Console</h3>
                 <div class="sub">Executive cadence · flagship accounts · joint sessions</div>
                 <ul class="action-list">
@@ -4541,7 +4501,7 @@
                   <a href="#" class="mock-jump" data-mock-view="overview">Overview</a>
                 </div>
               </div>
-              <div class="console-card" style="border-top-color:#34d399">
+              <div class="console-card" style="border-top-color:var(--accent-green)">
                 <h3>Service Delivery Console</h3>
                 <div class="sub">Incidents · TAC · inventory · collaboration</div>
                 <ul class="action-list">
@@ -4559,7 +4519,7 @@
                   <a href="#" class="mock-jump" data-mock-view="consoles">Console map</a>
                 </div>
               </div>
-              <div class="console-card" style="border-top-color:#a78bfa">
+              <div class="console-card" style="border-top-color:var(--accent-violet)">
                 <h3>Success Console</h3>
                 <div class="sub">Adoption · health story · customer risk posture</div>
                 <ul class="action-list">
@@ -4576,7 +4536,7 @@
                   <a href="#" class="mock-jump" data-mock-view="fieldnotes">Field notices</a>
                 </div>
               </div>
-              <div class="console-card" style="border-top-color:#fbbf24">
+              <div class="console-card" style="border-top-color:var(--accent-amber)">
                 <h3>Renewals Console</h3>
                 <div class="sub">Licensing · contracts · EoX · quote-ready inventory</div>
                 <ul class="action-list">
@@ -4592,7 +4552,7 @@
                   <a href="#" class="mock-jump" data-mock-view="devices">Devices</a>
                 </div>
               </div>
-              <div class="console-card" style="border-top-color:#38bdf8">
+              <div class="console-card" style="border-top-color:var(--accent-blue)">
                 <h3>Delivery Architect Console</h3>
                 <div class="sub">Patterns · dependencies · audit trail · API parity</div>
                 <ul class="action-list">
@@ -4654,7 +4614,7 @@
                 <li><code>CISCO_DATA_SOURCES.md</code> — SDC program consoles → SDM surfaces table.</li>
               </ul>
               <div class="btn-row" style="margin-top:14px">
-                <button class="btn btn-ghost" type="button" onclick="alert('Open MVP_SCOPE_FREEZE.md / CISCO_DATA_SOURCES.md in repo')">Open scope docs</button>
+                <button class="btn btn-ghost" type="button" data-action="alert" data-alert-text="Open MVP_SCOPE_FREEZE.md / CISCO_DATA_SOURCES.md in repo">Open scope docs</button>
               </div>
             </div>
           </div>
@@ -4685,12 +4645,12 @@
           </div>
 
           <!-- Salesforce CRM — console data feeds -->
-          <div class="panel sf-panel" style="border-left:3px solid #00a1e0;margin-top:20px">
-            <h2 style="color:#00a1e0;font-size:1.125rem;margin:0 0 10px">Salesforce CRM — SDC console data feeds (Wave 17)</h2>
+          <div class="panel sf-panel" style="border-left:3px solid var(--brand-salesforce);margin-top:20px">
+            <h2 style="color:var(--brand-salesforce);font-size:1.125rem;margin:0 0 10px">Salesforce CRM — SDC console data feeds (Wave 17)</h2>
             <p class="hint">Salesforce REST API v59.0 provides the CRM backbone for all six SDC program consoles. Data flows via OAuth 2.0 connected app with SOQL parameterized queries.</p>
             <div class="two-col" style="margin-top:14px">
               <div>
-                <h3 style="font-size:15px;color:#00a1e0;margin:0 0 8px">Console → SF object mapping</h3>
+                <h3 style="font-size:15px;color:var(--brand-salesforce);margin:0 0 8px">Console → SF object mapping</h3>
                 <div class="table-wrap">
                   <table>
                     <thead><tr><th>SDC Console</th><th>Primary SF Objects</th><th>Access</th></tr></thead>
@@ -4706,7 +4666,7 @@
                 </div>
               </div>
               <div>
-                <h3 style="font-size:15px;color:#00a1e0;margin:0 0 8px">Integration architecture</h3>
+                <h3 style="font-size:15px;color:var(--brand-salesforce);margin:0 0 8px">Integration architecture</h3>
                 <ul style="margin:0;padding-left:18px;color:var(--muted);font-size:14px;line-height:1.65">
                   <li><strong>Auth:</strong> OAuth 2.0 password flow (Connected App) with token caching (~110 min TTL)</li>
                   <li><strong>API:</strong> Salesforce REST API v59.0 with parameterized SOQL queries</li>
@@ -4720,7 +4680,7 @@
         </section>
 
         <!-- PSIRT -->
-        <section class="view" id="view-security">
+        <section class="view" id="view-security" role="tabpanel" aria-labelledby="tab-security" tabindex="0">
           <div class="kpi-grid">
             <div class="kpi"><div class="lbl">OpenVuln sync</div><div class="val">OK</div><div class="delta">Last 03:12 local</div></div>
             <div class="kpi"><div class="lbl">CVEs in estate</div><div class="val">7</div><div class="delta">3 need action</div></div>
@@ -4776,7 +4736,7 @@
         </section>
 
         <!-- Field notices -->
-        <section class="view" id="view-fieldnotes">
+        <section class="view" id="view-fieldnotes" role="tabpanel" aria-labelledby="tab-fieldnotes" tabindex="0">
           <div class="kpi-grid">
             <div class="kpi"><div class="lbl">Active FN matches</div><div class="val">2</div><div class="delta">inventory join</div></div>
             <div class="kpi"><div class="lbl">Devices flagged</div><div class="val">26</div><div class="delta">serial / PID</div></div>
@@ -4834,8 +4794,8 @@
           </div>
 
           <!-- Salesforce CRM — FN → case tracking -->
-          <div class="panel sf-panel" style="border-left:3px solid #00a1e0;margin-top:16px">
-            <h2 style="color:#00a1e0;font-size:1.125rem;margin:0 0 8px">Salesforce — FN-to-case tracking</h2>
+          <div class="panel sf-panel" style="border-left:3px solid var(--brand-salesforce);margin-top:16px">
+            <h2 style="color:var(--brand-salesforce);font-size:1.125rem;margin:0 0 8px">Salesforce — FN-to-case tracking</h2>
             <p class="hint">Field notices trigger Salesforce Cases for affected accounts. PM and SDM consoles use SF data to track remediation commitments and customer communication.</p>
             <div class="table-wrap">
               <table>
@@ -4855,7 +4815,7 @@
         <!-- ═══════════════════════════════════════════════════════════ -->
 
         <!-- Network as Code -->
-        <section class="view" id="view-network-as-code">
+        <section class="view" id="view-network-as-code" role="tabpanel" aria-labelledby="tab-network-as-code" tabindex="0">
           <div class="kpi-grid">
             <div class="kpi"><div class="lbl">NaC solutions scoped</div><div class="val">9</div><div class="delta">Catalyst Ctr · SD-WAN · ISE · IOS-XE · 5 tools</div></div>
             <div class="kpi"><div class="lbl">Automation readiness</div><div class="val">42 %</div><div class="delta">vs customer estate</div></div>
@@ -5047,7 +5007,7 @@
         </section>
 
         <!-- Services as Code -->
-        <section class="view" id="view-services-as-code">
+        <section class="view" id="view-services-as-code" role="tabpanel" aria-labelledby="tab-services-as-code" tabindex="0">
           <div class="kpi-grid">
             <div class="kpi"><div class="lbl">SaC technologies</div><div class="val">14</div><div class="delta">incl. AI Assistant &amp; DDS</div></div>
             <div class="kpi"><div class="lbl">Dev waves planned</div><div class="val">7</div><div class="delta">phased per customer stack</div></div>
@@ -5285,7 +5245,7 @@
         </section>
 
         <!-- Digital Document Solutions -->
-        <section class="view" id="view-digital-document-solutions">
+        <section class="view" id="view-digital-document-solutions" role="tabpanel" aria-labelledby="tab-digital-document-solutions" tabindex="0">
           <div class="kpi-grid">
             <div class="kpi"><div class="lbl">Document templates</div><div class="val">12</div><div class="delta">branded + versioned</div></div>
             <div class="kpi"><div class="lbl">Active shares</div><div class="val">8</div><div class="delta">customer-facing</div></div>
@@ -5370,34 +5330,31 @@
       tabindex="0"
     ></div>
 
-    <aside class="ai-pane" id="ai-pane-region" aria-label="AI insights and Microsoft 365 Copilot assistant">
+    <aside class="ai-pane" id="ai-pane-region" aria-label="AI insights panel">
       <div class="ai-pane-header">
         <div class="ai-pane-brand">
           <h2 class="ai-pane-title">Deep insights</h2>
-          <span class="ai-pane-copilot-tag" title="Production: Microsoft 365 Copilot with Graph-grounded enterprise data, SDM APIs, and tenant compliance boundaries">Copilot-ready</span>
+          <span class="ai-pane-copilot-tag" title="Production: Helix's own agent service, synthesizing live incident, device, and property data — no external assistant involved">AI-generated</span>
         </div>
-        <p class="hint" style="margin:0;font-size:13px;line-height:1.4">Context switches with each tab. Suggested prompts align to on-screen mock data.</p>
+        <p class="hint" style="margin:0;font-size:13px;line-height:1.4">Context switches with each tab. Insights are generated from the data shown in the current view.</p>
       </div>
       <div class="ai-pane-scroll">
-        <p class="ai-disclaimer" id="ai-pane-disclaimer">This panel is a <strong>mock</strong>. Production would stream grounded summaries from your <strong>SDM APIs</strong> into <strong>Microsoft 365 Copilot</strong>—using Microsoft Graph and your org’s search index where enabled, with enterprise SSO, allow-lists, logging, and compliance controls aligned to your tenant.</p>
+        <p class="ai-disclaimer" id="ai-pane-disclaimer">This panel is a <strong>mock</strong>. Production would call <strong>Helix's own agent service</strong>—the same Observe/Reason/Act pipeline behind Helix's automated agents—to synthesize these insights directly from live incident, device, and property data. No external assistant is involved.</p>
         <p class="a11y-media-notice" role="note">
           <strong>Accessibility:</strong> This mock does <strong>not</strong> play sounds or rely on audio alerts; status is shown in text and controls only.
-          Any live Copilot experiences in production should follow your organization’s accessibility standards for multimodal features (captions, transcripts, and clear on-screen status where applicable).
+          Any live AI-generated insights in production should follow your organization’s accessibility standards for multimodal features (captions, transcripts, and clear on-screen status where applicable).
         </p>
         <p id="ai-panel-announce" class="visually-hidden" aria-live="polite" aria-atomic="true"></p>
         <div id="ai-insights-mount" role="region" aria-label="Contextual AI insights for the current view"></div>
       </div>
       <div class="ai-copilot-panel">
-        <label for="ai-copilot-query">Ask Copilot (integration mock)</label>
-        <textarea id="ai-copilot-query" class="ai-query" rows="3" placeholder="Type a question or pick a suggestion below. In production: sign in to Microsoft 365 and use Copilot with your SDM-grounded data sources where configured."></textarea>
+        <label for="ai-ask-input">Ask about this view (mock)</label>
+        <textarea id="ai-ask-input" class="ai-query" rows="3" placeholder="Type a question or pick a suggestion below. In production: Helix's agent service answers using this view's live data — no external assistant needed."></textarea>
         <div class="ai-copilot-actions">
-          <button type="button" class="btn btn-copilot" id="ai-btn-copy-copilot">Copy for Copilot</button>
-          <button type="button" class="btn btn-ghost" id="ai-btn-open-copilot" title="Opens Microsoft 365 (sign in for Copilot chat)">Open Copilot</button>
+          <button type="button" class="btn btn-copilot" id="ai-btn-ask">Generate insight</button>
         </div>
-        <div class="ai-copilot-mock" title="Microsoft 365 Copilot — mock integration">
-          <p>
-            <strong>Production:</strong> Connect SDM APIs and estate context to <strong>Microsoft 365 Copilot</strong> via Microsoft Graph, plugins or declarative agents, and your org’s data boundary. This hub only prepares plain text to paste into Copilot or related workflows—no live Copilot session runs here.
-          </p>
+        <div class="ai-copilot-mock" id="ai-answer-mock" title="Mock AI-generated answer" hidden>
+          <p id="ai-answer-text"></p>
         </div>
         <p class="ai-suggestions-label">Suggested questions</p>
         <ul class="ai-suggestions" id="ai-suggestions-list" role="list"></ul>

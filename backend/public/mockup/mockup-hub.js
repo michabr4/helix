@@ -1,15 +1,15 @@
 /* Helix — mockup hub (external file: CSP-safe when served with Helmet) */
 (function () {
-  var THEME_KEY = "helix-mockup-theme";
-  var DAYLIGHT_SNAPSHOT_KEY = "helix-mockup-daylight-snapshot";
-  var CONTRAST_KEY = "helix-mockup-contrast";
-  var TEXT_SCALE_KEY = "helix-mockup-text-scale";
-  var REDUCED_MOTION_UI_KEY = "helix-mockup-reduced-motion";
-  var BLUELIGHT_KEY = "helix-mockup-bluelight";
-  var _daylightGeoTimer = null;
+  const THEME_KEY = "helix-mockup-theme";
+  const DAYLIGHT_SNAPSHOT_KEY = "helix-mockup-daylight-snapshot";
+  const CONTRAST_KEY = "helix-mockup-contrast";
+  const TEXT_SCALE_KEY = "helix-mockup-text-scale";
+  const REDUCED_MOTION_UI_KEY = "helix-mockup-reduced-motion";
+  const BLUELIGHT_KEY = "helix-mockup-bluelight";
+  let _daylightGeoTimer = null;
 
   function setAppStatusMessage(msg) {
-    var el = document.getElementById("app-status-message");
+    const el = document.getElementById("app-status-message");
     if (!el) return;
     el.textContent = msg;
     el.classList.add("is-visible");
@@ -21,7 +21,7 @@
   }
 
   function getThemePreference() {
-    var s = localStorage.getItem(THEME_KEY);
+    const s = localStorage.getItem(THEME_KEY);
     if (s === "light" || s === "dark") return s;
     if (s === "daylight") return "daylight";
     return "system";
@@ -29,11 +29,11 @@
 
   function resolveDaylightThemeSync() {
     try {
-      var snap = JSON.parse(localStorage.getItem(DAYLIGHT_SNAPSHOT_KEY));
-      var today = new Date().toISOString().slice(0, 10);
+      const snap = JSON.parse(localStorage.getItem(DAYLIGHT_SNAPSHOT_KEY));
+      const today = new Date().toISOString().slice(0, 10);
       if (snap && snap.day === today && (snap.theme === "light" || snap.theme === "dark")) return snap.theme;
     } catch (e) {}
-    var h = new Date().getHours();
+    const h = new Date().getHours();
     return h >= 7 && h < 19 ? "light" : "dark";
   }
 
@@ -69,7 +69,7 @@
   function refreshDaylightThemeFromGeo() {
     if (getThemePreference() !== "daylight") return;
     if (!navigator.geolocation) {
-      var fb = resolveDaylightThemeSync();
+      const fb = resolveDaylightThemeSync();
       applyDaylightSnapshot(fb);
       applyDocumentTheme("daylight");
       syncThemeSwitchPanel();
@@ -78,11 +78,11 @@
     }
     navigator.geolocation.getCurrentPosition(
       function (pos) {
-        var lat = pos.coords.latitude;
-        var lng = pos.coords.longitude;
-        var d = new Date();
-        var q = d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate());
-        var url =
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
+        const d = new Date();
+        const q = d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate());
+        const url =
           "https://api.sunrise-sunset.org/json?lat=" +
           encodeURIComponent(lat) +
           "&lng=" +
@@ -97,12 +97,12 @@
           })
           .then(function (data) {
             if (!data || data.status !== "OK" || !data.results) throw new Error("sun_api");
-            var rise = new Date(data.results.sunrise).getTime();
-            var set = new Date(data.results.sunset).getTime();
-            var now = Date.now();
-            var th;
+            const rise = new Date(data.results.sunrise).getTime();
+            const set = new Date(data.results.sunset).getTime();
+            const now = Date.now();
+            let th;
             if (!(rise < set) || rise !== rise || set !== set) {
-              var hh = new Date().getHours();
+              const hh = new Date().getHours();
               th = hh >= 7 && hh < 19 ? "light" : "dark";
             } else {
               th = now >= rise && now < set ? "light" : "dark";
@@ -115,8 +115,8 @@
             }
           })
           .catch(function () {
-            var h = new Date().getHours();
-            var fb = h >= 7 && h < 19 ? "light" : "dark";
+            const h = new Date().getHours();
+            const fb = h >= 7 && h < 19 ? "light" : "dark";
             applyDaylightSnapshot(fb);
             if (getThemePreference() === "daylight") {
               applyDocumentTheme("daylight");
@@ -126,8 +126,8 @@
           });
       },
       function () {
-        var h = new Date().getHours();
-        var fb = h >= 7 && h < 19 ? "light" : "dark";
+        const h = new Date().getHours();
+        const fb = h >= 7 && h < 19 ? "light" : "dark";
         applyDaylightSnapshot(fb);
         if (getThemePreference() === "daylight") {
           applyDocumentTheme("daylight");
@@ -140,7 +140,7 @@
   }
 
   function applyDocumentTheme(pref) {
-    var root = document.documentElement;
+    const root = document.documentElement;
     if (pref === "light") {
       root.setAttribute("data-theme", "light");
       root.style.colorScheme = "light";
@@ -148,7 +148,7 @@
       root.setAttribute("data-theme", "dark");
       root.style.colorScheme = "dark";
     } else if (pref === "daylight") {
-      var dl = resolveDaylightThemeSync();
+      const dl = resolveDaylightThemeSync();
       root.setAttribute("data-theme", dl);
       root.style.colorScheme = dl;
     } else {
@@ -158,19 +158,19 @@
   }
 
   function isLightUiTheme() {
-    var t = document.documentElement.getAttribute("data-theme");
+    const t = document.documentElement.getAttribute("data-theme");
     if (t === "light") return true;
     if (t === "dark") return false;
     return window.matchMedia("(prefers-color-scheme: light)").matches;
   }
 
   function syncBrandLogoForTheme() {
-    var img = document.querySelector(".brand-logo[data-src-light]");
+    const img = document.querySelector(".brand-logo[data-src-light]");
     if (!img) return;
-    var darkSrc = img.getAttribute("data-src-dark");
-    var lightSrc = img.getAttribute("data-src-light");
+    const darkSrc = img.getAttribute("data-src-dark");
+    const lightSrc = img.getAttribute("data-src-light");
     if (!darkSrc || !lightSrc) return;
-    var next = isLightUiTheme() ? lightSrc : darkSrc;
+    const next = isLightUiTheme() ? lightSrc : darkSrc;
     if (img.getAttribute("src") !== next) img.setAttribute("src", next);
   }
 
@@ -179,11 +179,11 @@
   }
 
   function syncThemeButtons() {
-    var pref = getThemePreference();
+    const pref = getThemePreference();
     if (pref === "system") applyDocumentTheme(null);
     else applyDocumentTheme(pref);
     document.querySelectorAll(".theme-btn[data-theme-pref]").forEach(function (btn) {
-      var choice = btn.getAttribute("data-theme-pref");
+      const choice = btn.getAttribute("data-theme-pref");
       btn.setAttribute("aria-pressed", choice === pref ? "true" : "false");
     });
     syncThemeSwitchPanel();
@@ -194,14 +194,14 @@
 
   /** Hub topbar: accessible switch + “match system” checkbox */
   function syncThemeSwitchPanel() {
-    var cb = document.getElementById("theme-follow-system");
-    var dayCb = document.getElementById("theme-daylight-location");
-    var sw = document.getElementById("theme-dark-switch");
+    const cb = document.getElementById("theme-follow-system");
+    const dayCb = document.getElementById("theme-daylight-location");
+    const sw = document.getElementById("theme-dark-switch");
     if (!cb || !sw) return;
 
-    var pref = getThemePreference();
-    var followSys = pref === "system";
-    var followDay = pref === "daylight";
+    const pref = getThemePreference();
+    const followSys = pref === "system";
+    const followDay = pref === "daylight";
     cb.checked = followSys;
     if (dayCb) dayCb.checked = followDay;
 
@@ -217,9 +217,9 @@
   }
 
   function announceThemeFromUser() {
-    var live = document.getElementById("theme-announce");
+    const live = document.getElementById("theme-announce");
     if (!live) return;
-    var msg;
+    let msg;
     if (getThemePreference() === "system") {
       msg =
         "Using system color theme. Current appearance is " +
@@ -240,30 +240,30 @@
   }
 
   function getContrastPreference() {
-    var c = localStorage.getItem(CONTRAST_KEY);
+    const c = localStorage.getItem(CONTRAST_KEY);
     if (c === "soft" || c === "high") return c;
     return "standard";
   }
 
   function applyContrastPreference(pref) {
-    var root = document.documentElement;
+    const root = document.documentElement;
     if (pref === "standard") root.removeAttribute("data-contrast");
     else root.setAttribute("data-contrast", pref);
   }
 
   function syncContrastButtons() {
-    var pref = getContrastPreference();
+    const pref = getContrastPreference();
     document.querySelectorAll(".contrast-btn[data-contrast-pref]").forEach(function (btn) {
-      var p = btn.getAttribute("data-contrast-pref");
+      const p = btn.getAttribute("data-contrast-pref");
       btn.setAttribute("aria-pressed", p === pref ? "true" : "false");
     });
   }
 
   function announceContrastChange() {
-    var live = document.getElementById("contrast-announce");
+    const live = document.getElementById("contrast-announce");
     if (!live) return;
-    var pref = getContrastPreference();
-    var msg =
+    const pref = getContrastPreference();
+    const msg =
       pref === "soft"
         ? "Contrast soft. Softer backgrounds and shadows."
         : pref === "high"
@@ -275,18 +275,18 @@
     }, 50);
   }
 
-  var GEO_PLACE_KEY = "helix-mockup-geo-place-label-v2";
-  var GEO_PLACE_TS_KEY = "helix-mockup-geo-place-ts-v2";
+  const GEO_PLACE_KEY = "helix-mockup-geo-place-label-v2";
+  const GEO_PLACE_TS_KEY = "helix-mockup-geo-place-ts-v2";
 
   /** U.S.: two-letter state from principalSubdivisionCode (e.g. US-NV → NV); else full subdivision name. */
   function geoStateDesignation(data) {
     if (!data) return "";
-    var name = (data.principalSubdivision || data.majorSubdivision || "").trim();
-    var code = data.principalSubdivisionCode || "";
+    const name = (data.principalSubdivision || data.majorSubdivision || "").trim();
+    const code = data.principalSubdivisionCode || "";
     if (data.countryCode === "US" && code) {
-      var i = code.lastIndexOf("-");
+      const i = code.lastIndexOf("-");
       if (i !== -1) {
-        var tail = code.slice(i + 1).trim();
+        const tail = code.slice(i + 1).trim();
         if (tail.length === 2) return tail.toUpperCase();
       }
     }
@@ -299,15 +299,15 @@
    */
   function geoCityNameForDisplay(data) {
     if (!data) return "";
-    var c = (data.city && String(data.city).trim()) || "";
+    const c = (data.city && String(data.city).trim()) || "";
     if (c) return c;
-    var adm = data.localityInfo && data.localityInfo.administrative;
+    const adm = data.localityInfo && data.localityInfo.administrative;
     if (Array.isArray(adm)) {
-      var i;
+      let i;
       for (i = 0; i < adm.length; i++) {
-        var a = adm[i];
+        const a = adm[i];
         if (!a || !a.name) continue;
-        var desc = (a.description || "").toLowerCase();
+        const desc = (a.description || "").toLowerCase();
         if (desc.indexOf("census-designated") !== -1) continue;
         if (desc.indexOf("township") !== -1) continue;
         if (a.adminLevel === 8) {
@@ -315,9 +315,9 @@
         }
       }
       for (i = adm.length - 1; i >= 0; i--) {
-        var a2 = adm[i];
+        const a2 = adm[i];
         if (!a2 || !a2.name) continue;
-        var desc2 = (a2.description || "").toLowerCase();
+        const desc2 = (a2.description || "").toLowerCase();
         if (desc2.indexOf("census-designated") !== -1) continue;
         if (desc2.indexOf("township") !== -1) continue;
         if (desc2.indexOf("county") !== -1 && (a2.adminLevel === 6 || /county\b/.test(a2.name))) continue;
@@ -326,30 +326,30 @@
         return String(a2.name).trim();
       }
     }
-    var v = (data.village && String(data.village).trim()) || "";
+    const v = (data.village && String(data.village).trim()) || "";
     if (v && !/\btownship\b/i.test(v)) return v;
     return "";
   }
 
   function geoPlaceLineFromReverseGeoClient(data) {
-    var city = geoCityNameForDisplay(data);
-    var st = geoStateDesignation(data);
+    const city = geoCityNameForDisplay(data);
+    const st = geoStateDesignation(data);
     if (city && st) return city + ", " + st;
     return city || st || "";
   }
 
   /** Sidebar clock: 12 h local time; city, state from browser geolocation + reverse geocode (cached in session). */
   function initLocalTimeOfDay() {
-    var el = document.getElementById("mockup-local-time");
-    var placeEl = document.getElementById("mockup-local-place");
-    var allowBtn = document.getElementById("mockup-local-geo-allow");
+    const el = document.getElementById("mockup-local-time");
+    const placeEl = document.getElementById("mockup-local-place");
+    const allowBtn = document.getElementById("mockup-local-geo-allow");
     if (!el) return;
 
-    var permState = null;
-    var geoSettled = false;
+    let permState = null;
+    let geoSettled = false;
 
     function tick() {
-      var d = new Date();
+      const d = new Date();
       el.textContent = d.toLocaleTimeString(undefined, {
         hour: "numeric",
         minute: "2-digit",
@@ -365,7 +365,7 @@
         allowBtn.hidden = true;
         return;
       }
-      var hasPlace = placeEl && placeEl.textContent && placeEl.textContent.trim().length > 0;
+      const hasPlace = placeEl && placeEl.textContent && placeEl.textContent.trim().length > 0;
       if (hasPlace) {
         allowBtn.hidden = true;
         return;
@@ -426,14 +426,14 @@
 
     function loadPlaceFromCache() {
       try {
-        var t = parseInt(sessionStorage.getItem(GEO_PLACE_TS_KEY), 10);
-        var lbl = sessionStorage.getItem(GEO_PLACE_KEY);
+        const t = parseInt(sessionStorage.getItem(GEO_PLACE_TS_KEY), 10);
+        const lbl = sessionStorage.getItem(GEO_PLACE_KEY);
         if (lbl && t && Date.now() - t < 6 * 3600000) applyPlaceLabel(lbl);
       } catch (e) {}
     }
 
     function fetchPlaceFromGeo(lat, lng) {
-      var url =
+      const url =
         "https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=" +
         encodeURIComponent(lat) +
         "&longitude=" +
@@ -445,7 +445,7 @@
           return r.json();
         })
         .then(function (data) {
-          var line = geoPlaceLineFromReverseGeoClient(data);
+          const line = geoPlaceLineFromReverseGeoClient(data);
           if (line) {
             try {
               sessionStorage.setItem(GEO_PLACE_KEY, line);
@@ -508,7 +508,7 @@
 
     document.querySelectorAll(".contrast-btn[data-contrast-pref]").forEach(function (btn) {
       btn.addEventListener("click", function () {
-        var p = btn.getAttribute("data-contrast-pref");
+        const p = btn.getAttribute("data-contrast-pref");
         if (p === "standard") localStorage.removeItem(CONTRAST_KEY);
         else localStorage.setItem(CONTRAST_KEY, p);
         applyContrastPreference(getContrastPreference());
@@ -519,16 +519,16 @@
 
     document.querySelectorAll(".theme-btn[data-theme-pref]").forEach(function (btn) {
       btn.addEventListener("click", function () {
-        var choice = btn.getAttribute("data-theme-pref");
+        const choice = btn.getAttribute("data-theme-pref");
         if (choice === "system") localStorage.removeItem(THEME_KEY);
         else localStorage.setItem(THEME_KEY, choice);
         syncThemeButtons();
       });
     });
 
-    var cb = document.getElementById("theme-follow-system");
-    var dayCb = document.getElementById("theme-daylight-location");
-    var sw = document.getElementById("theme-dark-switch");
+    const cb = document.getElementById("theme-follow-system");
+    const dayCb = document.getElementById("theme-daylight-location");
+    const sw = document.getElementById("theme-dark-switch");
     if (cb && sw) {
       cb.addEventListener("change", function () {
         if (cb.checked) {
@@ -566,7 +566,7 @@
 
       sw.addEventListener("click", function () {
         if (sw.disabled) return;
-        var nextDark = sw.getAttribute("aria-checked") !== "true";
+        const nextDark = sw.getAttribute("aria-checked") !== "true";
         if (cb) cb.checked = false;
         if (dayCb) dayCb.checked = false;
         localStorage.setItem(THEME_KEY, nextDark ? "dark" : "light");
@@ -604,7 +604,7 @@
   }
 
   function getEffectiveTextScale() {
-    var cs = getComputedStyle(document.documentElement).getPropertyValue("--text-scale").trim();
+    const cs = getComputedStyle(document.documentElement).getPropertyValue("--text-scale").trim();
     if (cs === "0.9" || cs === "1" || cs === "1.15" || cs === "1.3") return cs;
     return "1";
   }
@@ -618,15 +618,15 @@
   }
 
   function syncTextScaleButtons() {
-    var cur = getEffectiveTextScale();
+    const cur = getEffectiveTextScale();
     document.querySelectorAll(".readability-scale-btn[data-text-scale]").forEach(function (btn) {
-      var v = btn.getAttribute("data-text-scale");
+      const v = btn.getAttribute("data-text-scale");
       btn.setAttribute("aria-pressed", v === cur ? "true" : "false");
     });
   }
 
   function announceReadability(msg) {
-    var el = document.getElementById("readability-announce");
+    const el = document.getElementById("readability-announce");
     if (!el) return;
     el.textContent = "";
     window.requestAnimationFrame(function () {
@@ -638,16 +638,16 @@
     syncTextScaleButtons();
     document.querySelectorAll(".readability-scale-btn[data-text-scale]").forEach(function (btn) {
       btn.addEventListener("click", function () {
-        var v = btn.getAttribute("data-text-scale");
+        const v = btn.getAttribute("data-text-scale");
         if (v !== "0.9" && v !== "1" && v !== "1.15" && v !== "1.3") return;
         applyTextScale(v);
         syncTextScaleButtons();
-        var pct = v === "1" ? "100" : String(Math.round(parseFloat(v, 10) * 100));
+        const pct = v === "1" ? "100" : String(Math.round(parseFloat(v, 10) * 100));
         announceReadability("Text size set to " + pct + " percent.");
       });
     });
 
-    var rmCb = document.getElementById("readability-reduce-motion");
+    const rmCb = document.getElementById("readability-reduce-motion");
     function applyReducedMotionUi(on) {
       if (on) {
         document.documentElement.setAttribute("data-a11y-reduced-motion", "1");
@@ -680,7 +680,8 @@
     }
 
     function getBluelightPref() {
-      try { var v = localStorage.getItem(BLUELIGHT_KEY); } catch (e) { return "off"; }
+      let v;
+      try { v = localStorage.getItem(BLUELIGHT_KEY); } catch (e) { return "off"; }
       return (v === "low" || v === "medium" || v === "high") ? v : "off";
     }
     function applyBluelight(level) {
@@ -693,15 +694,15 @@
       }
     }
     function syncBluelightButtons() {
-      var cur = getBluelightPref();
+      const cur = getBluelightPref();
       document.querySelectorAll(".bluelight-btn[data-bluelight]").forEach(function (btn) {
         btn.setAttribute("aria-pressed", btn.getAttribute("data-bluelight") === cur ? "true" : "false");
       });
     }
     function announceBluelight(level) {
-      var el = document.getElementById("bluelight-announce");
+      const el = document.getElementById("bluelight-announce");
       if (!el) return;
-      var labels = { off: "Blue light filter off.", low: "Blue light filter: low warmth.", medium: "Blue light filter: medium warmth.", high: "Blue light filter: high warmth." };
+      const labels = { off: "Blue light filter off.", low: "Blue light filter: low warmth.", medium: "Blue light filter: medium warmth.", high: "Blue light filter: high warmth." };
       el.textContent = "";
       setTimeout(function () { el.textContent = labels[level] || ""; }, 50);
     }
@@ -710,7 +711,7 @@
     syncBluelightButtons();
     document.querySelectorAll(".bluelight-btn[data-bluelight]").forEach(function (btn) {
       btn.addEventListener("click", function () {
-        var v = btn.getAttribute("data-bluelight");
+        const v = btn.getAttribute("data-bluelight");
         if (v !== "off" && v !== "low" && v !== "medium" && v !== "high") return;
         applyBluelight(v);
         syncBluelightButtons();
@@ -721,7 +722,7 @@
     window.addEventListener("storage", function (e) {
       if (e.key !== TEXT_SCALE_KEY && e.key !== REDUCED_MOTION_UI_KEY && e.key !== BLUELIGHT_KEY) return;
       if (e.key === TEXT_SCALE_KEY) {
-        var nv = e.newValue;
+        const nv = e.newValue;
         if (nv === "0.9" || nv === "1" || nv === "1.15" || nv === "1.3") {
           document.documentElement.style.setProperty("--text-scale", nv);
         } else if (nv == null) {
@@ -816,10 +817,10 @@
     "digital-document-solutions": "DDS lifecycle — generate, review, share, and archive customer-facing technical documents.",
   };
 
-  /** Page-specific AI narrative + actionable steps (mock). Microsoft 365 Copilot / bot prompts are suggestions only. */
+  /** Page-specific AI narrative + actionable steps (mock), generated from the data shown in each view. */
   const AI_INSIGHTS_BY_VIEW = {
     overview: {
-      copilotContextPlain:
+      aiSummary:
         "Overview KPIs (mock): 14 open incidents, 2 P1/P2, 1,284 devices, 6 TAC-linked SRs, 98% license compliance, 3 advisory exposures, 2 FN-impacted patterns, blended CSAT 4.2 (+0.4 vs 7d).",
       blocks: [
         {
@@ -871,7 +872,7 @@
       ]
     },
     sentiment: {
-      copilotContextPlain:
+      aiSummary:
         "Sentiment (mock): CSAT 4.2, NPS +18, 7 at-risk journeys, VoC ingest P95 12m. Qualtrics/Medallia/Dynamics Customer Voice/Zendesk/Webex CC/Salesforce table stub.",
       blocks: [
         {
@@ -893,7 +894,7 @@
       ]
     },
     journeys: {
-      copilotContextPlain:
+      aiSummary:
         "Journeys (mock): 24 active journeys, friction index 0.31, 86% positive exit. Adobe/Amp/DNA/event bus API table; journey grid ties sentiment to phases.",
       blocks: [
         {
@@ -915,7 +916,7 @@
       ]
     },
     "cx-command": {
-      copilotContextPlain:
+      aiSummary:
         "Experience command (mock): ACV $48.2M, renewal risk $3.1M, support $/device $9.40, NRR proxy 102%. Unified next steps across PM, Delivery, CX, Renewals, Architect. Financial lines FY24/FY25. AI recs on ISE drift, Wave 16 gate, QBR bundling.",
       blocks: [
         {
@@ -945,7 +946,7 @@
       ]
     },
     "cx-role-actions": {
-      copilotContextPlain:
+      aiSummary:
         "CX role actions (mock): matrix of PM/SDM/CXM/CDA/ENG vs adoption, cost, speed, CSAT. KPI strip wave coverage 94%, support $/device $9.40, triage 4.2h, CSAT 4.2 NPS +18.",
       blocks: [
         {
@@ -989,7 +990,7 @@
       ]
     },
     "powerbi-pm": {
-      copilotContextPlain:
+      aiSummary:
         "Power BI Global PM (mockup): capability map for embed at /powerbi-pm.html; surfaces RAID, milestones, financials, capacity, regional drill, VoC, integration health; backend POWERBI_* + GenerateToken.",
       blocks: [
         {
@@ -1019,7 +1020,7 @@
       ]
     },
     incidents: {
-      copilotContextPlain:
+      aiSummary:
         "Incidents (mock): queue depth 14, P1/P2=2, mean ack→triage 4.2h. Sample INC-20244 P1 WAN jitter MGM Grand, INC-20243 ISE posture Bellagio, TAC correlation 69861/69857.",
       blocks: [
         {
@@ -1051,7 +1052,7 @@
       ]
     },
     devices: {
-      copilotContextPlain:
+      aiSummary:
         "Devices (mock): 1,284 DNA-managed, 23 health<80, 7 stale>24h telemetry, 26 FN advisory matches. Sample mgm-core-sw01, mgm-ftd-01 W16 FMC.",
       blocks: [
         {
@@ -1092,7 +1093,7 @@
       ]
     },
     properties: {
-      copilotContextPlain:
+      aiSummary:
         "Properties: full MGM mock portfolio — 11 Las Vegas resorts + 7 remote sites; per-property DNA site IDs, adoption %, wave tags (see Technology at property panel).",
       blocks: [
         {
@@ -1113,7 +1114,7 @@
       ]
     },
     integrations: {
-      copilotContextPlain:
+      aiSummary:
         "Integrations: 16 MVP waves W1–16 including FMC W16; 4 sources enabled in mock; API builds table from registry.",
       blocks: [
         {
@@ -1135,7 +1136,7 @@
       ]
     },
     "mvp-journey": {
-      copilotContextPlain:
+      aiSummary:
         "MVP journey view: 16 waves + DD automation maturity on a 6-phase Cisco customer journey; CSPC, Cisco IQ, Meraki, AppDynamics, and Salesforce pipeline per phase; mock maturity % per rail; deep CSPC collector/Smart Account and Cisco IQ entitlement panels; DD callout mapping NaC/SaC/DDS readiness and Meraki as Code/AppDynamics APM per phase; Salesforce Opportunities aligned to journey stages; Live merges /admin/sources.",
       blocks: [
         {
@@ -1187,7 +1188,7 @@
       ]
     },
     sources: {
-      copilotContextPlain:
+      aiSummary:
         "Sources admin: 18 VALID_SOURCES, 4 enabled (dna, tac, smart-licensing, fmc); vault cred refs; audit log mock entries. DD waves require specific sources (DD-F needs dna-center, DD-D needs ise, DD-K/E needs Meraki API, DD-L needs AppDynamics API). Salesforce (W17) requires Connected App OAuth.",
       blocks: [
         {
@@ -1231,7 +1232,7 @@
       ]
     },
     consoles: {
-      copilotContextPlain:
+      aiSummary:
         "Console map: SDC/vendor surfaces mapped to MVP waves W1–17 + DD-A–N; Meraki and AppDynamics now integrated inline (no standalone pages); Salesforce CRM (W17) as CRM layer across all consoles; DD waves extend console surfaces with automation capabilities.",
       blocks: [
         {
@@ -1274,7 +1275,7 @@
       ]
     },
     sdcroles: {
-      copilotContextPlain:
+      aiSummary:
         "SDC personas view: live recommended next steps panel re-renders on tab focus from APP_DATA_SNAPSHOT (incidents, devices, sentiment, journeys, cx-command, PSIRT, FN, integrations, overview KPIs, DD automation, Meraki, AppDynamics, Salesforce CRM). PM/SDM/CXM/CDA/ENG/High Touch Operations Manager each get 4 ranked steps with data provenance pills. DD callout maps automation recommendations per persona. Meraki site health and AppDynamics app health feed persona-specific workflows.",
       blocks: [
         {
@@ -1330,7 +1331,7 @@
       ]
     },
     security: {
-      copilotContextPlain:
+      aiSummary:
         "PSIRT mock: OpenVuln sync OK, 7 CVEs in estate, 1 critical/high patch window, 412 advisories tracked; sample remediation timeline.",
       blocks: [
         {
@@ -1352,7 +1353,7 @@
       ]
     },
     fieldnotes: {
-      copilotContextPlain:
+      aiSummary:
         "Field notices: 2 active inventory matches, 26 devices flagged, feed sync OK; samples FN74218 optics C9500, FN73990 WLC. DD callout maps NaC remediation pipelines and SaC impact reports per FN. Meraki as Code identifies 12 cloud-managed APs in FN blast radius. AppDynamics correlates 3 affected business transactions. Salesforce Cases track FN-to-case escalation per account.",
       blocks: [
         {
@@ -1396,7 +1397,7 @@
       ]
     },
     "network-as-code": {
-      copilotContextPlain:
+      aiSummary:
         "Network as Code: 9 NaC solutions (Catalyst Center, SD-WAN, ISE, IOS-XE, 5 NaC tools), 42% automation readiness, 1,626 total devices (DNA + Meraki), estimated 3-yr ROI $886K.",
       blocks: [
         {
@@ -1432,7 +1433,7 @@
       ]
     },
     "services-as-code": {
-      copilotContextPlain:
+      aiSummary:
         "Services as Code: 14 SaC technologies, 7 dev waves, AI Assistant available, estimated 3-yr ROI $1,258K. Partner co-delivery route saves 20% on delivery costs.",
       blocks: [
         {
@@ -1468,7 +1469,7 @@
       ]
     },
     "digital-document-solutions": {
-      copilotContextPlain:
+      aiSummary:
         "Digital Document Solutions: 12 templates, 8 active shares, 3 pending approvals, 24 docs generated this month. DDS automates delivery documentation tied to NaC and SaC pipeline outputs.",
       blocks: [
         {
@@ -1519,19 +1520,17 @@
       btn.className = "ai-suggestion";
       btn.textContent = text;
       btn.addEventListener("click", function () {
-        const ta = document.getElementById("ai-copilot-query");
-        if (ta) {
-          ta.value = text;
-          ta.focus();
-        }
+        const ta = document.getElementById("ai-ask-input");
+        if (ta) ta.value = text;
+        revealAiAnswer(text);
       });
       li.appendChild(btn);
       sugList.appendChild(li);
     });
 
-    var panAnn = document.getElementById("ai-panel-announce");
+    const panAnn = document.getElementById("ai-panel-announce");
     if (panAnn) {
-      var vt = titles[viewId] ? titles[viewId][0] : viewId;
+      const vt = titles[viewId] ? titles[viewId][0] : viewId;
       panAnn.textContent = "";
       window.setTimeout(function () {
         panAnn.textContent = "Insights and suggested questions updated for " + vt + ".";
@@ -1539,40 +1538,30 @@
     }
   }
 
-  function buildCopilotAgentContextBlock() {
+  /** Reveals a mock AI-generated answer, synthesized from the current view's own data (no external assistant). */
+  function revealAiAnswer(questionText) {
     const pack = AI_INSIGHTS_BY_VIEW[currentViewId] || AI_INSIGHTS_BY_VIEW.overview;
-    const t = titles[currentViewId];
-    const titleLine = t ? t[0] : currentViewId;
-    return `[Helix · mockup hub · Microsoft 365 Copilot context]\nView: ${titleLine}\n${pack.copilotContextPlain}\n\nUser question:\n`;
+    const mock = document.getElementById("ai-answer-mock");
+    const answerEl = document.getElementById("ai-answer-text");
+    if (!mock || !answerEl) return;
+    answerEl.textContent = pack.aiSummary;
+    mock.hidden = false;
+    const panAnn = document.getElementById("ai-panel-announce");
+    if (panAnn) {
+      panAnn.textContent = "";
+      window.setTimeout(function () {
+        panAnn.textContent = "Insight generated" + (questionText ? " for: " + questionText : "") + ".";
+      }, 80);
+    }
   }
 
-  function initCopilotAgentPanel() {
-    const copyBtn = document.getElementById("ai-btn-copy-copilot");
-    const openBtn = document.getElementById("ai-btn-open-copilot");
-    const ta = document.getElementById("ai-copilot-query");
-    if (copyBtn) {
-      copyBtn.addEventListener("click", function () {
+  function initAiAskPanel() {
+    const askBtn = document.getElementById("ai-btn-ask");
+    const ta = document.getElementById("ai-ask-input");
+    if (askBtn) {
+      askBtn.addEventListener("click", function () {
         const q = ta && ta.value ? ta.value.trim() : "";
-        const blob = buildCopilotAgentContextBlock() + (q || "(Add your question above.)");
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-          navigator.clipboard.writeText(blob).then(
-            function () {
-              setAppStatusMessage(
-                "Copied context and question to clipboard. Paste into Microsoft 365 Copilot or your SDM-linked Copilot experience."
-              );
-            },
-            function () {
-              window.prompt("Copy this text for Copilot:", blob.slice(0, 4000));
-            }
-          );
-        } else {
-          window.prompt("Copy this text for Copilot:", blob.slice(0, 4000));
-        }
-      });
-    }
-    if (openBtn) {
-      openBtn.addEventListener("click", function () {
-        window.open("https://www.microsoft365.com/chat", "_blank", "noopener,noreferrer");
+        revealAiAnswer(q);
       });
     }
   }
@@ -2099,7 +2088,7 @@
    * @returns {Set<string>}
    */
   function topExposureTierKeySet(entries) {
-    var sorted = entries
+    const sorted = entries
       .filter(function (e) {
         return typeof e.score === "number" && e.score > 0;
       })
@@ -2107,7 +2096,7 @@
         return b.score - a.score;
       });
     if (!sorted.length) return new Set();
-    var cutoff = sorted[Math.min(2, sorted.length - 1)].score;
+    const cutoff = sorted[Math.min(2, sorted.length - 1)].score;
     return new Set(
       sorted
         .filter(function (e) {
@@ -2124,8 +2113,8 @@
    * remaining properties follow by score, then original order.
    */
   function orderPropertiesWithExposureGroupFirst(list, keyFn, scoreFn) {
-    var decorated = list.map(function (item, origIdx) {
-      var s = scoreFn(item);
+    const decorated = list.map(function (item, origIdx) {
+      const s = scoreFn(item);
       return {
         item: item,
         key: keyFn(item),
@@ -2133,14 +2122,14 @@
         origIdx: origIdx
       };
     });
-    var tierKeys = topExposureTierKeySet(
+    const tierKeys = topExposureTierKeySet(
       decorated.map(function (d) {
         return { key: d.key, score: d.score };
       })
     );
     decorated.sort(function (a, b) {
-      var aCrit = tierKeys.has(a.key);
-      var bCrit = tierKeys.has(b.key);
+      const aCrit = tierKeys.has(a.key);
+      const bCrit = tierKeys.has(b.key);
       if (aCrit !== bCrit) return aCrit ? -1 : 1;
       if (b.score !== a.score) return b.score - a.score;
       return a.origIdx - b.origIdx;
@@ -2154,9 +2143,9 @@
   }
 
   function livePropertyDescriptor(p) {
-    var raw = p.description || p.summary || p.notes;
+    const raw = p.description || p.summary || p.notes;
     if (raw != null && String(raw).trim() !== "") return String(raw).trim();
-    var t = p.property_type || "Estate";
+    const t = p.property_type || "Estate";
     return "Managed " + t + " in the live portfolio — device and incident totals from API.";
   }
 
@@ -2728,11 +2717,11 @@
     const t = titles[id];
     const h = t ? t[0] : "";
     const b = viewTabDescriptors[id] != null ? viewTabDescriptors[id] : t ? t[1] : "";
-    var titleEl = document.getElementById("pageTitle");
-    var blurbEl = document.getElementById("pageBlurb");
+    const titleEl = document.getElementById("pageTitle");
+    const blurbEl = document.getElementById("pageBlurb");
     if (titleEl) titleEl.textContent = h;
     if (blurbEl) blurbEl.textContent = b;
-    var routeAnn = document.getElementById("route-announce");
+    const routeAnn = document.getElementById("route-announce");
     if (routeAnn && h) {
       routeAnn.textContent = "";
       window.setTimeout(function () {
@@ -2741,7 +2730,7 @@
     }
     document.title = h ? h + " \u2014 Helix UI Mockup Hub" : "Helix \u2014 UI Mockup Hub";
     history.replaceState(null, "", "#" + id);
-    var scrollContent = document.querySelector(".content");
+    const scrollContent = document.querySelector(".content");
     if (scrollContent) scrollContent.scrollTop = 0;
     renderAiInsights(id);
     if (id === "sdcroles") renderPersonaNextSteps();
@@ -2752,23 +2741,23 @@
   }
 
   /** Persisted order for all left nav tabs (data-view ids). */
-  var NAV_ORDER_KEY = "helix-mockup-nav-order";
-  var NAV_CX_ORDER_KEY = "helix-mockup-nav-cx-order";
-  var NAV_ORDER_KEY_LEGACY = "helix-mockup-nav-order";
-  var CX_TAB_VIEW_IDS = ["sentiment", "journeys", "cx-command", "cx-role-actions", "powerbi-pm"];
+  const NAV_ORDER_KEY = "helix-mockup-nav-order";
+  const NAV_CX_ORDER_KEY = "helix-mockup-nav-cx-order";
+  const NAV_ORDER_KEY_LEGACY = "helix-mockup-nav-order";
+  const CX_TAB_VIEW_IDS = ["sentiment", "journeys", "cx-command", "cx-role-actions", "powerbi-pm"];
 
   function mergeNavOrder(saved, domIds) {
-    var seen = Object.create(null);
-    var out = [];
-    var i;
+    const seen = Object.create(null);
+    const out = [];
+    let i;
     for (i = 0; i < saved.length; i++) {
-      var sid = saved[i];
+      const sid = saved[i];
       if (seen[sid] || domIds.indexOf(sid) === -1) continue;
       seen[sid] = true;
       out.push(sid);
     }
     for (i = 0; i < domIds.length; i++) {
-      var d = domIds[i];
+      const d = domIds[i];
       if (seen[d]) continue;
       seen[d] = true;
       out.push(d);
@@ -2778,16 +2767,16 @@
 
   function readSavedCxTabOrder() {
     try {
-      var raw = localStorage.getItem(NAV_CX_ORDER_KEY);
+      const raw = localStorage.getItem(NAV_CX_ORDER_KEY);
       if (raw) {
-        var cur = JSON.parse(raw);
+        const cur = JSON.parse(raw);
         if (Array.isArray(cur)) return cur;
       }
-      var leg = localStorage.getItem(NAV_ORDER_KEY_LEGACY);
+      const leg = localStorage.getItem(NAV_ORDER_KEY_LEGACY);
       if (leg) {
-        var old = JSON.parse(leg);
+        const old = JSON.parse(leg);
         if (Array.isArray(old)) {
-          var extracted = old.filter(function (id) {
+          const extracted = old.filter(function (id) {
             return CX_TAB_VIEW_IDS.indexOf(id) !== -1;
           });
           if (extracted.length === CX_TAB_VIEW_IDS.length) return extracted;
@@ -2798,12 +2787,12 @@
   }
 
   function injectCxBlockOrder(fullDefault, cxIdsList, cxOrderedMerged) {
-    var cxSet = Object.create(null);
-    var k;
+    const cxSet = Object.create(null);
+    let k;
     for (k = 0; k < cxIdsList.length; k++) cxSet[cxIdsList[k]] = true;
-    var first = -1;
-    var last = -1;
-    var i;
+    let first = -1;
+    let last = -1;
+    let i;
     for (i = 0; i < fullDefault.length; i++) {
       if (cxSet[fullDefault[i]]) {
         if (first < 0) first = i;
@@ -2816,39 +2805,39 @@
 
   function readFullSavedNavOrder(domIds) {
     try {
-      var raw = localStorage.getItem(NAV_ORDER_KEY);
+      const raw = localStorage.getItem(NAV_ORDER_KEY);
       if (raw) {
-        var cur = JSON.parse(raw);
+        const cur = JSON.parse(raw);
         if (Array.isArray(cur) && cur.length) return cur;
       }
     } catch (e) {}
-    var cxSaved = readSavedCxTabOrder();
+    const cxSaved = readSavedCxTabOrder();
     if (cxSaved && cxSaved.length) {
-      var cxMerged = mergeNavOrder(cxSaved, CX_TAB_VIEW_IDS.slice());
+      const cxMerged = mergeNavOrder(cxSaved, CX_TAB_VIEW_IDS.slice());
       return injectCxBlockOrder(domIds, CX_TAB_VIEW_IDS, cxMerged);
     }
     return null;
   }
 
   function applySavedNavOrder() {
-    var sortable = document.querySelector(".nav-sortable");
+    const sortable = document.querySelector(".nav-sortable");
     if (!sortable) return;
-    var domIds = Array.prototype.map.call(sortable.querySelectorAll(".nav-item[data-view]"), function (n) {
+    const domIds = Array.prototype.map.call(sortable.querySelectorAll(".nav-item[data-view]"), function (n) {
       return n.getAttribute("data-view");
     });
-    var saved = readFullSavedNavOrder(domIds);
+    const saved = readFullSavedNavOrder(domIds);
     if (!saved) return;
-    var merged = mergeNavOrder(saved, domIds);
+    const merged = mergeNavOrder(saved, domIds);
     merged.forEach(function (id) {
-      var el = sortable.querySelector('.nav-item[data-view="' + id + '"]');
+      const el = sortable.querySelector('.nav-item[data-view="' + id + '"]');
       if (el) sortable.appendChild(el);
     });
   }
 
   function persistNavOrderFromDom() {
-    var sortable = document.querySelector(".nav-sortable");
+    const sortable = document.querySelector(".nav-sortable");
     if (!sortable) return;
-    var ids = Array.prototype.map.call(sortable.querySelectorAll(".nav-item[data-view]"), function (n) {
+    const ids = Array.prototype.map.call(sortable.querySelectorAll(".nav-item[data-view]"), function (n) {
       return n.getAttribute("data-view");
     });
     try {
@@ -2857,23 +2846,23 @@
   }
 
   function initNavReorder() {
-    var sortable = document.querySelector(".nav-sortable");
+    const sortable = document.querySelector(".nav-sortable");
     if (!sortable) return;
     applySavedNavOrder();
-    var draggingEl = null;
+    let draggingEl = null;
 
     function persistNavOrder() {
       persistNavOrderFromDom();
     }
 
     function getDragAfterElement(y) {
-      var items = Array.prototype.slice.call(sortable.querySelectorAll(".nav-item:not(.is-dragging)"));
-      var closest = { offset: Number.NEGATIVE_INFINITY, child: null };
-      var j;
+      const items = Array.prototype.slice.call(sortable.querySelectorAll(".nav-item:not(.is-dragging)"));
+      let closest = { offset: Number.NEGATIVE_INFINITY, child: null };
+      let j;
       for (j = 0; j < items.length; j++) {
-        var child = items[j];
-        var box = child.getBoundingClientRect();
-        var offset = y - box.top - box.height / 2;
+        const child = items[j];
+        const box = child.getBoundingClientRect();
+        const offset = y - box.top - box.height / 2;
         if (offset < 0 && offset > closest.offset) {
           closest = { offset: offset, child: child };
         }
@@ -2886,7 +2875,7 @@
     });
 
     sortable.addEventListener("dragstart", function (e) {
-      var item = e.target && e.target.closest ? e.target.closest(".nav-item") : null;
+      const item = e.target && e.target.closest ? e.target.closest(".nav-item") : null;
       if (!item || !sortable.contains(item)) return;
       draggingEl = item;
       item.classList.add("is-dragging");
@@ -2910,9 +2899,9 @@
     sortable.addEventListener("dragover", function (e) {
       e.preventDefault();
       e.dataTransfer.dropEffect = "move";
-      var active = draggingEl || sortable.querySelector(".nav-item.is-dragging");
+      const active = draggingEl || sortable.querySelector(".nav-item.is-dragging");
       if (!active) return;
-      var after = getDragAfterElement(e.clientY);
+      const after = getDragAfterElement(e.clientY);
       if (after == null) sortable.appendChild(active);
       else sortable.insertBefore(active, after);
     });
@@ -2936,16 +2925,16 @@
     });
   });
 
-  var tablist = document.querySelector('.nav-sortable[role="tablist"]');
+  const tablist = document.querySelector('.nav-sortable[role="tablist"]');
   if (tablist) {
     tablist.addEventListener("keydown", function (e) {
-      var tabs = Array.prototype.slice.call(tablist.querySelectorAll('.nav-item[role="tab"][data-view]'));
-      var i = tabs.indexOf(document.activeElement);
+      const tabs = Array.prototype.slice.call(tablist.querySelectorAll('.nav-item[role="tab"][data-view]'));
+      const i = tabs.indexOf(document.activeElement);
       if (i < 0) return;
       if (e.altKey && (e.key === "ArrowUp" || e.key === "ArrowDown")) {
         e.preventDefault();
         e.stopPropagation();
-        var cur = tabs[i];
+        const cur = tabs[i];
         if (e.key === "ArrowUp" && i > 0) {
           tablist.insertBefore(cur, tabs[i - 1]);
         } else if (e.key === "ArrowDown" && i < tabs.length - 1) {
@@ -2954,7 +2943,7 @@
         persistNavOrderFromDom();
         return;
       }
-      var next = i;
+      let next = i;
       if (e.key === "ArrowRight" || e.key === "ArrowDown") {
         e.preventDefault();
         next = (i + 1) % tabs.length;
@@ -2975,13 +2964,13 @@
     });
   }
 
-  var ddTablist = document.querySelector('.nav-sortable-dd[role="tablist"]');
+  const ddTablist = document.querySelector('.nav-sortable-dd[role="tablist"]');
   if (ddTablist) {
     ddTablist.addEventListener("keydown", function (e) {
-      var tabs = Array.prototype.slice.call(ddTablist.querySelectorAll('.nav-item[role="tab"][data-view]'));
-      var i = tabs.indexOf(document.activeElement);
+      const tabs = Array.prototype.slice.call(ddTablist.querySelectorAll('.nav-item[role="tab"][data-view]'));
+      const i = tabs.indexOf(document.activeElement);
       if (i < 0) return;
-      var next = i;
+      let next = i;
       if (e.key === "ArrowRight" || e.key === "ArrowDown") {
         e.preventDefault();
         next = (i + 1) % tabs.length;
@@ -3003,21 +2992,30 @@
   }
 
   document.addEventListener("click", function (e) {
-    var jump = e.target.closest("a[data-mock-view]");
+    const jump = e.target.closest("a[data-mock-view]");
     if (jump) {
       e.preventDefault();
       showView(jump.getAttribute("data-mock-view"));
+      return;
+    }
+    const actionEl = e.target.closest("[data-action]");
+    if (!actionEl) return;
+    const action = actionEl.getAttribute("data-action");
+    if (action === "alert") {
+      alert(actionEl.getAttribute("data-alert-text") || "");
+    } else if (action === "show-view") {
+      showView(actionEl.getAttribute("data-view-target"));
     }
   });
 
   /** Mockup-live: same-origin /api/v1 + JWT from Operations (localStorage accessToken). */
-  var MOCKUP_LIVE_KEY = "helix-mockup-live";
-  var API_BASE_KEY = "helix-mockup-api-base";
-  var ACCESS_TOKEN_KEY = "accessToken";
+  const MOCKUP_LIVE_KEY = "helix-mockup-live";
+  const API_BASE_KEY = "helix-mockup-api-base";
+  const ACCESS_TOKEN_KEY = "accessToken";
 
   function operationsBaseUrl() {
     try {
-      var h = location.hostname;
+      const h = location.hostname;
       if (h === "localhost" || h === "127.0.0.1") return location.origin.replace(/\/$/, "");
       if (location.protocol === "file:") return "http://localhost:3000";
     } catch (e) {}
@@ -3028,7 +3026,7 @@
   function mockupTokenStorageIsSeparateFromBackend() {
     try {
       if (location.protocol === "file:") return true;
-      var h = location.hostname;
+      const h = location.hostname;
       if (h === "localhost" || h === "127.0.0.1") return false;
       return true;
     } catch (e) {
@@ -3037,9 +3035,9 @@
   }
 
   function syncMockupBackendLinks() {
-    var base = operationsBaseUrl();
+    const base = operationsBaseUrl();
     document.querySelectorAll("a[data-mockup-backend-path]").forEach(function (a) {
-      var p = a.getAttribute("data-mockup-backend-path") || "/";
+      let p = a.getAttribute("data-mockup-backend-path") || "/";
       if (p.charAt(0) !== "/") p = "/" + p;
       a.setAttribute("href", base + p);
     });
@@ -3047,7 +3045,7 @@
 
   function getLiveAccessToken() {
     try {
-      var t = localStorage.getItem(ACCESS_TOKEN_KEY);
+      const t = localStorage.getItem(ACCESS_TOKEN_KEY);
       return t ? String(t).trim() : "";
     } catch (e) {
       return "";
@@ -3066,7 +3064,7 @@
   function formatIsoShort(iso) {
     if (!iso) return "—";
     try {
-      var d = new Date(iso);
+      const d = new Date(iso);
       if (isNaN(d.getTime())) return String(iso).slice(0, 19);
       return d.toISOString().slice(0, 16).replace("T", " ");
     } catch (e) {
@@ -3075,13 +3073,13 @@
   }
 
   function journeyMiniRailSvg(phaseIndex, maturityPct) {
-    var n = Math.max(0, Math.min(5, phaseIndex | 0));
-    var circles = "";
-    var i;
+    const n = Math.max(0, Math.min(5, phaseIndex | 0));
+    let circles = "";
+    let i;
     for (i = 0; i < 6; i++) {
-      var active = i === n;
-      var cx = 16 + i * 28;
-      var fill = active ? "var(--accent)" : "var(--border2)";
+      const active = i === n;
+      const cx = 16 + i * 28;
+      const fill = active ? "var(--accent)" : "var(--border2)";
       circles +=
         '<circle cx="' +
         cx +
@@ -3089,7 +3087,7 @@
         fill +
         '" stroke="var(--border)" stroke-width="1"/>';
     }
-    var px = 16 + n * 28;
+    const px = 16 + n * 28;
     return (
       '<div class="pj-rail-wrap"><svg class="pj-rail-svg" viewBox="0 0 184 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
       '<line x1="16" y1="14" x2="168" y2="14" stroke="var(--border2)" stroke-width="2"/>' +
@@ -3103,18 +3101,18 @@
   }
 
   function renderMvpProductJourney() {
-    var el = document.getElementById("mvp-journey-products");
+    const el = document.getElementById("mvp-journey-products");
     if (!el) return;
-    var rows = buildWaveGridModels();
+    const rows = buildWaveGridModels();
     el.innerHTML = rows
       .map(function (r) {
-        var j = MVP_JOURNEY_BY_WAVE[r.wave] || {
+        const j = MVP_JOURNEY_BY_WAVE[r.wave] || {
           phaseIndex: 2,
           maturityPct: 50,
           mapNote: "Journey position not curated for this wave — align with your TAM success plan.",
           rec: "Define success criteria and evidence per phase before claiming later-stage outcomes."
         };
-        var deepBadges =
+        const deepBadges =
           j.deep === "cspc"
             ? ' <span class="tag tag-build">CSPC depth</span>'
             : j.deep === "iq"
@@ -3149,7 +3147,7 @@
   }
 
   function applyMvpJourneyLiveFromSources(body, status) {
-    var note = document.getElementById("mvp-journey-live-note");
+    const note = document.getElementById("mvp-journey-live-note");
     if (note) {
       note.textContent = "";
       note.className = "pj-live-note";
@@ -3170,15 +3168,15 @@
       return;
     }
     function srcRow(name) {
-      for (var i = 0; i < body.length; i++) {
+      for (let i = 0; i < body.length; i++) {
         if (body[i].sourceName === name) return body[i];
       }
       return null;
     }
-    var cspc = srcRow("cspc");
-    var iq = srcRow("cisco-iq");
-    var elC = document.getElementById("journey-cspc-sdm");
-    var elI = document.getElementById("journey-iq-sdm");
+    const cspc = srcRow("cspc");
+    const iq = srcRow("cisco-iq");
+    const elC = document.getElementById("journey-cspc-sdm");
+    const elI = document.getElementById("journey-iq-sdm");
     if (elC) {
       elC.textContent = cspc
         ? (cspc.enabled ? "Enabled" : "Disabled") +
@@ -3203,14 +3201,14 @@
   }
 
   function getMockupApiPrefix() {
-    var b = (localStorage.getItem(API_BASE_KEY) || "").trim();
+    let b = (localStorage.getItem(API_BASE_KEY) || "").trim();
     if (!b) b = "/api/v1";
     return b.replace(/\/$/, "");
   }
 
   /** When live API cannot be reached (backend stopped, wrong URL, CORS, offline). */
   function liveModeApiUnreachableMessage(prefix, detail) {
-    var sameOriginTip =
+    const sameOriginTip =
       "This page is " +
       (function () {
         try {
@@ -3242,7 +3240,7 @@
 
   /** Signals for integration advisor — merges mock snapshot with live KPI DOM when Live data is on. */
   function getAdvisorSignals() {
-    var S = {
+    const S = {
       openIncidents: APP_DATA_SNAPSHOT.openIncidents,
       p1p2: APP_DATA_SNAPSHOT.p1p2,
       p1Id: APP_DATA_SNAPSHOT.p1Id,
@@ -3256,14 +3254,14 @@
     };
     if (isMockupLive()) {
       function num(id) {
-        var el = document.getElementById(id);
+        const el = document.getElementById(id);
         if (!el) return null;
-        var t = (el.textContent || "").replace(/,/g, "").trim();
-        var n = parseInt(t, 10);
+        const t = (el.textContent || "").replace(/,/g, "").trim();
+        const n = parseInt(t, 10);
         return isNaN(n) ? null : n;
       }
-      var oi = num("mockup-live-kpi-overview-incidents");
-      var p12 = num("mockup-live-kpi-overview-p12");
+      const oi = num("mockup-live-kpi-overview-incidents");
+      const p12 = num("mockup-live-kpi-overview-p12");
       if (oi != null) S.openIncidents = oi;
       if (p12 != null) S.p1p2 = p12;
     }
@@ -3271,7 +3269,7 @@
   }
 
   function advisorSource(name) {
-    for (var i = 0; i < INTEGRATION_SOURCES.length; i++) {
+    for (let i = 0; i < INTEGRATION_SOURCES.length; i++) {
       if (INTEGRATION_SOURCES[i].name === name) return INTEGRATION_SOURCES[i];
     }
     return null;
@@ -3282,10 +3280,10 @@
    * Recomputed on tab change and live refresh.
    */
   function buildIntegrationAdvisorPlan(viewId, signals) {
-    var live = isMockupLive();
-    var steps = [];
-    var waves = [];
-    var seenW = {};
+    const live = isMockupLive();
+    const steps = [];
+    const waves = [];
+    const seenW = {};
     function addStep(text, view, label) {
       steps.push({ text: text, view: view || null, label: label || (view ? "Open" : "") });
     }
@@ -3295,8 +3293,8 @@
       waves.push({ wave: wave, title: title, meta: meta, urgent: !!urgent });
     }
 
-    var vt = titles[viewId] ? titles[viewId][0] : viewId;
-    var headline =
+    const vt = titles[viewId] ? titles[viewId][0] : viewId;
+    const headline =
       (live ? "Live API" : "Mock") +
       " · " +
       signals.openIncidents +
@@ -3313,7 +3311,7 @@
         "incidents",
         "Queue"
       );
-      var sup = advisorSource("support-api");
+      const sup = advisorSource("support-api");
       if (sup && !sup.on)
         addWave(
           "W4",
@@ -3321,7 +3319,7 @@
           "Cron EoX / bug / contract pull to enrich " + escHtml(signals.p1Id) + " — off in registry.",
           true
         );
-      var te = advisorSource("thousandeyes");
+      const te = advisorSource("thousandeyes");
       if (te && !te.on)
         addWave("W5", "ThousandEyes · enable", "Automated path alerts tied to WAN incidents — off in registry.", true);
     }
@@ -3348,12 +3346,12 @@
 
     if (signals.psirtCriticalHigh >= 1 || signals.advisoryExposure >= 2) {
       addStep("Advisory exposure: automate OpenVuln nightly join vs inventory.", "security", "PSIRT");
-      var ov = advisorSource("psirt-openvuln");
+      const ov = advisorSource("psirt-openvuln");
       if (ov && !ov.on) addWave("W14", "OpenVuln OAuth", "Scheduled CVE match — required before CAB narrative.", true);
     }
 
     if (signals.fnImpactedPatterns >= 1) {
-      var fn = advisorSource("field-notices");
+      const fn = advisorSource("field-notices");
       if (fn && !fn.on)
         addWave(
           "W15",
@@ -3367,7 +3365,7 @@
       addStep(signals.atRiskJourneys + " at-risk journeys: wire VoC + ISE session exports.", "journeys", "Journeys");
     }
 
-    var ise = advisorSource("ise");
+    const ise = advisorSource("ise");
     if (ise && !ise.on && signals.p1p2 >= 1) {
       addWave(
         "W11",
@@ -3392,15 +3390,15 @@
   }
 
   function renderIntegrationAdvisor() {
-    var viewId = currentViewId;
-    var signals = getAdvisorSignals();
-    var plan = buildIntegrationAdvisorPlan(viewId, signals);
+    const viewId = currentViewId;
+    const signals = getAdvisorSignals();
+    const plan = buildIntegrationAdvisorPlan(viewId, signals);
 
-    var strip = document.getElementById("integration-advisor-strip");
+    const strip = document.getElementById("integration-advisor-strip");
     if (strip) {
-      var lis = plan.steps
+      const lis = plan.steps
         .map(function (s) {
-          var link = "";
+          let link = "";
           if (s.view && s.label)
             link =
               ' <a href="#" class="mock-jump" data-mock-view="' +
@@ -3425,7 +3423,7 @@
         "</span></div>";
     }
 
-    var cardsMount = document.getElementById("integration-advisor-cards");
+    const cardsMount = document.getElementById("integration-advisor-cards");
     if (cardsMount) {
       if (!plan.waves.length) {
         cardsMount.innerHTML =
@@ -3433,7 +3431,7 @@
       } else {
         cardsMount.innerHTML = plan.waves
           .map(function (w) {
-            var u = w.urgent ? " advisor-wave-card--urgent" : "";
+            const u = w.urgent ? " advisor-wave-card--urgent" : "";
             return (
               '<div class="card advisor-wave-card' +
               u +
@@ -3450,7 +3448,7 @@
       }
     }
 
-    var ann = document.getElementById("integration-advisor-announce");
+    const ann = document.getElementById("integration-advisor-announce");
     if (ann) {
       ann.textContent = "";
       window.setTimeout(function () {
@@ -3465,19 +3463,19 @@
   }
 
   function syncMockupLiveBar() {
-    var bar = document.getElementById("mockup-live-bar");
-    var t = document.getElementById("mockup-live-toggle");
-    var pill = document.getElementById("mockup-data-pill");
+    const bar = document.getElementById("mockup-live-bar");
+    const t = document.getElementById("mockup-live-toggle");
+    const pill = document.getElementById("mockup-data-pill");
     if (t) t.checked = isMockupLive();
     if (bar) bar.classList.toggle("mockup-live-on", isMockupLive());
     if (pill) pill.textContent = isMockupLive() ? "Live API" : "Mock data";
   }
 
   function mockupPostJson(path, bodyObj) {
-    var token = getLiveAccessToken();
-    var prefix = getMockupApiPrefix();
-    var url = prefix + (path.charAt(0) === "/" ? path : "/" + path);
-    var headers = { Accept: "application/json", "Content-Type": "application/json" };
+    const token = getLiveAccessToken();
+    const prefix = getMockupApiPrefix();
+    const url = prefix + (path.charAt(0) === "/" ? path : "/" + path);
+    const headers = { Accept: "application/json", "Content-Type": "application/json" };
     if (token) headers.Authorization = "Bearer " + token;
     return fetch(url, {
       method: "POST",
@@ -3486,7 +3484,7 @@
     })
       .then(function (res) {
         return res.text().then(function (text) {
-          var j = null;
+          let j = null;
           try {
             j = text ? JSON.parse(text) : null;
           } catch (e) {
@@ -3496,21 +3494,21 @@
         });
       })
       .catch(function (e) {
-        var msg = e && e.message ? e.message : String(e);
+        const msg = e && e.message ? e.message : String(e);
         return { ok: false, status: 0, body: { message: msg } };
       });
   }
 
   function mockupFetchJson(path) {
-    var token = getLiveAccessToken();
-    var prefix = getMockupApiPrefix();
-    var url = prefix.charAt(0) === "/" ? prefix + path : prefix + path;
-    var headers = { Accept: "application/json" };
+    const token = getLiveAccessToken();
+    const prefix = getMockupApiPrefix();
+    const url = prefix.charAt(0) === "/" ? prefix + path : prefix + path;
+    const headers = { Accept: "application/json" };
     if (token) headers.Authorization = "Bearer " + token;
     return fetch(url, { headers: headers })
       .then(function (res) {
         return res.text().then(function (text) {
-          var j = null;
+          let j = null;
           try {
             j = text ? JSON.parse(text) : null;
           } catch (e) {
@@ -3520,7 +3518,7 @@
         });
       })
       .catch(function (e) {
-        var msg = e && e.message ? e.message : String(e);
+        const msg = e && e.message ? e.message : String(e);
         return {
           ok: false,
           status: 0,
@@ -3532,12 +3530,12 @@
   }
 
   function isIncidentOpen(status) {
-    var s = (status || "").toLowerCase();
+    const s = (status || "").toLowerCase();
     return s !== "resolved" && s !== "closed" && s !== "cancelled";
   }
 
   function badgePriorityHtml(p) {
-    var cls = "b-p3";
+    let cls = "b-p3";
     if (p === "P1") cls = "b-p1";
     else if (p === "P2") cls = "b-p2";
     else if (p === "P4") cls = "b-p4";
@@ -3545,26 +3543,26 @@
   }
 
   function badgeStatusHtml(status) {
-    var s = (status || "").toLowerCase();
-    var ok = s === "resolved" || s === "closed";
+    const s = (status || "").toLowerCase();
+    const ok = s === "resolved" || s === "closed";
     return '<span class="badge ' + (ok ? "b-ok" : "b-warn") + '">' + escHtml(status) + "</span>";
   }
 
   function deviceStatusBadgeHtml(st) {
-    var s = (st || "").toLowerCase();
-    var cls = "b-ok";
+    const s = (st || "").toLowerCase();
+    let cls = "b-ok";
     if (s === "failed" || s === "decommissioned") cls = "b-p1";
     else if (s === "maintenance" || s === "inactive") cls = "b-warn";
     return '<span class="badge ' + cls + '">' + escHtml(st) + "</span>";
   }
 
   function setElText(id, text) {
-    var el = document.getElementById(id);
+    const el = document.getElementById(id);
     if (el) el.textContent = text;
   }
 
   function propNameMap(properties) {
-    var m = {};
+    const m = {};
     properties.forEach(function (p) {
       m[p.property_id] = p.name;
     });
@@ -3572,10 +3570,10 @@
   }
 
   function applyLiveOverviewKpis(properties, devices, incidents, tacCases) {
-    var openInc = incidents.filter(function (i) {
+    const openInc = incidents.filter(function (i) {
       return isIncidentOpen(i.status);
     });
-    var p12 = openInc.filter(function (i) {
+    const p12 = openInc.filter(function (i) {
       return i.priority === "P1" || i.priority === "P2";
     });
     setElText("mockup-live-kpi-overview-incidents", String(openInc.length));
@@ -3583,7 +3581,7 @@
     setElText("mockup-live-kpi-overview-p12", String(p12.length));
     setElText("mockup-live-kpi-overview-devices", String(devices.length));
     setElText("mockup-live-kpi-overview-devices-sub", "From /devices");
-    var withTac = incidents.filter(function (i) {
+    const withTac = incidents.filter(function (i) {
       return i.tac_case_number && String(i.tac_case_number).length > 0;
     }).length;
     setElText("mockup-live-kpi-overview-tac", String(tacCases.length));
@@ -3591,22 +3589,22 @@
   }
 
   function applyLiveIncidentView(incidents, properties, tacCases) {
-    var names = propNameMap(properties);
-    var openInc = incidents.filter(function (i) {
+    const names = propNameMap(properties);
+    const openInc = incidents.filter(function (i) {
       return isIncidentOpen(i.status);
     });
-    var p12 = openInc.filter(function (i) {
+    const p12 = openInc.filter(function (i) {
       return i.priority === "P1" || i.priority === "P2";
     });
     setElText("mockup-live-kpi-inc-open", String(openInc.length));
     setElText("mockup-live-kpi-inc-p12", String(p12.length));
-    var tacLinked = incidents.filter(function (i) {
+    const tacLinked = incidents.filter(function (i) {
       return i.tac_case_number;
     }).length;
     setElText("mockup-live-kpi-inc-tac", String(tacLinked));
     setElText("mockup-live-kpi-inc-total", String(incidents.length));
 
-    var tb = document.getElementById("mockup-live-incidents-tbody");
+    const tb = document.getElementById("mockup-live-incidents-tbody");
     if (tb) {
       if (!incidents.length) {
         tb.innerHTML =
@@ -3635,7 +3633,7 @@
       }
     }
 
-    var tt = document.getElementById("mockup-live-tac-tbody");
+    const tt = document.getElementById("mockup-live-tac-tbody");
     if (tt) {
       if (!tacCases.length) {
         tt.innerHTML = '<tr><td colspan="3" style="color:var(--muted)">No TAC cases in API.</td></tr>';
@@ -3659,14 +3657,14 @@
   }
 
   function applyLiveDevicesView(devices, properties) {
-    var names = propNameMap(properties);
-    var active = devices.filter(function (d) {
+    const names = propNameMap(properties);
+    const active = devices.filter(function (d) {
       return (d.status || "").toLowerCase() === "active";
     }).length;
-    var maint = devices.filter(function (d) {
+    const maint = devices.filter(function (d) {
       return (d.status || "").toLowerCase() === "maintenance";
     }).length;
-    var failed = devices.filter(function (d) {
+    const failed = devices.filter(function (d) {
       return (d.status || "").toLowerCase() === "failed";
     }).length;
     setElText("mockup-live-kpi-dev-total", String(devices.length));
@@ -3674,7 +3672,7 @@
     setElText("mockup-live-kpi-dev-maint", String(maint));
     setElText("mockup-live-kpi-dev-fail", String(failed));
 
-    var tb = document.getElementById("mockup-live-devices-tbody");
+    const tb = document.getElementById("mockup-live-devices-tbody");
     if (tb) {
       if (!devices.length) {
         tb.innerHTML =
@@ -3703,9 +3701,9 @@
   }
 
   function renderLivePropertyPortfolio(properties, devices, incidents) {
-    var grid = document.getElementById("property-cards-grid");
-    var body = document.getElementById("property-site-map-body");
-    var dl = document.getElementById("property-tech-dl");
+    const grid = document.getElementById("property-cards-grid");
+    const body = document.getElementById("property-site-map-body");
+    const dl = document.getElementById("property-tech-dl");
     if (!grid) return;
 
     function incOpenForProp(pid) {
@@ -3719,7 +3717,7 @@
       }).length;
     }
 
-    var packLive = null;
+    let packLive = null;
     if (!properties.length) {
       grid.innerHTML = '<div class="empty-hint">No properties from API.</div>';
     } else {
@@ -3729,21 +3727,21 @@
           return p.property_id;
         },
         function (p) {
-          var dc = devCountForProp(p.property_id);
-          var ic = incOpenForProp(p.property_id);
+          const dc = devCountForProp(p.property_id);
+          const ic = incOpenForProp(p.property_id);
           return Math.min(100, Math.round(dc * 0.11 + ic * 24));
         }
       );
-      var tierKeys = packLive.tierKeys;
+      const tierKeys = packLive.tierKeys;
       grid.innerHTML = packLive.ordered
         .map(function (p, idx) {
-          var dc = devCountForProp(p.property_id);
-          var ic = incOpenForProp(p.property_id);
-          var v = propertyCardVariantClass(idx);
-          var photo = propertyCardPhotoUrl(idx);
-          var ex =
+          const dc = devCountForProp(p.property_id);
+          const ic = incOpenForProp(p.property_id);
+          const v = propertyCardVariantClass(idx);
+          const photo = propertyCardPhotoUrl(idx);
+          const ex =
             tierKeys.has(p.property_id) ? " property-card--exposure-critical" : "";
-          var exSr = tierKeys.has(p.property_id)
+          const exSr = tierKeys.has(p.property_id)
             ? '<span class="visually-hidden"> Top network exposure index in live portfolio — prioritize remediation.</span>'
             : "";
           return (
@@ -3804,12 +3802,12 @@
   }
 
   function liveModeMissingTokenMessage() {
-    var origin = "";
+    let origin = "";
     try {
       origin = location.origin;
     } catch (e) {}
-    var ops = operationsBaseUrl() + "/";
-    var parts = [
+    const ops = operationsBaseUrl() + "/";
+    const parts = [
       "Live mode needs a JWT in localStorage key accessToken on this page’s origin (" +
         (origin || "unknown") +
         ")."
@@ -3832,7 +3830,7 @@
     if (!isMockupLive()) return;
     if (!getLiveAccessToken()) {
       setAppStatusMessage(liveModeMissingTokenMessage());
-      var hint = document.getElementById("mockup-live-hint-panel");
+      const hint = document.getElementById("mockup-live-hint-panel");
       if (hint) hint.hidden = false;
       return;
     }
@@ -3844,7 +3842,7 @@
       mockupFetchJson("/tac-cases")
     ])
       .then(function (results) {
-        var pRes = results[0];
+        const pRes = results[0];
         if (results.some(function (r) { return r.networkError; })) {
           setAppStatusMessage(
             liveModeApiUnreachableMessage(getMockupApiPrefix(), pRes.errorDetail || pRes.body.message)
@@ -3860,8 +3858,8 @@
           return;
         }
         if (!pRes.ok || !results[1].ok || !results[2].ok || !results[3].ok) {
-          var msg = pRes.body && pRes.body.message ? pRes.body.message : "";
-          var st = [pRes.status, results[1].status, results[2].status, results[3].status].join(" / ");
+          const msg = pRes.body && pRes.body.message ? pRes.body.message : "";
+          const st = [pRes.status, results[1].status, results[2].status, results[3].status].join(" / ");
           setAppStatusMessage(
             (msg ? msg + " — " : "") +
               "Live pull failed (HTTP " +
@@ -3872,10 +3870,10 @@
           );
           return;
         }
-        var properties = Array.isArray(pRes.body) ? pRes.body : [];
-        var devices = Array.isArray(results[1].body) ? results[1].body : [];
-        var incidents = Array.isArray(results[2].body) ? results[2].body : [];
-        var tacCases = Array.isArray(results[3].body) ? results[3].body : [];
+        const properties = Array.isArray(pRes.body) ? pRes.body : [];
+        const devices = Array.isArray(results[1].body) ? results[1].body : [];
+        const incidents = Array.isArray(results[2].body) ? results[2].body : [];
+        const tacCases = Array.isArray(results[3].body) ? results[3].body : [];
 
         applyLiveOverviewKpis(properties, devices, incidents, tacCases);
         applyLiveIncidentView(incidents, properties, tacCases);
@@ -3891,7 +3889,7 @@
             incidents.length +
             " incidents."
         );
-        var hintOk = document.getElementById("mockup-live-hint-panel");
+        const hintOk = document.getElementById("mockup-live-hint-panel");
         if (hintOk) hintOk.hidden = true;
 
         mockupFetchJson("/admin/sources").then(function (srcRes) {
@@ -3915,12 +3913,12 @@
   }
 
   function initMockupLiveTokenPaste() {
-    var inp = document.getElementById("mockup-live-token");
-    var save = document.getElementById("mockup-live-token-save");
-    var clear = document.getElementById("mockup-live-token-clear");
+    const inp = document.getElementById("mockup-live-token");
+    const save = document.getElementById("mockup-live-token-save");
+    const clear = document.getElementById("mockup-live-token-clear");
     if (save && inp) {
       save.addEventListener("click", function () {
-        var v = (inp.value || "").trim();
+        const v = (inp.value || "").trim();
         if (!v) {
           setAppStatusMessage("Paste a JWT from Operations (Application → Local Storage → accessToken), then Save.");
           return;
@@ -3947,23 +3945,23 @@
     }
   }
 
-  var PANES_SIDEBAR_KEY = "helix-mockup-sidebar-w";
-  var PANES_AI_KEY = "helix-mockup-ai-pane-w";
-  var PANE_BLOCKS_KEY = "helix-mockup-pane-blocks-order";
-  var PANES_DEF_SB = 272;
-  var PANES_DEF_AI = 332;
-  var PANES_SB_MIN = 200;
-  var PANES_SB_MAX = 520;
-  var PANES_AI_MIN = 220;
-  var PANES_AI_MAX = 560;
-  var PANES_CENTER_MIN = 320;
+  const PANES_SIDEBAR_KEY = "helix-mockup-sidebar-w";
+  const PANES_AI_KEY = "helix-mockup-ai-pane-w";
+  const PANE_BLOCKS_KEY = "helix-mockup-pane-blocks-order";
+  const PANES_DEF_SB = 272;
+  const PANES_DEF_AI = 332;
+  const PANES_SB_MIN = 200;
+  const PANES_SB_MAX = 520;
+  const PANES_AI_MIN = 220;
+  const PANES_AI_MAX = 560;
+  const PANES_CENTER_MIN = 320;
 
-  var mainContentDragBlock = null;
-  var aiScrollDragBlock = null;
+  let mainContentDragBlock = null;
+  let aiScrollDragBlock = null;
 
   function readCssPxVar(name, fallback) {
-    var raw = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-    var m = /^([\d.]+)px$/.exec(raw);
+    const raw = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    const m = /^([\d.]+)px$/.exec(raw);
     if (m) return Math.round(parseFloat(m[1], 10));
     return fallback;
   }
@@ -3978,25 +3976,25 @@
   function setPaneWidths(sb, ai, writeStorage) {
     sb = Math.max(PANES_SB_MIN, Math.min(PANES_SB_MAX, Math.round(sb)));
     ai = Math.max(PANES_AI_MIN, Math.min(PANES_AI_MAX, Math.round(ai)));
-    var root = document.documentElement;
+    const root = document.documentElement;
     root.style.setProperty("--sidebar-w", sb + "px");
     root.style.setProperty("--ai-pane-w", ai + "px");
     if (writeStorage) persistPaneWidths(sb, ai);
   }
 
   function clampOuterPanesToViewport() {
-    var mq = window.matchMedia("(min-width: 1101px)");
+    const mq = window.matchMedia("(min-width: 1101px)");
     if (!mq.matches) return;
-    var vw = window.innerWidth || document.documentElement.clientWidth || 1200;
-    var g = readCssPxVar("--pane-gutter-track", 6) * 2;
-    var sb = readCssPxVar("--sidebar-w", PANES_DEF_SB);
-    var ai = readCssPxVar("--ai-pane-w", PANES_DEF_AI);
+    const vw = window.innerWidth || document.documentElement.clientWidth || 1200;
+    const g = readCssPxVar("--pane-gutter-track", 6) * 2;
+    let sb = readCssPxVar("--sidebar-w", PANES_DEF_SB);
+    let ai = readCssPxVar("--ai-pane-w", PANES_DEF_AI);
     sb = Math.max(PANES_SB_MIN, Math.min(PANES_SB_MAX, sb));
     ai = Math.max(PANES_AI_MIN, Math.min(PANES_AI_MAX, ai));
-    var maxPair = vw - g - PANES_CENTER_MIN;
+    const maxPair = vw - g - PANES_CENTER_MIN;
     if (sb + ai > maxPair) {
-      var over = sb + ai - maxPair;
-      var fromAi = Math.min(over, ai - PANES_AI_MIN);
+      let over = sb + ai - maxPair;
+      const fromAi = Math.min(over, ai - PANES_AI_MIN);
       ai -= fromAi;
       over -= fromAi;
       if (over > 0) sb = Math.max(PANES_SB_MIN, sb - over);
@@ -4005,23 +4003,23 @@
   }
 
   function balanceOuterPaneWidths() {
-    var mq = window.matchMedia("(min-width: 1101px)");
+    const mq = window.matchMedia("(min-width: 1101px)");
     if (!mq.matches) {
       setAppStatusMessage("Balance columns needs a wide window (over 1100px).");
       return;
     }
-    var vw = window.innerWidth || document.documentElement.clientWidth || 1200;
-    var g = readCssPxVar("--pane-gutter-track", 6) * 2;
-    var budget = vw - g - PANES_CENTER_MIN;
+    const vw = window.innerWidth || document.documentElement.clientWidth || 1200;
+    const g = readCssPxVar("--pane-gutter-track", 6) * 2;
+    const budget = vw - g - PANES_CENTER_MIN;
     if (budget <= PANES_SB_MIN + PANES_AI_MIN) {
       setPaneWidths(PANES_SB_MIN, PANES_AI_MIN, true);
       clampOuterPanesToViewport();
       setAppStatusMessage("Columns set to minimum widths (narrow viewport).");
       return;
     }
-    var half = Math.floor(budget / 2);
-    var sb = Math.max(PANES_SB_MIN, Math.min(PANES_SB_MAX, half));
-    var ai = budget - sb;
+    const half = Math.floor(budget / 2);
+    const sb = Math.max(PANES_SB_MIN, Math.min(PANES_SB_MAX, half));
+    let ai = budget - sb;
     ai = Math.max(PANES_AI_MIN, Math.min(PANES_AI_MAX, ai));
     if (sb + ai > budget) ai = Math.max(PANES_AI_MIN, budget - sb);
     setPaneWidths(sb, ai, true);
@@ -4037,9 +4035,9 @@
 
   function loadPaneBlocksStore() {
     try {
-      var raw = localStorage.getItem(PANE_BLOCKS_KEY);
+      const raw = localStorage.getItem(PANE_BLOCKS_KEY);
       if (!raw) return { main: {}, aiScroll: [] };
-      var o = JSON.parse(raw);
+      const o = JSON.parse(raw);
       if (!o || typeof o !== "object") return { main: {}, aiScroll: [] };
       if (!o.main || typeof o.main !== "object") o.main = {};
       if (!Array.isArray(o.aiScroll)) o.aiScroll = [];
@@ -4057,12 +4055,12 @@
 
   function ensureViewBlockIds(view) {
     if (!view || !view.id) return;
-    var vid = view.id;
-    var max = 0;
+    const vid = view.id;
+    let max = 0;
     Array.from(view.children).forEach(function (el) {
-      var ps = el.dataset.paneSlot;
+      const ps = el.dataset.paneSlot;
       if (!ps || ps.indexOf(vid + "-b") !== 0) return;
-      var m = /-b(\d+)$/.exec(ps);
+      const m = /-b(\d+)$/.exec(ps);
       if (m) max = Math.max(max, parseInt(m[1], 10));
     });
     Array.from(view.children).forEach(function (el) {
@@ -4075,28 +4073,28 @@
   function applyMainViewBlockOrder(view) {
     if (!view) return;
     ensureViewBlockIds(view);
-    var store = loadPaneBlocksStore();
-    var order = store.main[view.id];
+    const store = loadPaneBlocksStore();
+    const order = store.main[view.id];
     if (!order || !order.length) return;
-    var map = Object.create(null);
+    const map = Object.create(null);
     Array.from(view.children).forEach(function (el) {
       if (el.dataset.paneSlot) map[el.dataset.paneSlot] = el;
     });
-    var domIds = Array.from(view.children)
+    const domIds = Array.from(view.children)
       .map(function (c) {
         return c.dataset.paneSlot;
       })
       .filter(Boolean);
-    var merged = mergeNavOrder(order, domIds);
+    const merged = mergeNavOrder(order, domIds);
     merged.forEach(function (slot) {
-      var el = map[slot];
+      const el = map[slot];
       if (el) view.appendChild(el);
     });
   }
 
   function persistMainViewBlockOrder(view) {
     if (!view) return;
-    var store = loadPaneBlocksStore();
+    const store = loadPaneBlocksStore();
     store.main[view.id] = Array.from(view.children)
       .map(function (c) {
         return c.dataset.paneSlot;
@@ -4107,10 +4105,10 @@
 
   function ensureAiScrollBlockIds(scroll) {
     if (!scroll) return;
-    var max = 0;
+    let max = 0;
     Array.from(scroll.children).forEach(function (el) {
-      var ps = el.dataset.paneSlot;
-      var m = ps && /^ai-pane-scroll-b(\d+)$/.exec(ps);
+      const ps = el.dataset.paneSlot;
+      const m = ps && /^ai-pane-scroll-b(\d+)$/.exec(ps);
       if (m) max = Math.max(max, parseInt(m[1], 10));
     });
     Array.from(scroll.children).forEach(function (el) {
@@ -4123,28 +4121,28 @@
   function applyAiScrollBlockOrder(scroll) {
     if (!scroll) return;
     ensureAiScrollBlockIds(scroll);
-    var store = loadPaneBlocksStore();
-    var order = store.aiScroll;
+    const store = loadPaneBlocksStore();
+    const order = store.aiScroll;
     if (!order || !order.length) return;
-    var map = Object.create(null);
+    const map = Object.create(null);
     Array.from(scroll.children).forEach(function (el) {
       if (el.dataset.paneSlot) map[el.dataset.paneSlot] = el;
     });
-    var domIds = Array.from(scroll.children)
+    const domIds = Array.from(scroll.children)
       .map(function (c) {
         return c.dataset.paneSlot;
       })
       .filter(Boolean);
-    var merged = mergeNavOrder(order, domIds);
+    const merged = mergeNavOrder(order, domIds);
     merged.forEach(function (slot) {
-      var el = map[slot];
+      const el = map[slot];
       if (el) scroll.appendChild(el);
     });
   }
 
   function persistAiScrollBlockOrder(scroll) {
     if (!scroll) return;
-    var store = loadPaneBlocksStore();
+    const store = loadPaneBlocksStore();
     store.aiScroll = Array.from(scroll.children)
       .map(function (c) {
         return c.dataset.paneSlot;
@@ -4154,14 +4152,14 @@
   }
 
   function getBlockAfterElement(container, y, dragging, selector) {
-    var items = Array.prototype.slice.call(container.querySelectorAll(selector));
-    var closest = { offset: Number.NEGATIVE_INFINITY, child: null };
-    var j;
+    const items = Array.prototype.slice.call(container.querySelectorAll(selector));
+    let closest = { offset: Number.NEGATIVE_INFINITY, child: null };
+    let j;
     for (j = 0; j < items.length; j++) {
-      var child = items[j];
+      const child = items[j];
       if (child === dragging) continue;
-      var box = child.getBoundingClientRect();
-      var offset = y - box.top - box.height / 2;
+      const box = child.getBoundingClientRect();
+      const offset = y - box.top - box.height / 2;
       if (offset < 0 && offset > closest.offset) {
         closest = { offset: offset, child: child };
       }
@@ -4173,7 +4171,7 @@
     document.querySelectorAll("section.view > [data-pane-slot]").forEach(function (el) {
       el.removeAttribute("draggable");
     });
-    var v = document.querySelector("section.view.active");
+    const v = document.querySelector("section.view.active");
     if (!v) return;
     v.querySelectorAll(":scope > [data-pane-slot]").forEach(function (el) {
       el.setAttribute("draggable", "true");
@@ -4185,17 +4183,17 @@
       ensureViewBlockIds(v);
       applyMainViewBlockOrder(v);
     });
-    var aiScroll = document.querySelector(".ai-pane-scroll");
+    const aiScroll = document.querySelector(".ai-pane-scroll");
     if (aiScroll) {
       applyAiScrollBlockOrder(aiScroll);
     }
 
-    var contentInner = document.querySelector(".content-inner");
+    const contentInner = document.querySelector(".content-inner");
     if (contentInner) {
       contentInner.addEventListener(
         "dragstart",
         function (e) {
-          var block = e.target.closest("section.view.active > [data-pane-slot]");
+          const block = e.target.closest("section.view.active > [data-pane-slot]");
           if (!block || !contentInner.contains(block)) return;
           if (e.target.closest("button, a, input, textarea, select, .mock-jump")) {
             e.preventDefault();
@@ -4215,16 +4213,16 @@
         contentInner.querySelectorAll(".is-pane-block-dragging").forEach(function (n) {
           n.classList.remove("is-pane-block-dragging");
         });
-        var vActive = document.querySelector("section.view.active");
+        const vActive = document.querySelector("section.view.active");
         if (vActive) persistMainViewBlockOrder(vActive);
         mainContentDragBlock = null;
       });
       contentInner.addEventListener("dragover", function (e) {
         e.preventDefault();
         e.dataTransfer.dropEffect = "move";
-        var v0 = document.querySelector("section.view.active");
+        const v0 = document.querySelector("section.view.active");
         if (!v0 || !mainContentDragBlock || !v0.contains(mainContentDragBlock)) return;
-        var after = getBlockAfterElement(
+        const after = getBlockAfterElement(
           v0,
           e.clientY,
           mainContentDragBlock,
@@ -4243,7 +4241,7 @@
         el.setAttribute("draggable", "true");
       });
       aiScroll.addEventListener("dragstart", function (e) {
-        var block = e.target.closest(".ai-pane-scroll > [data-pane-slot]");
+        const block = e.target.closest(".ai-pane-scroll > [data-pane-slot]");
         if (!block || block.parentElement !== aiScroll) return;
         if (e.target.closest("button, a, input, textarea, select")) {
           e.preventDefault();
@@ -4268,7 +4266,7 @@
         e.preventDefault();
         e.dataTransfer.dropEffect = "move";
         if (!aiScrollDragBlock) return;
-        var after = getBlockAfterElement(
+        const after = getBlockAfterElement(
           aiScroll,
           e.clientY,
           aiScrollDragBlock,
@@ -4282,8 +4280,8 @@
       });
     }
 
-    var bal = document.getElementById("mockup-pane-balance");
-    var rst = document.getElementById("mockup-pane-reset");
+    const bal = document.getElementById("mockup-pane-balance");
+    const rst = document.getElementById("mockup-pane-reset");
     if (bal) bal.addEventListener("click", balanceOuterPaneWidths);
     if (rst) rst.addEventListener("click", resetOuterPaneWidthsToDefaults);
 
@@ -4292,18 +4290,18 @@
 
   /** Drag or keyboard-adjust sidebar / AI column widths (desktop 3-column layout only). */
   function initPaneResize() {
-    var mq = window.matchMedia("(min-width: 1101px)");
-    var g1 = document.querySelector(".pane-gutter--sidebar-main");
-    var g2 = document.querySelector(".pane-gutter--main-ai");
+    const mq = window.matchMedia("(min-width: 1101px)");
+    const g1 = document.querySelector(".pane-gutter--sidebar-main");
+    const g2 = document.querySelector(".pane-gutter--main-ai");
     if (!g1 || !g2) return;
 
-    var clampToViewport = function () {
+    const clampToViewport = function () {
       clampOuterPanesToViewport();
     };
 
-    var drag = null;
+    let drag = null;
 
-    var endDrag = function () {
+    const endDrag = function () {
       if (!drag) return;
       drag = null;
       document.body.classList.remove("is-resizing-panes");
@@ -4314,9 +4312,9 @@
       window.removeEventListener("touchcancel", endDrag);
     };
 
-    var onMove = function (ev) {
+    const onMove = function (ev) {
       if (!drag) return;
-      var dx = ev.clientX - drag.startX;
+      const dx = ev.clientX - drag.startX;
       if (drag.which === "sidebar") {
         setPaneWidths(drag.startSb + dx, drag.startAi, true);
       } else {
@@ -4325,16 +4323,16 @@
       clampToViewport();
     };
 
-    var onTouchMove = function (ev) {
+    const onTouchMove = function (ev) {
       if (!drag || !ev.touches || !ev.touches[0]) return;
       ev.preventDefault();
       onMove({ clientX: ev.touches[0].clientX });
     };
 
-    var startDrag = function (which, clientX) {
+    const startDrag = function (which, clientX) {
       if (!mq.matches) return;
-      var sb = readCssPxVar("--sidebar-w", PANES_DEF_SB);
-      var ai = readCssPxVar("--ai-pane-w", PANES_DEF_AI);
+      const sb = readCssPxVar("--sidebar-w", PANES_DEF_SB);
+      const ai = readCssPxVar("--ai-pane-w", PANES_DEF_AI);
       drag = { which: which, startX: clientX, startSb: sb, startAi: ai };
       document.body.classList.add("is-resizing-panes");
       window.addEventListener("mousemove", onMove);
@@ -4376,22 +4374,22 @@
 
     g1.addEventListener("dblclick", function () {
       if (!mq.matches) return;
-      var ai = readCssPxVar("--ai-pane-w", PANES_DEF_AI);
+      const ai = readCssPxVar("--ai-pane-w", PANES_DEF_AI);
       setPaneWidths(PANES_DEF_SB, ai, true);
       clampToViewport();
     });
     g2.addEventListener("dblclick", function () {
       if (!mq.matches) return;
-      var sb = readCssPxVar("--sidebar-w", PANES_DEF_SB);
+      const sb = readCssPxVar("--sidebar-w", PANES_DEF_SB);
       setPaneWidths(sb, PANES_DEF_AI, true);
       clampToViewport();
     });
 
-    var onKey = function (ev) {
+    const onKey = function (ev) {
       if (!mq.matches) return;
-      var step = ev.shiftKey ? 24 : 8;
-      var sb = readCssPxVar("--sidebar-w", PANES_DEF_SB);
-      var ai = readCssPxVar("--ai-pane-w", PANES_DEF_AI);
+      const step = ev.shiftKey ? 24 : 8;
+      const sb = readCssPxVar("--sidebar-w", PANES_DEF_SB);
+      const ai = readCssPxVar("--ai-pane-w", PANES_DEF_AI);
       if (ev.currentTarget === g1) {
         if (ev.key === "ArrowLeft") {
           ev.preventDefault();
@@ -4440,9 +4438,9 @@
     clampToViewport();
   }
 
-  var NAV_BREAK_KEY = "helix-mockup-nav-break-scale";
-  var NAV_BREAK_MIN = 0.6;
-  var NAV_BREAK_MAX = 1.7;
+  const NAV_BREAK_KEY = "helix-mockup-nav-break-scale";
+  const NAV_BREAK_MIN = 0.6;
+  const NAV_BREAK_MAX = 1.7;
 
   function setNavBreakScale(scale) {
     scale = Math.round(Math.max(NAV_BREAK_MIN, Math.min(NAV_BREAK_MAX, scale)) * 100) / 100;
@@ -4460,22 +4458,22 @@
   }
 
   function initNavBreakScale() {
-    var inp = document.getElementById("mockup-nav-break-scale");
+    const inp = document.getElementById("mockup-nav-break-scale");
     if (!inp) return;
-    var cur = 1;
+    let cur = 1;
     try {
-      var s = localStorage.getItem(NAV_BREAK_KEY);
+      const s = localStorage.getItem(NAV_BREAK_KEY);
       if (s && /^[\d.]+$/.test(s)) cur = parseFloat(s, 10);
     } catch (e) {}
     cur = setNavBreakScale(cur);
     inp.value = String(Math.round(cur * 100));
     syncNavBreakRangeAria(inp, cur);
     inp.addEventListener("input", function () {
-      var v = parseInt(inp.value, 10) / 100;
+      const v = parseInt(inp.value, 10) / 100;
       setNavBreakScale(v);
       syncNavBreakRangeAria(inp, v);
     });
-    var reset = document.getElementById("mockup-nav-break-reset");
+    const reset = document.getElementById("mockup-nav-break-reset");
     if (reset) {
       reset.addEventListener("click", function () {
         inp.value = "100";
@@ -4486,14 +4484,14 @@
   }
 
   function initOverviewWarRoom() {
-    var btn = document.getElementById("overview-open-war-room");
+    const btn = document.getElementById("overview-open-war-room");
     if (!btn) return;
     btn.addEventListener("click", function () {
       if (!getLiveAccessToken()) {
         setAppStatusMessage(
           "Open war room requires a JWT: sign in on Operations (same host) or paste accessToken, then try again."
         );
-        var hp = document.getElementById("mockup-live-hint-panel");
+        const hp = document.getElementById("mockup-live-hint-panel");
         if (hp) hp.hidden = false;
         return;
       }
@@ -4505,7 +4503,7 @@
           setAppStatusMessage("Webex space created: " + (r.body.title || "war room") + ". Opened in a new tab.");
           return;
         }
-        var msg =
+        const msg =
           r.body && r.body.message
             ? r.body.message
             : r.status === 401
@@ -4526,8 +4524,8 @@
     if (location.search.indexOf("live=1") !== -1) localStorage.setItem(MOCKUP_LIVE_KEY, "1");
     if (location.search.indexOf("live=0") !== -1) localStorage.removeItem(MOCKUP_LIVE_KEY);
 
-    var toggle = document.getElementById("mockup-live-toggle");
-    var refresh = document.getElementById("mockup-live-refresh");
+    const toggle = document.getElementById("mockup-live-toggle");
+    const refresh = document.getElementById("mockup-live-refresh");
     syncMockupLiveBar();
 
     if (toggle) {
@@ -4536,7 +4534,7 @@
           localStorage.setItem(MOCKUP_LIVE_KEY, "1");
           syncMockupLiveBar();
           if (!getLiveAccessToken()) {
-            var hint0 = document.getElementById("mockup-live-hint-panel");
+            const hint0 = document.getElementById("mockup-live-hint-panel");
             if (hint0) hint0.hidden = false;
           }
           refreshMockupLiveData();
@@ -4561,7 +4559,7 @@
     if (isMockupLive()) {
       syncMockupLiveBar();
       if (mockupTokenStorageIsSeparateFromBackend()) {
-        var hp0 = document.getElementById("mockup-live-hint-panel");
+        const hp0 = document.getElementById("mockup-live-hint-panel");
         if (hp0) hp0.hidden = false;
       }
       refreshMockupLiveData();
@@ -4580,10 +4578,10 @@
   initMockupLiveMode();
   initOverviewWarRoom();
   initPropertyFilters();
-  initCopilotAgentPanel();
+  initAiAskPanel();
   initPaneResize();
   initPaneBlocksAndColumnControls();
   initNavBreakScale();
-  var hash = (location.hash || "#overview").slice(1);
+  const hash = (location.hash || "#overview").slice(1);
   showView(titles[hash] ? hash : "overview");
 })();

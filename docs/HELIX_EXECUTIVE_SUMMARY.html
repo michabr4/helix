@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Helix — Executive Summary</title>
+<style>
+  @page { size: letter landscape; margin: 0; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    color: #1a1a2e;
+    background: #fff;
+    line-height: 1.38;
+    width: 11in;
+    height: 8.5in;
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .header-band {
+    background: linear-gradient(135deg, #003949 0%, #005073 40%, #049FD9 100%);
+    padding: 14px 44px 11px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .header-left { display: flex; align-items: center; gap: 14px; }
+  .cisco-logo svg { height: 26px; }
+  .header-divider { width: 1px; height: 24px; background: rgba(255,255,255,0.35); }
+  .header-title { color: #fff; }
+  .header-title h1 { font-size: 18px; font-weight: 700; letter-spacing: -0.4px; }
+  .header-title .sub { font-size: 9.5px; opacity: 0.85; margin-top: 1px; }
+  .header-right { text-align: right; color: rgba(255,255,255,0.8); font-size: 9px; line-height: 1.4; }
+  .cx-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 3px;
+    padding: 2px 8px;
+    font-size: 9px;
+    font-weight: 600;
+    color: #fff;
+    letter-spacing: 0.4px;
+    margin-bottom: 2px;
+  }
+
+  .tagline {
+    background: #f8fbfd;
+    border-bottom: 1px solid #e0e8ee;
+    padding: 7px 44px;
+    font-size: 11px;
+    color: #1a1a2e;
+    font-weight: 500;
+    text-align: center;
+  }
+  .tagline strong { color: #E6007E; }
+
+  .content { padding: 10px 44px 44px; }
+
+  .section-title {
+    font-size: 9px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #003949;
+    margin-bottom: 5px;
+    padding-bottom: 2px;
+    border-bottom: 2px solid #E6007E;
+    display: inline-block;
+  }
+
+  .metric-strip {
+    display: flex;
+    gap: 0;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid #e0e8ee;
+  }
+  .metric-card {
+    flex: 1;
+    padding: 8px 6px;
+    text-align: center;
+    background: #fff;
+    border-right: 1px solid #e0e8ee;
+  }
+  .metric-card:last-child { border-right: none; }
+  .metric-card .num {
+    font-size: 22px;
+    font-weight: 800;
+    color: #003949;
+    letter-spacing: -0.8px;
+    line-height: 1.1;
+  }
+  .metric-card .num .unit { font-size: 11px; font-weight: 600; }
+  .metric-card .label {
+    font-size: 7.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    color: #5a6a7a;
+    margin-top: 1px;
+    font-weight: 600;
+  }
+  .metric-card .delta {
+    font-size: 7.5px;
+    color: #5a6a7a;
+    font-weight: 600;
+    margin-top: 1px;
+  }
+  .metric-card.key-driver .num { color: #E6007E; }
+  .metric-card.key-driver .delta { color: #E6007E; }
+
+  .three-col { display: flex; gap: 16px; margin-bottom: 0; }
+  .col-narrow { flex: 0 0 29%; }
+  .col-wide { flex: 1; }
+
+  .feature-block {
+    background: #fafcfe;
+    border: 1px solid #e4ecf2;
+    border-radius: 5px;
+    padding: 6px 9px;
+    margin-bottom: 5px;
+  }
+  .feature-block h3 {
+    font-size: 9.5px;
+    font-weight: 700;
+    color: #003949;
+    margin-bottom: 2px;
+  }
+  .feature-block p {
+    font-size: 8.5px;
+    color: #3d4f5f;
+    line-height: 1.35;
+  }
+
+  .ai-panel {
+    background: #fafcfe;
+    border: 1px solid #e4ecf2;
+    border-left: 2px solid #E6007E;
+    border-radius: 5px;
+    padding: 6px 9px;
+    margin-bottom: 5px;
+  }
+  .ai-panel h3 {
+    font-size: 9.5px;
+    font-weight: 700;
+    color: #003949;
+    margin-bottom: 2px;
+  }
+  .ai-panel p {
+    font-size: 8.5px;
+    color: #3d4f5f;
+    line-height: 1.35;
+  }
+  .ai-tag {
+    display: inline-block;
+    background: #E6007E;
+    color: #fff;
+    font-size: 7px;
+    font-weight: 800;
+    padding: 1px 4px;
+    border-radius: 2px;
+    letter-spacing: 0.4px;
+    margin-left: 3px;
+    vertical-align: middle;
+  }
+
+  .outcome-table { width: 100%; border-collapse: collapse; margin-bottom: 6px; font-size: 8.5px; }
+  .outcome-table th {
+    background: #003949;
+    color: #fff;
+    padding: 4px 6px;
+    text-align: left;
+    font-size: 7.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    font-weight: 700;
+  }
+  .outcome-table td {
+    padding: 4px 6px;
+    border-bottom: 1px solid #e4ecf2;
+    color: #2d3e50;
+  }
+  .outcome-table tr:nth-child(even) td { background: #f8fbfd; }
+  .outcome-table .highlight { color: #E6007E; font-weight: 700; }
+
+  .bottom-bar {
+    display: flex;
+    gap: 10px;
+    font-size: 8px;
+    color: #5a6a7a;
+    margin-top: 2px;
+  }
+  .bottom-bar .pill {
+    flex: 1;
+    background: #f8fbfd;
+    border: 1px solid #e4ecf2;
+    border-radius: 4px;
+    padding: 5px 9px;
+  }
+  .bottom-bar .pill strong { color: #003949; }
+
+  .footer-wrap {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+  .metrics-disclaimer {
+    background: #eef4f8;
+    border-top: 1px solid #d0dce6;
+    padding: 4px 44px 5px;
+    font-size: 6.75px;
+    font-style: italic;
+    color: #4a5a6a;
+    text-align: center;
+    line-height: 1.35;
+  }
+  .footer {
+    background: #003949;
+    padding: 5px 44px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: rgba(255,255,255,0.7);
+    font-size: 7.5px;
+  }
+  .footer .confidential {
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: rgba(255,255,255,0.5);
+  }
+</style>
+</head>
+<body>
+
+<div class="header-band">
+  <div class="header-left">
+    <div class="cisco-logo">
+      <svg viewBox="0 0 200 45" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g fill="#fff">
+          <rect x="33" y="10" width="4" height="14" rx="2"/>
+          <rect x="42" y="5" width="4" height="24" rx="2"/>
+          <rect x="51" y="0" width="4" height="34" rx="2"/>
+          <rect x="60" y="5" width="4" height="24" rx="2"/>
+          <rect x="69" y="10" width="4" height="14" rx="2"/>
+          <text x="28" y="44" font-family="Arial,sans-serif" font-size="15" font-weight="700" letter-spacing="3">cisco</text>
+        </g>
+      </svg>
+    </div>
+    <div class="header-divider"></div>
+    <div class="header-title">
+      <h1>Helix</h1>
+      <div class="sub">Unified Customer Experience Intelligence for CX Operations</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="cx-badge">CISCO CUSTOMER EXPERIENCE</div>
+    <div>Executive Summary · FY26</div>
+  </div>
+</div>
+
+<div class="tagline">
+  <strong>One platform</strong> replacing 17+ siloed vendor consoles · <strong>AI-powered insights</strong> across every CX workflow · <strong>60% faster</strong> time-to-resolution · <strong>$2.1M</strong> projected 3-year ROI
+</div>
+
+<div class="content">
+
+  <div class="metric-strip">
+    <div class="metric-card key-driver">
+      <div class="num">17<span class="unit">+</span></div>
+      <div class="label">Cisco API Integrations</div>
+      <div class="delta">Unified in one surface</div>
+    </div>
+    <div class="metric-card">
+      <div class="num">6</div>
+      <div class="label">SDC Consoles Consolidated</div>
+      <div class="delta">PM · SDM · CXM · Ren · DA · Eng</div>
+    </div>
+    <div class="metric-card key-driver">
+      <div class="num">60<span class="unit">%</span></div>
+      <div class="label">Swivel-Chair Reduction</div>
+      <div class="delta">vs. current multi-tool workflows</div>
+    </div>
+    <div class="metric-card key-driver">
+      <div class="num">$2.1<span class="unit">M</span></div>
+      <div class="label">Projected 3-Year ROI</div>
+      <div class="delta">NaC $886K + SaC $1,258K</div>
+    </div>
+    <div class="metric-card">
+      <div class="num">42<span class="unit">%</span></div>
+      <div class="label">Automation Readiness</div>
+      <div class="delta">1,626 devices Day-1 eligible</div>
+    </div>
+    <div class="metric-card">
+      <div class="num">19</div>
+      <div class="label">Operational Views</div>
+      <div class="delta">Full CX lifecycle coverage</div>
+    </div>
+  </div>
+
+  <div class="three-col">
+
+    <div class="col-narrow">
+      <div class="section-title">Platform Simplification</div>
+      <div class="feature-block">
+        <h3>Single Pane of Glass</h3>
+        <p>Replaces fragmented access across DNA Center, TAC, Smart Licensing, WebEx, ThousandEyes, ISE, Meraki, AppDynamics, Salesforce, and 8 more platforms into one authenticated surface.</p>
+      </div>
+      <div class="feature-block">
+        <h3>Salesforce CRM Backbone</h3>
+        <p>Cases, Accounts, Contacts, Opportunities, Entitlements, and Service Contracts feed all six SDC consoles — eliminates CRM tab-switching and manual reconciliation.</p>
+      </div>
+      <div class="feature-block">
+        <h3>Digitized Delivery Engine</h3>
+        <p>Network as Code (9 solutions), Services as Code (12 waves), and DDS (12 templates) transform manual delivery into programmable, repeatable workflows.</p>
+      </div>
+      <div class="feature-block">
+        <h3>Cross-Platform Mobile</h3>
+        <p>Native iOS + Android app with SSO (OIDC + PKCE), hardware-backed token storage, and full operational access on the go.</p>
+      </div>
+    </div>
+
+    <div class="col-narrow">
+      <div class="section-title">AI-Powered Intelligence</div>
+      <div class="ai-panel">
+        <h3>AI Copilot Integration <span class="ai-tag">AI</span></h3>
+        <p>Context-aware insights via Microsoft 365 Copilot on every view. Renewal risk, automation readiness, and cross-domain correlation in the operator's workflow.</p>
+      </div>
+      <div class="ai-panel">
+        <h3>Predictive Revenue Intel <span class="ai-tag">AI</span></h3>
+        <p>Correlates Salesforce pipeline with incident patterns to flag revenue-at-risk accounts before renewal windows. Triggers proactive outreach across CXM consoles.</p>
+      </div>
+      <div class="ai-panel">
+        <h3>Integration Advisor <span class="ai-tag">AI</span></h3>
+        <p>Analyzes P1/P2 incidents, observability gaps, health scores, PSIRT/FN exposure — generates prioritized action steps per operator context.</p>
+      </div>
+      <div class="ai-panel">
+        <h3>Automation Scoring <span class="ai-tag">AI</span></h3>
+        <p>Evaluates 1,626 devices against NaC readiness. Identifies 42% Day-1 eligible fleet and generates per-solution adoption roadmaps.</p>
+      </div>
+    </div>
+
+    <div class="col-wide">
+      <div class="section-title">CX Role Enhancement &amp; Outcomes</div>
+      <table class="outcome-table">
+        <thead>
+          <tr>
+            <th style="width:16%">CX Role</th>
+            <th style="width:28%">Before Helix</th>
+            <th style="width:30%">With Helix</th>
+            <th style="width:26%">Projected Impact</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>SDM / TAM</strong></td>
+            <td>4–6 tools per incident; manual TAC correlation</td>
+            <td>Single console, auto-TAC linkage, AI triage</td>
+            <td class="highlight">60% faster MTTR · 3× throughput</td>
+          </tr>
+          <tr>
+            <td><strong>PM / Manager</strong></td>
+            <td>Separate SF + Power BI + spreadsheets</td>
+            <td>Embedded Power BI + SF pipeline in one view</td>
+            <td class="highlight">4 hrs/wk saved · real-time pipeline</td>
+          </tr>
+          <tr>
+            <td><strong>CXM / CSM</strong></td>
+            <td>Disconnected renewal and entitlement data</td>
+            <td>AI-flagged renewal risk; SF entitlement feed</td>
+            <td class="highlight">25% ↑ renewal capture rate</td>
+          </tr>
+          <tr>
+            <td><strong>Engineer</strong></td>
+            <td>CLI-based ops; no code automation</td>
+            <td>NaC pipelines (Terraform/Ansible/pyATS)</td>
+            <td class="highlight">70% ↓ manual config tasks</td>
+          </tr>
+          <tr>
+            <td><strong>Delivery Arch.</strong></td>
+            <td>Reference designs in documents only</td>
+            <td>Live 4-phase adoption across 1,626 devices</td>
+            <td class="highlight">50% ↓ design-to-deploy cycle</td>
+          </tr>
+          <tr>
+            <td><strong>Customer</strong></td>
+            <td>Slow escalation; fragmented reporting</td>
+            <td>Proactive AI alerts; unified QBR via DDS</td>
+            <td class="highlight">↑ CSAT · ↑ NPS · ↓ Escalations</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="bottom-bar">
+        <div class="pill">
+          <strong>Platform:</strong> Web · iOS · Android · SSO · 19 views · Power BI analytics · Live &amp; offline modes
+        </div>
+        <div class="pill">
+          <strong>Security:</strong> RBAC (7 roles) · JWT + OIDC SSO · HW-backed mobile auth · Audit trail · Helmet CSP
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="footer-wrap">
+  <div class="metrics-disclaimer">
+    Note: These are mock metrics for illustration; they reflect the direction the app is headed with the power of AI—not audited operational or financial results.
+  </div>
+  <div class="footer">
+    <div>Cisco Systems, Inc. · Customer Experience · Service Delivery Center</div>
+    <div class="confidential">Cisco Confidential</div>
+    <div>Helix v0.1 · April 2026</div>
+  </div>
+</div>
+
+</body>
+</html>

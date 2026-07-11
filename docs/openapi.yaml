@@ -1,0 +1,1151 @@
+openapi: 3.1.0
+info:
+  title: ServiceFlow SDM API
+  version: 1.0.0
+  description: |
+    Service Delivery Manager backend API for MGM service delivery operations.
+
+    ## Authentication
+    All protected endpoints require a Bearer JWT access token obtained from
+    `POST /api/v1/auth/login` or `POST /api/v1/auth/sso/exchange`.
+
+    ## Roles
+    Roles in order of privilege: `admin > sdm > manager > tam > csm > engineer > viewer`
+
+    `viewer` has read-only access scoped to their assigned properties/incidents.
+
+servers:
+  - url: http://localhost:3000/api/v1
+    description: Local development
+
+security:
+  - bearerAuth: []
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    Error:
+      type: object
+      required: [message]
+      properties:
+        message:
+          type: string
+          example: Unauthorized
+
+    HealthResponse:
+      type: object
+      required: [status, checks]
+      properties:
+        status:
+          type: string
+          enum: [ok, degraded]
+        checks:
+          type: object
+          properties:
+            database:
+              type: string
+              enum: [ok, degraded]
+            redis:
+              type: string
+              enum: [ok, degraded]
+
+    TokenPair:
+      type: object
+      required: [accessToken, refreshToken]
+      properties:
+        accessToken:
+          type: string
+        refreshToken:
+          type: string
+
+    Property:
+      type: object
+      required: [property_id, name, property_type]
+      properties:
+        property_id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          example: Bellagio
+        property_type:
+          type: string
+          enum: [hotel, casino, resort, venue]
+        created_at:
+          type: string
+          format: date-time
+
+    Device:
+      type: object
+      required: [device_id, property_id, hostname, ip_address, serial_number, status]
+      properties:
+        device_id:
+          type: string
+          format: uuid
+        property_id:
+          type: string
+          format: uuid
+        hostname:
+          type: string
+          example: sw-bellagio-core-01
+        ip_address:
+          type: string
+          format: ipv4
+          example: 10.1.1.1
+        serial_number:
+          type: string
+          example: FCZ2341A0AB
+        status:
+          type: string
+          enum: [active, inactive, maintenance, decommissioned, failed]
+        dna_device_id:
+          type: string
+          nullable: true
+        dna_managed:
+          type: boolean
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+
+    Incident:
+      type: object
+      required: [incident_id, incident_number, property_id, title, priority, status]
+      properties:
+        incident_id:
+          type: string
+          format: uuid
+        incident_number:
+          type: integer
+        property_id:
+          type: string
+          format: uuid
+        device_id:
+          type: string
+          format: uuid
+          nullable: true
+        title:
+          type: string
+        priority:
+          type: string
+          enum: [P1, P2, P3, P4]
+        status:
+          type: string
+          enum: [open, acknowledged, investigating, in-progress, pending, resolved, closed, cancelled]
+        tac_case_number:
+          type: string
+          nullable: true
+        reported_by:
+          type: string
+          format: uuid
+        assigned_to:
+          type: string
+          format: uuid
+        description:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    IncidentUpdate:
+      type: object
+      required: [update_id, incident_id, user_id, content, created_at]
+      properties:
+        update_id:
+          type: string
+          format: uuid
+        incident_id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        content:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+
+    TacCase:
+      type: object
+      properties:
+        case_number:
+          type: string
+        severity:
+          type: string
+        status:
+          type: string
+
+    IntegrationSource:
+      type: object
+      required: [source_name]
+      properties:
+        source_name:
+          type: string
+        enabled:
+          type: boolean
+        base_url:
+          type: string
+          nullable: true
+        auth_type:
+          type: string
+          nullable: true
+        schedule:
+          type: string
+          nullable: true
+          example: "*/15 * * * *"
+        credentials_ref:
+          type: string
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    SyncResult:
+      type: object
+      required: [processed]
+      properties:
+        processed:
+          type: integer
+        status:
+          type: string
+          nullable: true
+        message:
+          type: string
+          nullable: true
+
+    UserPropertyAssignment:
+      type: object
+      required: [property_id, name, property_type]
+      properties:
+        property_id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        property_type:
+          type: string
+          enum: [hotel, casino, resort, venue]
+
+paths:
+
+  # ── Health ─────────────────────────────────────────────────────────────────
+
+  /health:
+    get:
+      summary: Health check
+      description: Returns 200 if all components are healthy, 207 if any are degraded.
+      security: []
+      tags: [Health]
+      responses:
+        "200":
+          description: All components healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthResponse"
+        "207":
+          description: One or more components degraded (server is running but partially impaired)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthResponse"
+
+  # ── Auth ───────────────────────────────────────────────────────────────────
+
+  /auth/login:
+    post:
+      summary: Login with email and password
+      description: Returns an access token (15 min) and a refresh token (7 days).
+      security: []
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  minLength: 8
+      responses:
+        "200":
+          description: Tokens issued
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TokenPair"
+        "400":
+          description: Invalid request body
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "429":
+          description: Rate limit exceeded (20 attempts per 15 minutes)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /auth/refresh:
+    post:
+      summary: Refresh access token
+      description: Exchanges a valid refresh token for a new access token.
+      security: []
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [refreshToken]
+              properties:
+                refreshToken:
+                  type: string
+      responses:
+        "200":
+          description: New access token issued
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [accessToken]
+                properties:
+                  accessToken:
+                    type: string
+        "400":
+          description: Missing refresh token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Invalid or expired refresh token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "429":
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /auth/logout:
+    post:
+      summary: Logout — invalidate current access token
+      description: |
+        Adds the token's `jti` to the Redis denylist. The token becomes immediately
+        invalid even if it has not expired yet.
+      tags: [Auth]
+      responses:
+        "204":
+          description: Logged out successfully
+
+  /auth/sso/callback:
+    get:
+      summary: SSO OIDC callback (handled by IdP redirect)
+      description: |
+        Receives the authorization code from the OIDC provider. Not called directly
+        by API clients — the IdP redirects the browser here. Issues a one-time
+        exchange code via query param `?sso_code=` and redirects to `SSO_SUCCESS_REDIRECT`.
+      security: []
+      tags: [Auth]
+      parameters:
+        - name: code
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: state
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "302":
+          description: Redirect to frontend with `?sso_code=<uuid>`
+
+  /auth/sso/exchange:
+    post:
+      summary: Exchange SSO one-time code for tokens
+      description: |
+        Called by the frontend immediately after the SSO redirect. The `code` is
+        single-use (Redis GETDEL) and expires after 60 seconds.
+      security: []
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [code]
+              properties:
+                code:
+                  type: string
+                  format: uuid
+      responses:
+        "200":
+          description: Tokens issued
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TokenPair"
+        "400":
+          description: Missing code
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Code invalid or expired
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  # ── Properties ─────────────────────────────────────────────────────────────
+
+  /properties:
+    get:
+      summary: List all properties
+      tags: [Properties]
+      responses:
+        "200":
+          description: Array of properties
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Property"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+    post:
+      summary: Create a property
+      description: Requires role `admin`, `sdm`, or `manager`.
+      tags: [Properties]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, propertyType]
+              properties:
+                name:
+                  type: string
+                propertyType:
+                  type: string
+                  enum: [hotel, casino, resort, venue]
+      responses:
+        "201":
+          description: Property created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Property"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  /properties/{propertyId}:
+    get:
+      summary: Get a single property
+      tags: [Properties]
+      parameters:
+        - $ref: "#/components/parameters/PropertyId"
+      responses:
+        "200":
+          description: Property object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Property"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  # ── Devices ────────────────────────────────────────────────────────────────
+
+  /devices:
+    get:
+      summary: List devices
+      description: |
+        Privileged roles see all devices. `viewer` role sees only devices belonging
+        to their assigned properties (`mgm.user_properties`).
+      tags: [Devices]
+      responses:
+        "200":
+          description: Array of devices
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Device"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+    post:
+      summary: Create a device
+      description: Requires role `admin`, `sdm`, `engineer`, or `manager`.
+      tags: [Devices]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [propertyId, hostname, ipAddress, serialNumber, status]
+              properties:
+                propertyId:
+                  type: string
+                  format: uuid
+                hostname:
+                  type: string
+                ipAddress:
+                  type: string
+                  format: ipv4
+                serialNumber:
+                  type: string
+                  minLength: 3
+                status:
+                  type: string
+                  enum: [active, inactive, maintenance, decommissioned, failed]
+      responses:
+        "201":
+          description: Device created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Device"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  /devices/{deviceId}:
+    get:
+      summary: Get a single device
+      description: Viewers receive 404 if the device's property is not in their assignment.
+      tags: [Devices]
+      parameters:
+        - $ref: "#/components/parameters/DeviceId"
+      responses:
+        "200":
+          description: Device object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Device"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  # ── Incidents ──────────────────────────────────────────────────────────────
+
+  /incidents:
+    get:
+      summary: List incidents
+      description: |
+        Privileged roles see all incidents. `viewer` role sees only incidents
+        they reported or are assigned to.
+      tags: [Incidents]
+      responses:
+        "200":
+          description: Array of incidents
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Incident"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+    post:
+      summary: Create an incident
+      description: Requires any privileged role (not viewer).
+      tags: [Incidents]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [propertyId, title, description, priority]
+              properties:
+                propertyId:
+                  type: string
+                  format: uuid
+                deviceId:
+                  type: string
+                  format: uuid
+                title:
+                  type: string
+                  minLength: 5
+                description:
+                  type: string
+                  minLength: 5
+                priority:
+                  type: string
+                  enum: [P1, P2, P3, P4]
+      responses:
+        "201":
+          description: Incident created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Incident"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  /incidents/{incidentId}:
+    get:
+      summary: Get a single incident
+      description: Viewers receive 404 if they are not the reporter or assignee.
+      tags: [Incidents]
+      parameters:
+        - $ref: "#/components/parameters/IncidentId"
+      responses:
+        "200":
+          description: Incident detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Incident"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+    patch:
+      summary: Update incident status
+      description: Requires role `admin`, `sdm`, `tam`, `engineer`, or `manager`.
+      tags: [Incidents]
+      parameters:
+        - $ref: "#/components/parameters/IncidentId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [status]
+              properties:
+                status:
+                  type: string
+                  enum: [open, acknowledged, investigating, in-progress, pending, resolved, closed, cancelled]
+      responses:
+        "200":
+          description: Updated incident status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  incident_id:
+                    type: string
+                    format: uuid
+                  status:
+                    type: string
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /incidents/{incidentId}/updates:
+    post:
+      summary: Add an update note to an incident
+      tags: [Incidents]
+      parameters:
+        - $ref: "#/components/parameters/IncidentId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [content]
+              properties:
+                content:
+                  type: string
+                  minLength: 1
+      responses:
+        "201":
+          description: Update created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IncidentUpdate"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /incidents/{incidentId}/tac-link:
+    post:
+      summary: Link a TAC case to an incident
+      description: Requires role `admin`, `sdm`, `tam`, or `engineer`.
+      tags: [Incidents]
+      parameters:
+        - $ref: "#/components/parameters/IncidentId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [tacCaseNumber, tacSeverity]
+              properties:
+                tacCaseNumber:
+                  type: string
+                  minLength: 3
+                tacSeverity:
+                  type: string
+                  enum: ["1", "2", "3", "4"]
+      responses:
+        "200":
+          description: TAC link created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  incident_id:
+                    type: string
+                    format: uuid
+                  tac_case_number:
+                    type: string
+                  tac_severity:
+                    type: string
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  # ── TAC Cases ──────────────────────────────────────────────────────────────
+
+  /tac-cases:
+    get:
+      summary: List TAC cases (paginated)
+      tags: [TAC]
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 50
+            maximum: 200
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+      responses:
+        "200":
+          description: Paginated TAC cases
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [limit, offset, rows]
+                properties:
+                  limit:
+                    type: integer
+                  offset:
+                    type: integer
+                  rows:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/TacCase"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  # ── Integrations ───────────────────────────────────────────────────────────
+
+  /integrations/sync/{source}:
+    post:
+      summary: Manually trigger a sync for an integration source
+      description: Requires role `admin` or `sdm`.
+      tags: [Integrations]
+      parameters:
+        - name: source
+          in: path
+          required: true
+          schema:
+            type: string
+            enum: [dna-center, tac, smart-licensing, salesforce]
+      responses:
+        "200":
+          description: Sync completed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SyncResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  # ── Source Admin ───────────────────────────────────────────────────────────
+
+  /admin/sources:
+    get:
+      summary: List all integration source configs
+      description: Requires role `admin` or `sdm`.
+      tags: [Admin]
+      responses:
+        "200":
+          description: Array of source configs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/IntegrationSource"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  /admin/sources/{sourceName}:
+    put:
+      summary: Update an integration source config
+      description: Requires role `admin`.
+      tags: [Admin]
+      parameters:
+        - name: sourceName
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                enabled:
+                  type: boolean
+                baseUrl:
+                  type: string
+                  format: uri
+                authType:
+                  type: string
+                schedule:
+                  type: string
+                credentialsRef:
+                  type: string
+                notes:
+                  type: string
+                  maxLength: 1000
+      responses:
+        "200":
+          description: Updated source config
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IntegrationSource"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /admin/sources/{sourceName}/test:
+    post:
+      summary: Test / manually run a source sync
+      description: Requires role `admin` or `sdm`.
+      tags: [Admin]
+      parameters:
+        - name: sourceName
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Sync result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SyncResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  # ── User Property Assignments ──────────────────────────────────────────────
+
+  /admin/users/{userId}/properties:
+    get:
+      summary: List properties assigned to a user
+      description: Requires role `admin`, `sdm`, or `manager`.
+      tags: [Admin]
+      parameters:
+        - $ref: "#/components/parameters/UserId"
+      responses:
+        "200":
+          description: Array of property assignments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/UserPropertyAssignment"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+    post:
+      summary: Assign properties to a user (additive)
+      description: Requires role `admin`, `sdm`, or `manager`.
+      tags: [Admin]
+      parameters:
+        - $ref: "#/components/parameters/UserId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [propertyIds]
+              properties:
+                propertyIds:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+                  minItems: 1
+      responses:
+        "201":
+          description: Properties assigned
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userId:
+                    type: string
+                    format: uuid
+                  assigned:
+                    type: array
+                    items:
+                      type: string
+                      format: uuid
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+    put:
+      summary: Replace all property assignments for a user
+      description: Requires role `admin` only. Deletes existing assignments and sets new ones.
+      tags: [Admin]
+      parameters:
+        - $ref: "#/components/parameters/UserId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [propertyIds]
+              properties:
+                propertyIds:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+                  minItems: 1
+      responses:
+        "200":
+          description: Properties replaced
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userId:
+                    type: string
+                    format: uuid
+                  properties:
+                    type: array
+                    items:
+                      type: string
+                      format: uuid
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  /admin/users/{userId}/properties/{propertyId}:
+    delete:
+      summary: Remove one property assignment from a user
+      description: Requires role `admin`, `sdm`, or `manager`.
+      tags: [Admin]
+      parameters:
+        - $ref: "#/components/parameters/UserId"
+        - name: propertyId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "204":
+          description: Assignment removed
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  # ── Shared parameters & responses ──────────────────────────────────────────
+
+  parameters:
+    PropertyId:
+      name: propertyId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+
+    DeviceId:
+      name: deviceId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+
+    IncidentId:
+      name: incidentId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+
+    UserId:
+      name: userId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+
+  responses:
+    BadRequest:
+      description: Invalid request body or parameters
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+
+    Unauthorized:
+      description: Missing or invalid access token
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+
+    Forbidden:
+      description: Authenticated but insufficient role
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+
+tags:
+  - name: Health
+    description: Server and dependency health checks
+  - name: Auth
+    description: Authentication — login, refresh, logout, SSO
+  - name: Properties
+    description: MGM property management
+  - name: Devices
+    description: Network device inventory
+  - name: Incidents
+    description: Incident management
+  - name: TAC
+    description: Cisco TAC case sync and listing
+  - name: Integrations
+    description: Manual integration sync triggers
+  - name: Admin
+    description: Source config management and user property assignments

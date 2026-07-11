@@ -1,0 +1,47 @@
+# Mechanical lint fixes on a schedule (opens a PR; does not push to main).
+# Safe fixes only — anything needing judgment stays in failing CI or review.
+name: scheduled-autofix
+
+on:
+  schedule:
+    - cron: "0 9 * * 1" # Mondays 09:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  eslint-fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Backend — install & lint:fix
+        working-directory: backend
+        run: |
+          npm ci
+          npm run lint:fix
+
+      - name: Frontend — install & lint:fix
+        working-directory: frontend
+        run: |
+          npm ci
+          npm run lint:fix
+
+      - name: Open PR if fixes produced
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: "chore: apply eslint --fix (scheduled)"
+          title: "chore: automated eslint lint fixes"
+          branch: automated/eslint-autofix
+          delete-branch: true
+          body: |
+            Automated run of `npm run lint:fix` in `backend/` and `frontend/`.
+
+            - **Merge** if CI is green and the diff is only mechanical ESLint fixes.
+            - **Close** if empty or duplicate.
