@@ -6,12 +6,12 @@
  * Redis connection that is re-used from the app-wide ioredis client.
  */
 import { Queue, Worker, type Job } from "bullmq";
-import IORedis from "ioredis";
+import { Redis } from "ioredis";
 import { env } from "../config.js";
 
 // Separate Redis connection for BullMQ (it needs a dedicated connection
 // that it can block on — ioredis singleton is used elsewhere for pub/sub).
-const redisConnection = new IORedis({
+const redisConnection = new Redis({
   host: env.REDIS_HOST,
   port: env.REDIS_PORT,
   maxRetriesPerRequest: null, // Required by BullMQ
