@@ -81,7 +81,7 @@ export function createApp() {
 
   // Global error handler — catches any unhandled error thrown or passed to next() in route handlers.
   // Must be defined last and with exactly four parameters for Express to recognise it as an error handler.
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   app.use((err: unknown, req: Request, res: Response, _next: NextFunction): void => {
     const rid = (req as Request & { id?: string }).id;
     const message = err instanceof Error ? err.message : "Internal server error";
