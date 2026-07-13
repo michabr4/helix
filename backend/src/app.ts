@@ -23,6 +23,7 @@ import { pidRouter } from "./routes/pid.js";
 import { journeyRouter } from "./routes/journey.js";
 import { slaRouter } from "./routes/sla.js";
 import { agentsRouter } from "./routes/agents.js";
+import { adoptionRouter } from "./routes/adoption.js";
 
 export function createApp() {
   const app = express();
@@ -53,14 +54,30 @@ export function createApp() {
   app.use("/api/v1/admin/users", userPropertiesRouter);
   app.use("/api/v1/analytics/powerbi", powerBiRouter);
   app.use("/api/v1/salesforce", salesforceRouter);
+  // These routers are mounted at both the versioned (/api/v1/...) and
+  // unversioned (/api/...) paths. The frontend's default VITE_API_BASE_URL
+  // is "/api/v1" (see frontend/.env.development and frontend/src/api.ts),
+  // so the /api/v1 mount is what the React app actually calls; the
+  // unversioned mount is kept for backward compatibility with anything
+  // else (e.g. the static /mockup app) that may call the unversioned path.
+  app.use("/api/v1/security", securityRouter);
   app.use("/api/security", securityRouter);
+  app.use("/api/v1/cx", cxRouter);
   app.use("/api/cx", cxRouter);
+  app.use("/api/v1/voc", vocRouter);
   app.use("/api/voc", vocRouter);
+  app.use("/api/v1/raid", raidRouter);
   app.use("/api/raid", raidRouter);
+  app.use("/api/v1/pid", pidRouter);
   app.use("/api/pid", pidRouter);
+  app.use("/api/v1/journey", journeyRouter);
   app.use("/api/journey", journeyRouter);
+  app.use("/api/v1/sla", slaRouter);
   app.use("/api/sla", slaRouter);
+  app.use("/api/v1/agents", agentsRouter);
   app.use("/api/agents", agentsRouter);
+  app.use("/api/v1/adoption", adoptionRouter);
+  app.use("/api/adoption", adoptionRouter);
 
   // Global error handler — catches any unhandled error thrown or passed to next() in route handlers.
   // Must be defined last and with exactly four parameters for Express to recognise it as an error handler.

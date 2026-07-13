@@ -15,6 +15,17 @@ import { slaMonitorAgent } from "../agents/slaMonitor.js";
 import { incidentFirstResponseAgent } from "../agents/incidentFirstResponse.js";
 import { statusReportAgent } from "../agents/statusReport.js";
 import { postIncidentDocAgent } from "../agents/postIncidentDoc.js";
+import { resourceUtilizationAgent } from "../agents/resourceUtilization.js";
+import { deliveryBenchmarkAgent } from "../agents/deliveryBenchmark.js";
+import { vocSynthesisAgent } from "../agents/vocSynthesis.js";
+import { customerHealthAgent } from "../agents/customerHealth.js";
+import { adoptionGapAgent } from "../agents/adoptionGap.js";
+import { escalationPredictionAgent } from "../agents/escalationPrediction.js";
+import { renewalRiskAgent } from "../agents/renewalRisk.js";
+import { changeImpactAgent } from "../agents/changeImpact.js";
+import { qbrAssemblyAgent } from "../agents/qbrAssembly.js";
+import { onboardingOrchestrationAgent } from "../agents/onboardingOrchestration.js";
+import { financialForecastAgent } from "../agents/financialForecast.js";
 
 interface SourceConfig {
   source_name: string;
@@ -132,5 +143,82 @@ export async function startScheduler(): Promise<void> {
     );
   });
 
-  console.log(JSON.stringify({ level: "info", message: "helix_agents_scheduled", agents: 4 }));
+  // Resource Utilization Agent — daily at 06:00
+  cron.schedule("0 6 * * *", () => {
+    resourceUtilizationAgent.run().catch(err =>
+      console.error(JSON.stringify({ level: "error", message: "agent_error", agent: "resource-utilization", error: String(err) }))
+    );
+  });
+
+  // Delivery Performance Benchmarking Agent — monthly, 1st of month at 07:00
+  cron.schedule("0 7 1 * *", () => {
+    deliveryBenchmarkAgent.run().catch(err =>
+      console.error(JSON.stringify({ level: "error", message: "agent_error", agent: "delivery-benchmark", error: String(err) }))
+    );
+  });
+
+  // VoC Synthesis & Trend Agent — weekly, every Monday at 08:00
+  cron.schedule("0 8 * * 1", () => {
+    vocSynthesisAgent.run().catch(err =>
+      console.error(JSON.stringify({ level: "error", message: "agent_error", agent: "voc-synthesis", error: String(err) }))
+    );
+  });
+
+  // Customer Health Scoring Agent — weekly, every Monday at 05:00 (ahead of downstream reports)
+  cron.schedule("0 5 * * 1", () => {
+    customerHealthAgent.run().catch(err =>
+      console.error(JSON.stringify({ level: "error", message: "agent_error", agent: "customer-health", error: String(err) }))
+    );
+  });
+
+  // Adoption & Utilization Gap Agent — weekly, every Wednesday at 06:00
+  cron.schedule("0 6 * * 3", () => {
+    adoptionGapAgent.run().catch(err =>
+      console.error(JSON.stringify({ level: "error", message: "agent_error", agent: "adoption-utilization-gap", error: String(err) }))
+    );
+  });
+
+  // Escalation Prediction Agent — every 30 minutes
+  cron.schedule("*/30 * * * *", () => {
+    escalationPredictionAgent.run().catch(err =>
+      console.error(JSON.stringify({ level: "error", message: "agent_error", agent: "escalation-prediction", error: String(err) }))
+    );
+  });
+
+  // Renewal Risk Early Warning Agent — daily at 06:30
+  cron.schedule("30 6 * * *", () => {
+    renewalRiskAgent.run().catch(err =>
+      console.error(JSON.stringify({ level: "error", message: "agent_error", agent: "renewal-risk", error: String(err) }))
+    );
+  });
+
+  // Change Impact & Communication Agent — every 2 hours
+  cron.schedule("0 */2 * * *", () => {
+    changeImpactAgent.run().catch(err =>
+      console.error(JSON.stringify({ level: "error", message: "agent_error", agent: "change-impact-communication", error: String(err) }))
+    );
+  });
+
+  // QBR/EBR Content Assembly Agent — daily at 05:30
+  cron.schedule("30 5 * * *", () => {
+    qbrAssemblyAgent.run().catch(err =>
+      console.error(JSON.stringify({ level: "error", message: "agent_error", agent: "qbr-ebr-content-assembly", error: String(err) }))
+    );
+  });
+
+  // Customer Onboarding Orchestration Agent — daily at 07:00
+  cron.schedule("0 7 * * *", () => {
+    onboardingOrchestrationAgent.run().catch(err =>
+      console.error(JSON.stringify({ level: "error", message: "agent_error", agent: "onboarding-orchestration", error: String(err) }))
+    );
+  });
+
+  // Financial Forecast Agent — monthly, 1st of month at 08:00
+  cron.schedule("0 8 1 * *", () => {
+    financialForecastAgent.run().catch(err =>
+      console.error(JSON.stringify({ level: "error", message: "agent_error", agent: "financial-forecast", error: String(err) }))
+    );
+  });
+
+  console.log(JSON.stringify({ level: "info", message: "helix_agents_scheduled", agents: 15 }));
 }

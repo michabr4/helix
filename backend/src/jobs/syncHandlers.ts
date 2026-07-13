@@ -1,5 +1,5 @@
 import { SalesforceClient } from "../integrations/salesforceClient.js";
-import { runDnaSync, runSmartLicensingSync, runTacSync } from "./syncService.js";
+import { runCiscoIqSync, runDnaSync, runSmartLicensingSync, runTacSync } from "./syncService.js";
 
 export type SyncResult = { processed: number; status?: string; message?: string };
 
@@ -12,6 +12,10 @@ export const syncHandlers: Record<string, () => Promise<SyncResult>> = {
   "dna-center": async () => ({ processed: await runDnaSync() }),
   "tac": async () => ({ processed: await runTacSync() }),
   "smart-licensing": async () => ({ processed: await runSmartLicensingSync() }),
+  // NOTE: cisco-iq is seeded `enabled: false` in sourceAdmin.ts and must stay
+  // that way until ciscoIqClient.ts's assumed REST contract is validated
+  // against real Cisco IQ API docs/credentials (see client's header comment).
+  "cisco-iq": async () => ({ processed: await runCiscoIqSync() }),
   "salesforce": async () => {
     const result = await SalesforceClient.testConnection();
     return { processed: 0, status: result.ok ? "connected" : "error", message: result.message };

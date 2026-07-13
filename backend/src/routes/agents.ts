@@ -14,6 +14,18 @@ import { slaMonitorAgent } from "../agents/slaMonitor.js";
 import { incidentFirstResponseAgent } from "../agents/incidentFirstResponse.js";
 import { statusReportAgent } from "../agents/statusReport.js";
 import { postIncidentDocAgent } from "../agents/postIncidentDoc.js";
+import { resourceUtilizationAgent } from "../agents/resourceUtilization.js";
+import { deliveryBenchmarkAgent } from "../agents/deliveryBenchmark.js";
+import { execCommsAgent } from "../agents/execComms.js";
+import { vocSynthesisAgent } from "../agents/vocSynthesis.js";
+import { customerHealthAgent } from "../agents/customerHealth.js";
+import { adoptionGapAgent } from "../agents/adoptionGap.js";
+import { escalationPredictionAgent } from "../agents/escalationPrediction.js";
+import { renewalRiskAgent } from "../agents/renewalRisk.js";
+import { changeImpactAgent } from "../agents/changeImpact.js";
+import { qbrAssemblyAgent } from "../agents/qbrAssembly.js";
+import { onboardingOrchestrationAgent } from "../agents/onboardingOrchestration.js";
+import { financialForecastAgent } from "../agents/financialForecast.js";
 
 export const agentsRouter = Router();
 
@@ -23,6 +35,18 @@ const AGENT_REGISTRY = [
   incidentFirstResponseAgent,
   statusReportAgent,
   postIncidentDocAgent,
+  resourceUtilizationAgent,
+  deliveryBenchmarkAgent,
+  execCommsAgent,
+  vocSynthesisAgent,
+  customerHealthAgent,
+  adoptionGapAgent,
+  escalationPredictionAgent,
+  renewalRiskAgent,
+  changeImpactAgent,
+  qbrAssemblyAgent,
+  onboardingOrchestrationAgent,
+  financialForecastAgent,
 ];
 
 /** GET /api/agents/status — list agents with latest job status */

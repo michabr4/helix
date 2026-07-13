@@ -50,6 +50,17 @@ const EnvSchema = z
     SMART_LICENSING_CLIENT_ID: z.string().default(""),
     SMART_LICENSING_CLIENT_SECRET: z.string().default(""),
 
+    /**
+     * Cisco IQ (Wave 9) — adoption/entitlement insights. Endpoint shape is
+     * an unverified assumption (see ciscoIqClient.ts header comment) —
+     * confirm against real API docs before flipping `cisco-iq.enabled` in
+     * mgm.integration_source_configs.
+     */
+    CISCO_IQ_TOKEN_URL: z.string().default("https://cloudsso.cisco.com/as/token.oauth2"),
+    CISCO_IQ_API_URL: z.string().default("https://api.iq.cisco.com"),
+    CISCO_IQ_CLIENT_ID: z.string().default(""),
+    CISCO_IQ_CLIENT_SECRET: z.string().default(""),
+
     /** OpenID Connect SSO (authorization code + PKCE). */
     SSO_ENABLED: boolish.optional().default(false),
     SSO_ISSUER: z.string().optional().default(""),

@@ -27,9 +27,9 @@ VALUES
   ('eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee', 'Cisco DNA Center', 'Network Infrastructure', '22222222-2222-2222-2222-222222222222', '33333333-3333-3333-3333-333333333333')
 ON CONFLICT DO NOTHING;
 
-INSERT INTO cisco.licenses (license_id, owner_user_id, sku, product_name, license_model, quantity_purchased, quantity_consumed, compliance_status, smart_account, virtual_account)
+INSERT INTO cisco.licenses (license_id, owner_user_id, sku, product_name, license_model, quantity_purchased, quantity_consumed, compliance_status, smart_account, virtual_account, property_id)
 VALUES
-  ('ffffffff-ffff-ffff-ffff-ffffffffffff', '22222222-2222-2222-2222-222222222222', 'C1-DNAC-E', 'DNA Center Essentials', 'subscription', 500, 220, 'compliant', 'MGM-SA', 'GES-WEST')
+  ('ffffffff-ffff-ffff-ffff-ffffffffffff', '22222222-2222-2222-2222-222222222222', 'C1-DNAC-E', 'DNA Center Essentials', 'subscription', 500, 220, 'compliant', 'MGM-SA', 'GES-WEST', 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa')
 ON CONFLICT DO NOTHING;
 
 INSERT INTO mgm.incidents (incident_id, property_id, device_id, title, description, priority, status, reported_by, assigned_to, tac_case_number, tac_severity)

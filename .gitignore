@@ -9,6 +9,9 @@ coverage/
 tmp/
 *.tsbuildinfo
 
+# Local IDE agent rules/config — not application source.
+.windsurf/
+
 # Ad-hoc local debug scratch (2026-06-24 login troubleshooting) — one contained a captured
 # JWT access/refresh token pair, another the dev password in plaintext. Not source, never commit.
 backend/DEBUG_LOGIN.md

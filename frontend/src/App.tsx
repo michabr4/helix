@@ -20,6 +20,7 @@ const SentimentPage          = lazy(() => import("./pages/SentimentPage").then(m
 const JourneyPage            = lazy(() => import("./pages/JourneyPage").then(m => ({ default: m.JourneyPage })));
 const ExperienceCommandPage  = lazy(() => import("./pages/ExperienceCommandPage").then(m => ({ default: m.ExperienceCommandPage })));
 const PersonasConsolePage    = lazy(() => import("./pages/PersonasConsolePage").then(m => ({ default: m.PersonasConsolePage })));
+const AdoptionPage           = lazy(() => import("./pages/AdoptionPage").then(m => ({ default: m.AdoptionPage })));
 
 function RequireAuth({ children }: { children: JSX.Element }) {
   const token = getAccessToken();
@@ -43,6 +44,7 @@ const NAV_LINKS = [
   { label: "Security",      path: "/security" },
   { label: "Field Notices", path: "/field-notices" },
   { label: "Sentiment",     path: "/sentiment" },
+  { label: "Adoption",      path: "/adoption" },
   { label: "Journey",       path: "/journey" },
   { label: "CX Command",    path: "/cx-command" },
   { label: "Console",       path: "/console" },
@@ -107,6 +109,7 @@ export function App() {
             <Route path="/properties"    element={<RequireAuth><PropertiesPage /></RequireAuth>} />
             <Route path="/security"      element={<RequireAuth><SecurityPage /></RequireAuth>} />
             <Route path="/field-notices" element={<RequireAuth><FieldNoticesPage /></RequireAuth>} />
+            <Route path="/adoption"      element={<RequireAuth><AdoptionPage /></RequireAuth>} />
             <Route path="/sentiment"     element={<RequireAuth><SentimentPage /></RequireAuth>} />
             <Route path="/journey"       element={<RequireAuth><JourneyPage /></RequireAuth>} />
             <Route path="/cx-command"    element={<RequireAuth><ExperienceCommandPage /></RequireAuth>} />
