@@ -24,6 +24,7 @@ import { journeyRouter } from "./routes/journey.js";
 import { slaRouter } from "./routes/sla.js";
 import { agentsRouter } from "./routes/agents.js";
 import { adoptionRouter } from "./routes/adoption.js";
+import { goalsRouter } from "./routes/goals.js";
 
 export function createApp() {
   const app = express();
@@ -78,6 +79,8 @@ export function createApp() {
   app.use("/api/agents", agentsRouter);
   app.use("/api/v1/adoption", adoptionRouter);
   app.use("/api/adoption", adoptionRouter);
+  app.use("/api/v1/goals", goalsRouter);
+  app.use("/api/goals", goalsRouter);
 
   // Global error handler — catches any unhandled error thrown or passed to next() in route handlers.
   // Must be defined last and with exactly four parameters for Express to recognise it as an error handler.

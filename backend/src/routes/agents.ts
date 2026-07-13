@@ -26,6 +26,7 @@ import { changeImpactAgent } from "../agents/changeImpact.js";
 import { qbrAssemblyAgent } from "../agents/qbrAssembly.js";
 import { onboardingOrchestrationAgent } from "../agents/onboardingOrchestration.js";
 import { financialForecastAgent } from "../agents/financialForecast.js";
+import { goalLoopAgent } from "../agents/goalLoop.js";
 
 export const agentsRouter = Router();
 
@@ -46,6 +47,7 @@ const AGENT_REGISTRY = [
   changeImpactAgent,
   qbrAssemblyAgent,
   onboardingOrchestrationAgent,
+  goalLoopAgent,
   financialForecastAgent,
 ];
 

@@ -26,6 +26,7 @@ import { changeImpactAgent } from "../agents/changeImpact.js";
 import { qbrAssemblyAgent } from "../agents/qbrAssembly.js";
 import { onboardingOrchestrationAgent } from "../agents/onboardingOrchestration.js";
 import { financialForecastAgent } from "../agents/financialForecast.js";
+import { goalLoopAgent } from "../agents/goalLoop.js";
 
 interface SourceConfig {
   source_name: string;
@@ -220,5 +221,12 @@ export async function startScheduler(): Promise<void> {
     );
   });
 
-  console.log(JSON.stringify({ level: "info", message: "helix_agents_scheduled", agents: 15 }));
+  // Goal Loop Agent — daily at 06:15 (ahead of most other daily agents)
+  cron.schedule("15 6 * * *", () => {
+    goalLoopAgent.run().catch(err =>
+      console.error(JSON.stringify({ level: "error", message: "agent_error", agent: "goal-loop", error: String(err) }))
+    );
+  });
+
+  console.log(JSON.stringify({ level: "info", message: "helix_agents_scheduled", agents: 16 }));
 }
